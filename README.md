@@ -1,4 +1,4 @@
-# comp2018
+# compiler-2018
 *A java compiler*
 
 Para el Análisis Léxico:
