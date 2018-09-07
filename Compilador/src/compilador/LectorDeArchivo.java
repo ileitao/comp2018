@@ -6,7 +6,6 @@
 package compilador;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -32,12 +31,9 @@ public class LectorDeArchivo {
     
     public LectorDeArchivo(String archivo) {
         try {
-            this.rutaDelArchivo = archivo;
-            this.in = new BufferedReader(new FileReader(new File(this.rutaDelArchivo)));
+        	this.rutaDelArchivo = archivo;
+        	inicializar();
             System.out.println("Archivo abierto exitosamente.");
-            this.puntero = 0;
-            this.lineaActual = in.readLine();
-            this.lineaAnterior = "";
         }
         catch(IOException exc) {
             System.out.println("Archivo o ruta de archivo incorrecta.");
@@ -61,8 +57,13 @@ public class LectorDeArchivo {
         }
     }
     
-    public String leerChar() throws IOException {
-        String character = "";
+    /**
+     * Se lee el siguiente char de la linea actual, se avanza de linea en caso de llegar al final de la misma.
+     * @return El char leido.
+     * @throws IOException
+     */
+    public Character leerChar() throws IOException {
+        Character charLeido = ' ';
         //// Tengo una linea para leer
         if (this.lineaActual != null) {
             //// El puntero superó el largo de la linea leída
@@ -74,25 +75,22 @@ public class LectorDeArchivo {
                 //// Pido el primer caracter recursivamente
                 return this.leerChar();
             } else if (this.puntero == this.lineaActual.length()) {
-                character = "/n";
+            	//En caso de llegar al final de la linea se debe retornan el caracter de salto de linea.
+                charLeido = Character.DIRECTIONALITY_PARAGRAPH_SEPARATOR;
             } else {
-                char characterLeido = (this.lineaActual.charAt(puntero));
-                character = "" + characterLeido;
-                switch (characterLeido){
-                  //case '\t': result="/t"; break;
-                    case ' ': character = " "; break;
-                }  
-                System.out.println("Caracter Parcial: " + character + " en nro linea: " + this.nroLinea + " puntero en posicion " + this.puntero);
+            	//Capturo el siguiente char.
+            	charLeido = this.lineaActual.charAt(puntero);
+                System.out.println("Caracter Parcial: " + charLeido + " en nro linea: " + this.nroLinea + " puntero en posicion " + this.puntero);
             }
 
             this.puntero++;
         } else {
             //// Fin del archivo = devolver caracter simbolico
             //// para avanzar al ultimo estado (x ej "$")
-            character = "";
+            return null;
         }
 
-        return character;    
+        return charLeido;    
     }
     
     /**
@@ -117,18 +115,22 @@ public class LectorDeArchivo {
      * Resetea el lector al inicio del archivo almacenado en rutaDelArchivo
      * @throws IOException 
      */
-    public void resetearLector() throws IOException {
-        try {
-            this.in.close();
-            this.in = new BufferedReader(new FileReader(this.rutaDelArchivo));
-            this.puntero = 0;
-            this.nroLinea = 0;
-            this.lineaActual = in.readLine();
-            this.lineaAnterior = "";   
-        }
-        catch (IOException exc) {
+    public void inicializar() throws IOException {
+    	try {
+	    	//Si el buffer ya se encuentra abierto, lo cierra antes de reabrirlo.
+	    	if (this.in != null)
+	    		this.in.close();
+
+	    	this.in = new BufferedReader(new FileReader(this.rutaDelArchivo));
+    	}
+    	catch (IOException exc) {
             System.out.println("No se pudo resetear el archivo.");
         }
+    	this.puntero = 0;
+        this.nroLinea = 0;
+        this.lineaActual = in.readLine();
+        this.lineaAnterior = "";
+    		
     }
     
     public BufferedReader getIn() {

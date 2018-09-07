@@ -25,10 +25,19 @@ public class Compilador {
         lector.leerLinea();
         System.out.println(lector.getLineaActual());
         
-        lector.resetearLector();
+        lector.inicializar();
         for (int i = 0; i < 50; i++) {
             lector.leerChar();
         }
+        
+        lector.retrocederPuntero();
+        lector.retrocederPuntero();
+        lector.retrocederPuntero();
+        lector.retrocederPuntero();
+        lector.retrocederPuntero();
+//        lector.retrocederPuntero();
+        System.out.println(lector.getLineaActual());
+        System.out.println(lector.leerChar());
         
         //// TablaDeSimbolos tablaDeSimbolos = new TablaDeSimbolos();
         //// LectorDeArchivo lectorDeArchivo = new LectorDeArchivo(rutaDelAchivo);
