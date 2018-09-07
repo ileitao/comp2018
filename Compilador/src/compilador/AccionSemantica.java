@@ -5,6 +5,7 @@ package compilador;
  * 
  * @author ileitao
  * @author gmaiola
+ * @author ltapia
  */
 public abstract class AccionSemantica {
     

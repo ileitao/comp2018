@@ -10,6 +10,7 @@ import java.util.HashMap;
  * 
  * @author ileitao
  * @author gmaiola
+ * @author ltapia
  */
 public class TablaDeSimbolos {
 

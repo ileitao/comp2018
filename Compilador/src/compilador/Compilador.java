@@ -7,6 +7,7 @@ import java.io.IOException;
  * 
  * @author ileitao
  * @author gmaiola
+ * @author ltapia
  */
 public class Compilador {
     

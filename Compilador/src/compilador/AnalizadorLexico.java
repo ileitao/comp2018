@@ -8,6 +8,7 @@ import java.util.List;
  * 
  * @author ileitao
  * @author gmaiola
+ * @author ltapia
  */
 public class AnalizadorLexico {
 

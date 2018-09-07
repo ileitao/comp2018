@@ -9,6 +9,7 @@ package compilador;
  *
  * @author ileitao
  * @author gmaiola
+ * @author ltapia
  */
 public class Simbolo {
     

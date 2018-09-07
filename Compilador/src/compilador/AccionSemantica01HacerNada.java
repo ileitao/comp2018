@@ -10,6 +10,7 @@ package compilador;
  * 
  * @author ileitao
  * @author gmaiola
+ * @author ltapia
  */
 public class AccionSemantica01HacerNada extends AccionSemantica {
 
