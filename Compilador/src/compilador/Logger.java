@@ -13,4 +13,10 @@ package compilador;
  */
 public class Logger {
     
+//	private List<Evento> eventos;
+	
+//	public void log(Evento e) {
+		//guardar el evento de error o warning
+//		eventos.add(e);
+//	}
 }
