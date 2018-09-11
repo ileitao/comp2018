@@ -14,22 +14,22 @@ import java.util.HashMap;
  */
 public class TablaDeSimbolos {
 
-    private HashMap<Integer, Simbolo> tablaDeSimbolos;
+    private HashMap<Token, RegTablaSimbolos> tablaDeSimbolos;
     
     public TablaDeSimbolos() {
-        this.tablaDeSimbolos = new HashMap<Integer, Simbolo>();
+        this.tablaDeSimbolos = new HashMap<Token, RegTablaSimbolos>();
     }
     
-    public HashMap<Integer, Simbolo> getTablaDeSimbolos() {
+    public HashMap<Token, RegTablaSimbolos> getTablaDeSimbolos() {
         return this.tablaDeSimbolos;
     }
     
-    public void agregarSimbolo(Simbolo simbolo) {
-        
+    public void agregarSimbolo(RegTablaSimbolos regSimbolo) {
+        this.tablaDeSimbolos.put(regSimbolo.getToken(), regSimbolo);
     }
     
-    public Simbolo getSimbolo() {
-        return new Simbolo();
+    public RegTablaSimbolos getRegistro(Token token) {
+        return this.tablaDeSimbolos.get(token);
     }
     
     /**

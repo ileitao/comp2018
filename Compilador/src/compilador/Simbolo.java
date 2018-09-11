@@ -11,6 +11,11 @@ package compilador;
  * @author gmaiola
  * @author ltapia
  */
+@Deprecated
 public class Simbolo {
     
+	
+	/**
+	 * ESTA CLASE NO ES NECESARIA, YA QUE UN SIMBOLO ES EN SI LA CLASE CHARACTER.
+	 */
 }

@@ -3,7 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package compilador;
+package compilador.log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Clase Logger
@@ -14,10 +17,17 @@ package compilador;
  */
 public class Logger {
     
-//	private List<Evento> eventos;
+	private List<EventoLog> eventos;
 	
-//	public void log(Evento e) {
-		//guardar el evento de error o warning
-//		eventos.add(e);
-//	}
+	public Logger() {
+		this.eventos = new ArrayList<>();
+	}
+	
+	public void log(EventoLog evento) {
+		eventos.add(evento);
+	}
+
+	public void imprimir() {
+		System.out.println(eventos);
+	}
 }

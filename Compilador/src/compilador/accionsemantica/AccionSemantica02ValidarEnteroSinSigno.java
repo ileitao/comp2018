@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package compilador;
+package compilador.accionsemantica;
+
+import compilador.AnalizadorLexico;
 
 /**
  * Clase AccionSemantica02ValidarEnteroSinSigno
@@ -18,9 +20,10 @@ public class AccionSemantica02ValidarEnteroSinSigno extends AccionSemantica {
         super(analizadorLexico);
     }
 
-    @Override
-    public void execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+	@Override
+	protected boolean verificar() {
+		// TODO Auto-generated method stub
+		return false;
+	}
     
 }
