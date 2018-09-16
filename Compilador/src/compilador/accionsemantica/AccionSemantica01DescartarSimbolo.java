@@ -22,6 +22,6 @@ public class AccionSemantica01DescartarSimbolo extends AccionSemantica {
     
 	@Override
 	protected void corregir() {
-		this.analizadorLexico.setLexemaParcial("");
+		this.analizadorLexico.setEstadoActual(AnalizadorLexico.ESTADO_INICIAL);
 	}
 }

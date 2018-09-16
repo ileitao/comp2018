@@ -13,10 +13,10 @@ package compilador;
 public class RegTablaSimbolos {
 
 	private Token token;
-	private TipoSimbolo tipo;
+	private TipoToken tipo;
 	private int posicion;
 
-	public RegTablaSimbolos(Token token, TipoSimbolo tipo, int posicion) {
+	public RegTablaSimbolos(Token token, TipoToken tipo, int posicion) {
 		this.token = token;
 		this.tipo = tipo;
 		this.posicion = posicion;
@@ -40,7 +40,7 @@ public class RegTablaSimbolos {
 	/**
 	 * @return the tipo
 	 */
-	public TipoSimbolo getTipo() {
+	public TipoToken getTipo() {
 		return tipo;
 	}
 
@@ -48,7 +48,7 @@ public class RegTablaSimbolos {
 	 * @param tipo
 	 *            the tipo to set
 	 */
-	public void setTipo(TipoSimbolo tipo) {
+	public void setTipo(TipoToken tipo) {
 		this.tipo = tipo;
 	}
 

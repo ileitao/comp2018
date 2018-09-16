@@ -18,7 +18,7 @@ import compilador.log.Logger;
  */
 public class AnalizadorLexico {
 
-    private static final int ESTADO_INICIAL = 0;
+    public static final int ESTADO_INICIAL = 0;
 
     private static final int ESTADO_FINAL = -1;
 
@@ -66,10 +66,10 @@ public class AnalizadorLexico {
         {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "}"
         {11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, 12, -1, -1, -1, -1}, // "#"
         {12, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1}, // "'"
-        { 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // " "
-        { 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1}, // "/n"
-        { 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "/t"
-        { 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "otro"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // " "
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1}, // "/n"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "/t"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "otro"
         {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, // $
 
     };
@@ -174,7 +174,9 @@ public class AnalizadorLexico {
 	            //Ir armando el lexema parcial
 	            this.lexemaParcial.append(this.charActual);
             else
-            	matAccSem[fila][estadoAnterior].execute();
+            	//Si hay una accion semantica asociada se ejecuta
+            	if (matAccSem[fila][estadoAnterior] != null)
+            		matAccSem[fila][estadoAnterior].execute();
         }
         
         //Retrocedo el lector para no volver a procesar el ultimo caracter leido en la siguiente ejecucion.
@@ -185,7 +187,7 @@ public class AnalizadorLexico {
 	       
         	//FIXME Estos datos deben ser provistos al reconocer el token para poder almacenarlos en la tabla de simbolos.
         	//Ver como identificar que tipo de token es.
-	        TipoSimbolo tipoSimbolo = TipoSimbolo.CADENA;
+	        TipoToken tipoSimbolo = TipoToken.CADENA;
 	        int posicionToken = lector.getPuntero();
 	        int lineaToken = lector.getNroLinea();
 	        
@@ -259,9 +261,9 @@ public class AnalizadorLexico {
             return 19;
         } else if (caracter == '#') {
             return 20;
-        } else if (caracter == ' ') {
-            return 21;
         } else if (caracter == '\'') {
+            return 21;
+        } else if (caracter == ' ') {
             return 22;
         } else if (caracter == '\n') {
             return 23;

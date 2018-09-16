@@ -14,7 +14,7 @@ package compilador;
  */
 public class Token {
 
-	private static long nextId = 1;
+	private static long nextId = 257;
 
 	StringBuffer lexema;
 	long id;
