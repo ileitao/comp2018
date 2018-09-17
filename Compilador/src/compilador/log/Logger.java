@@ -28,6 +28,6 @@ public class Logger {
 	}
 
 	public void imprimir() {
-		System.out.println(eventos);
+		System.out.println("Eventos: " + eventos);
 	}
 }

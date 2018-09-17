@@ -65,7 +65,9 @@ public class Token {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((lexema == null) ? 0 : lexema.hashCode());
+		
+		//Custom hashcode usando el toString() en lugar del StringBuffer en si.
+		result = prime * result + ((lexema == null) ? 0 : lexema.toString().hashCode());
 		return result;
 	}
 
@@ -86,7 +88,9 @@ public class Token {
 		if (lexema == null) {
 			if (other.lexema != null)
 				return false;
-		} else if (!lexema.equals(other.lexema))
+		}
+		//Se utiliza el toString en lugar del StringBuffer en si.
+		else if (!lexema.toString().equals(other.lexema.toString()))
 			return false;
 		return true;
 	}

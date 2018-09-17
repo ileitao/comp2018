@@ -12,9 +12,13 @@ public class EventoLog {
 	// Tipo de evento ocurrido: Error o Warning
 	private String tipo;
 
-	public EventoLog(String mensaje, String tipo) {
+	// Linea dentro del archivo en la que se encuentra el error
+	private int linea;
+
+	public EventoLog(String mensaje, String tipo, int linea) {
 		this.mensaje = mensaje;
 		this.tipo = tipo;
+		this.linea = linea;
 	}
 
 	/**
@@ -47,9 +51,17 @@ public class EventoLog {
 		this.tipo = tipo;
 	}
 
+	public int getLinea() {
+		return linea;
+	}
+
+	public void setLinea(int linea) {
+		this.linea = linea;
+	}
+
 	@Override
 	public String toString() {
-		return "EventoLog [mensaje=" + mensaje + ", tipo=" + tipo + "]";
+		return "EventoLog [mensaje=" + mensaje + ", tipo=" + tipo + ", linea=" + linea + "]";
 	}
 
 }

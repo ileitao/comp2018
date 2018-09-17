@@ -19,6 +19,7 @@ public class AccionSemantica03ValidarFlotante extends AccionSemantica {
 
 	private static final int ESTADO_VERIFICACION_FUERA_DE_RANGO 	= 1;
 	private static final int ESTADO_VERIFICACION_CARACTER_INVALIDO 	= 2;
+	private static final String MAXIMO_VALOR_FLOTANTE = "999.F999";
 	
     public AccionSemantica03ValidarFlotante(AnalizadorLexico analizadorLexico) {
         super(analizadorLexico);
@@ -28,7 +29,7 @@ public class AccionSemantica03ValidarFlotante extends AccionSemantica {
 	protected boolean verificar() {
 
 		//Obtener linea para finalidades de loggeo
-        int line = this.analizadorLexico.getLineaActual();
+        int linea = this.analizadorLexico.getLineaActual();
         //Descartar "cualquier" caracter final acompañando al lexema
 //        this.analizadorLexico.retrocederLectura();
 //        this.analizadorLexico.setLexemaParcial(this.analizadorLexico.getLexemaParcial().substring(0, this.analizadorLexico.getLexemaParcial().length() - 1));
@@ -45,14 +46,14 @@ public class AccionSemantica03ValidarFlotante extends AccionSemantica {
                 return true;
             } else
        		 	//TODO Loggear WARNING por salirse del rango, informar linea, setear el valor máximo
-            	this.analizadorLexico.getLogger().log(new EventoLog(FLOTANTE_FUERA_DE_RANGO, WARNING));
+            	this.analizadorLexico.getLogger().log(new EventoLog(FLOTANTE_FUERA_DE_RANGO, WARNING, linea));
             	this.estadoVerificacion = ESTADO_VERIFICACION_FUERA_DE_RANGO;
             	return false;
         }
         catch (NumberFormatException e) {
         	//ESTO NO DEBERIA SUCEDER, LO DEBEMOS CONTROLAR PARA QUE NO SE LANCE LA EXCEPCION!
         	this.estadoVerificacion = ESTADO_VERIFICACION_CARACTER_INVALIDO;
-        	this.analizadorLexico.getLogger().log(new EventoLog(TOKEN_INESPERADO, ERROR));
+        	this.analizadorLexico.getLogger().log(new EventoLog(TOKEN_INESPERADO, ERROR, linea));
             return false;
         }
 	}
@@ -62,7 +63,7 @@ public class AccionSemantica03ValidarFlotante extends AccionSemantica {
 		
 		switch (this.estadoVerificacion) {
 		case ESTADO_VERIFICACION_FUERA_DE_RANGO:
-			this.analizadorLexico.setLexemaParcial(Float.toString(Float.MAX_VALUE));
+			this.analizadorLexico.setLexemaParcial(MAXIMO_VALOR_FLOTANTE);
 			break;
 		case ESTADO_VERIFICACION_CARACTER_INVALIDO:
 		default:

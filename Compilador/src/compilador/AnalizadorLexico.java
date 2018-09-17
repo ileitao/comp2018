@@ -2,6 +2,7 @@ package compilador;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import compilador.accionsemantica.AccionSemantica;
@@ -28,8 +29,6 @@ public class AnalizadorLexico {
 
     private static final int CANTIDAD_SIMBOLOS = 27;
 
-    private int lineaActual = 1;
-
     //Usar StringBuffer solo por una cuestion de performance, ya que String es inmutable y genera un nuevo objeto String
     //por cada nuevo elemento, almacenandolo en la Pool de Strings.
     private StringBuffer lexemaParcial;
@@ -44,33 +43,33 @@ public class AnalizadorLexico {
     	/*EstadosestadoActual
     	{0,   1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16 */
     	
-        {10,  1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, -1, -1, -1, -1}, // [a-z] - [A-Z]
-        {10,  1, -1, -1, -1,  6, -1, -1,  6, -1, 10, 11, 12, -1, -1, -1, -1}, // "F"
-        {10,  1, -1,  4, -1, -1, -1, -1, -1, -1, 10, 11, 12, -1, -1, -1, -1}, // "u"
-        {10,  1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, -1, -1, -1, -1}, // "i"
-        { 2,  1,  2, -1, -1,  8,  9,  9,  8,  9, -1, 11, 12, -1, -1, -1, -1}, // [0-9]
-        { 5, -1,  5, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "."
-        { 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, -1, -1, -1, -1}, // "_"
-        {-1, -1, -1, -1, -1, -1,  7, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "+"matEstados
-        {-1, -1,  3, -1, -1, -1,  7, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "-"
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "*"
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "/"
-        {16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // ":"
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "="
-        {13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "<"
-        {14, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // ">"
-        {15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "!"
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "("
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // ")"
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "{"
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "}"
-        {11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, 12, -1, -1, -1, -1}, // "#"
-        {12, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1}, // "'"
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // " "
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1}, // "/n"
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "/t"
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, // "otro"
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, // $
+        {10,  1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, -1, -1, -1, -1}, //0 | [a-z] - [A-Z]
+        {10,  1, -1, -1, -1,  6, -1, -1,  6, -1, 10, 11, 12, -1, -1, -1, -1}, //1 |  "F"
+        {10,  1, -1,  4, -1, -1, -1, -1, -1, -1, 10, 11, 12, -1, -1, -1, -1}, //2 |  "u"
+        {10,  1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, -1, -1, -1, -1}, //3 |  "i"
+        { 2,  1,  2, -1, -1,  8,  9,  9,  8,  9, -1, 11, 12, -1, -1, -1, -1}, //4 |  [0-9]
+        { 5, -1,  5, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //5 |  "."
+        { 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, -1, -1, -1, -1}, //6 |  "_"
+        {-1, -1, -1, -1, -1, -1,  7, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //7 |  "+"matEstados
+        {-1, -1,  3, -1, -1, -1,  7, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //8 |  "-"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //9 |  "*"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //10|  "/"
+        {16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //11|  ":"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //12|  "="
+        {13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //13|  "<"
+        {14, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //14|  ">"
+        {15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //15|  "!"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //16|  "("
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //17|  ")"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //18|  "{"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //19|  "}"
+        {11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, 12, -1, -1, -1, -1}, //20|  "#"
+        {12, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1}, //21|  "'"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //22|  " "
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1}, //23|  "/n"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //24|  "/t"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1}, //25|  "otro"
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, //26|  $
 
     };
 
@@ -114,12 +113,8 @@ public class AnalizadorLexico {
         return this.estadoActual;
     }
 
-    public void setLineaActual(int lineaActual) {
-        this.lineaActual = lineaActual;
-    }
-
     public int getLineaActual() {
-        return this.lineaActual;
+        return this.lector.getNroLinea();
     }
 
     public TablaDeSimbolos getTablaSimbolos() {
@@ -152,9 +147,7 @@ public class AnalizadorLexico {
      * @throws IOException En caso de que llegue al final del archivo.
      */
     public Token getToken() {
-        //TODO realizar la logica de avance de estados hasta obtener un token.
-        //Se debe invocar al lector de archivos mientras los estados de la matriz no lleguen al estado final
-        //En caso de error, se debera loguear.
+
         this.lexemaParcial = new StringBuffer();
         this.estadoActual = AnalizadorLexico.ESTADO_INICIAL;
         
@@ -169,7 +162,9 @@ public class AnalizadorLexico {
             int estadoAnterior = this.estadoActual;
             
             estadoActual = matEstados[fila][estadoActual];
-
+            
+//            System.out.println("Estado anterior: " + estadoAnterior + " | Estado actual : " + estadoActual);
+            
             if (this.estadoActual != AnalizadorLexico.ESTADO_FINAL)
 	            //Ir armando el lexema parcial
 	            this.lexemaParcial.append(this.charActual);
@@ -198,9 +193,10 @@ public class AnalizadorLexico {
 	        //Si no existe en la tabla de simbolos cargo el registro, sino devuelvo el token existente.
 	        if(reg == null) {
 	        	token.setId();
-	        	this.tablaSimbolos.agregarSimbolo(new RegTablaSimbolos(token, tipoSimbolo, posicionToken));
+	        	reg = new RegTablaSimbolos(token, tipoSimbolo, lineaToken, posicionToken);
+	        	this.tablaSimbolos.agregarSimbolo(reg);
 	        }
-	        return token;
+	        return reg.getToken();
         }
         else
         	return null;
@@ -279,9 +275,9 @@ public class AnalizadorLexico {
     public void cargarMatAccSemanticas() {
     	this.matAccSem = new AccionSemantica[AnalizadorLexico.CANTIDAD_SIMBOLOS][AnalizadorLexico.CANTIDAD_ESTADOS];
     	
-    	for(int i = 0; i < AnalizadorLexico.CANTIDAD_SIMBOLOS; i++)
-    		for(int j = 0; j < AnalizadorLexico.CANTIDAD_ESTADOS; j++)
-    			matAccSem[i][j] = new AccionSemantica03ValidarFlotante(this);
+    	//Acciones semanticas para flotantes
+    	for(int fila : Arrays.asList(4, 5, 8) )
+    		matAccSem[fila][2] = new AccionSemantica03ValidarFlotante(this);
     	
     	//A MODO DE TEST
     	for(int i = 22; i < 26; i++)

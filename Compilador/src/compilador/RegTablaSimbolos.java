@@ -14,11 +14,13 @@ public class RegTablaSimbolos {
 
 	private Token token;
 	private TipoToken tipo;
+	private int linea;
 	private int posicion;
 
-	public RegTablaSimbolos(Token token, TipoToken tipo, int posicion) {
+	public RegTablaSimbolos(Token token, TipoToken tipo, int linea, int posicion) {
 		this.token = token;
 		this.tipo = tipo;
+		this.linea = linea;
 		this.posicion = posicion;
 	}
 
@@ -50,6 +52,14 @@ public class RegTablaSimbolos {
 	 */
 	public void setTipo(TipoToken tipo) {
 		this.tipo = tipo;
+	}
+
+	public int getLinea() {
+		return linea;
+	}
+
+	public void setLinea(int linea) {
+		this.linea = linea;
 	}
 
 	/**
