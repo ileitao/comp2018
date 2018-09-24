@@ -1,6 +1,10 @@
-9.F99999999999999999999999999
-codigo de prueba para el lector
-a ver cuanto se la banca
-	abc	def	
-	coso
-ajam
+int _i
+if _var1
+		123_iu
+	
+	.5
+	2.
+	6.2F3
+	7.1F-2
+	
+endif

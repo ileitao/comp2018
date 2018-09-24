@@ -14,13 +14,12 @@ package compilador;
  */
 public class Token {
 
-	private static long nextId = 257;
-
-	StringBuffer lexema;
+	String lexema;
 	long id;
 
-	public Token(String lexema) {
-		this.lexema = new StringBuffer(lexema);
+	public Token(String lexema, long id) {
+		this.lexema = lexema;
+		this.id = id;
 	}
 
 	/**
@@ -30,17 +29,14 @@ public class Token {
 		return id;
 	}
 
-	/**
-	 * Sets the next id
-	 */
-	public void setId() {
-		this.id = nextId++;
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	/**
 	 * @return the lexema
 	 */
-	public StringBuffer getLexema() {
+	public String getLexema() {
 		return lexema;
 	}
 
@@ -48,54 +44,13 @@ public class Token {
 	 * @param lexema
 	 *            the lexema to set
 	 */
-	public void setLexema(StringBuffer lexema) {
+	public void setLexema(String lexema) {
 		this.lexema = lexema;
 	}
 
-	public void concatenarSimbolo(Character simbolo) {
-		this.lexema.append(simbolo);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		
-		//Custom hashcode usando el toString() en lugar del StringBuffer en si.
-		result = prime * result + ((lexema == null) ? 0 : lexema.toString().hashCode());
-		return result;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Token other = (Token) obj;
-		if (lexema == null) {
-			if (other.lexema != null)
-				return false;
-		}
-		//Se utiliza el toString en lugar del StringBuffer en si.
-		else if (!lexema.toString().equals(other.lexema.toString()))
-			return false;
-		return true;
-	}
-
-	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

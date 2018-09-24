@@ -32,11 +32,14 @@ public class Compilador {
 		Token token = analizadorLexico.getToken();
 		
 		while(token != null) {
-			System.out.println(token.toString());
+//			System.out.println(token.toString());
 			token = analizadorLexico.getToken();
 		}
 		
 		analizadorLexico.getLogger().imprimir();
+		System.out.println("************************************************");
+		
+		analizadorLexico.getTablaSimbolos().imprimirTablaDeSimbolos();
 		
 	}
 

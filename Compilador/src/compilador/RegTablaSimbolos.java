@@ -18,7 +18,7 @@ public class RegTablaSimbolos {
 	private int posicion;
 
 	public RegTablaSimbolos(Token token, TipoToken tipo, int linea, int posicion) {
-		this.token = token;
+		this.token = token;    	
 		this.tipo = tipo;
 		this.linea = linea;
 		this.posicion = posicion;
@@ -75,6 +75,12 @@ public class RegTablaSimbolos {
 	 */
 	public void setPosicion(int posicion) {
 		this.posicion = posicion;
+	}
+
+	@Override
+	public String toString() {
+		return "RegTablaSimbolos [token=" + token + ", tipo=" + tipo + ", linea=" + linea + ", posicion=" + posicion
+				+ "]";
 	}
 
 }

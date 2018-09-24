@@ -1,7 +1,6 @@
 package compilador.accionsemantica;
 
 import compilador.AnalizadorLexico;
-import compilador.log.Logger;
 
 /**
  * Clase abstracta AccionSemantica
@@ -12,10 +11,26 @@ import compilador.log.Logger;
  */
 public abstract class AccionSemantica {
 
-	protected AnalizadorLexico analizadorLexico;
+	public static final int AS_INICIALIZAR_LEXEMA = 1;
+	public static final int AS_CONCATENAR_LEXEMA = 2;
 	
-	//Estado resultante de la verificacion, el cual será seteado por cada implementacion de accion semantica.
-	protected int estadoVerificacion;
+	//setear token reconocido
+	public static final int AS_TIPO_TOKEN_IDENTIFICADOR = 4;
+	
+	//valida numero y descarta postfijo
+	public static final int AS_TIPO_TOKEN_ENTERO_SIN_SIGNO = 5;
+	//valida numero y descarta postfijo
+	public static final int AS_TIPO_TOKEN_FLOTANTE = 6;
+	//valida posible palabra reservada
+	public static final int AS_TIPO_TOKEN_PALABRA_RESERVADA = 7;
+	
+	public static final int AS_DESCARTAR_TOKEN = 18;
+	//no realiza ninguna accion
+	public static final int AS_NO_ACCION = 19;
+	
+	public static final int AS_ERROR = 20;
+	
+	protected AnalizadorLexico analizadorLexico;
 
 	public AccionSemantica(AnalizadorLexico analizadorLexico) {
 		this.analizadorLexico = analizadorLexico;
@@ -25,24 +40,6 @@ public abstract class AccionSemantica {
 	 * Realiza la verificacion correspondiente de la accion semantica y ejecuta la
 	 * el metodo de correccion para la misma en caso de ser necesario.
 	 */
-	public void execute() {
-		if (!verificar())
-			corregir();
-	}
+	public abstract void execute();
 
-	/**
-	 * Es llamdo por el metodo al ejecutarse el metodo publico execute().; Realiza
-	 * la correccion necesaria por parte de la accion semantica. El funcionamiento
-	 * por defecto es NO ACCION.
-	 */
-	protected void corregir() {
-	};
-
-	/**
-	 * Realiza las validaciones necesarias de la accion semantica que implementa la
-	 * clase
-	 * 
-	 * @return Debe retornar true si el token es valido, en caso contrario false.
-	 */
-	protected abstract boolean verificar();
 }
