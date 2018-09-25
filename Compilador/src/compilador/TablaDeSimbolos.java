@@ -46,8 +46,17 @@ public class TablaDeSimbolos {
     private void cargarPalabrasReservadas() {
     	RegTablaSimbolos reg;
     	
-//    	reg = crearRegTabla("if", TipoToken.PALABRA_RESERVADA, 0, 0);
-//    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	reg = crearRegTabla("if", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("else", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("endif", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("print", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
     	reg = crearRegTabla("usinteger", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);

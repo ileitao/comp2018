@@ -5,29 +5,25 @@ import compilador.RegTablaSimbolos;
 import compilador.TipoToken;
 import compilador.log.EventoLog;
 
-public class ASValidarTokenPalabraReservada extends ASValidarToken {
+public class ASTokenPalabraReservada extends ASReconocerToken {
 
-	public ASValidarTokenPalabraReservada(AnalizadorLexico analizadorLexico) {
+	public ASTokenPalabraReservada(AnalizadorLexico analizadorLexico) {
 		super(analizadorLexico, TipoToken.PALABRA_RESERVADA);
 	}
 
 	/**
-	 * Retorna true si la palabra existe en la tabla de simbolos.
-	 * Se sobreentiende que es palabra reservada porque es un lexema completamente en minusculas.
-	 * Aun asi, se realiza la verificacion.
+	 * Retorna true si la palabra existe en la tabla de simbolos y ademas es palabra reservada.
 	 */
 	@Override
 	public boolean validar() {
 		String lexema = this.analizadorLexico.getLexemaParcial().toString();
 		RegTablaSimbolos reg = this.analizadorLexico.getTablaSimbolos().getRegistro(lexema);
 		
-		//Supera la validacion en caso de existir el lexema en la tabla de simbolos
-		//y ademas, ser de tipo PALABRA_RESERVADA.
 		return (reg != null) && (reg.getTipo().equals(this.tipotoken));
 	}
 
 	/**
-	 * Se
+	 * Se almacena el error y se reinicia el analizador lexico.
 	 */
 	@Override
 	public void hacer() {

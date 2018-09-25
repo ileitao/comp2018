@@ -4,13 +4,13 @@ import compilador.AnalizadorLexico;
 import compilador.TipoToken;
 import compilador.log.EventoLog;
 
-public class ASValidarTokenEnteroSinSigno extends ASValidarToken {
+public class ASTokenEnteroSinSigno extends ASReconocerToken {
 
 	//(2^16)-1
 	private final int MAX_ENTERO_SIN_SIGNO = 65535;
 	private final int MIN_ENTERO_SIN_SIGNO = 0;
 	
-	public ASValidarTokenEnteroSinSigno(AnalizadorLexico analizadorLexico) {
+	public ASTokenEnteroSinSigno(AnalizadorLexico analizadorLexico) {
 		super(analizadorLexico, TipoToken.CONSTANTE_ENTERO_SIN_SIGNO);
 	}
 

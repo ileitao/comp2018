@@ -14,7 +14,9 @@ public abstract class AccionSemantica {
 	public static final int AS_INICIALIZAR_LEXEMA = 1;
 	public static final int AS_CONCATENAR_LEXEMA = 2;
 	
-	//setear token reconocido
+	public static final int AS_TIPO_TOKEN_OPERADOR = 3;
+	
+	//valida longitud identificador
 	public static final int AS_TIPO_TOKEN_IDENTIFICADOR = 4;
 	
 	//valida numero y descarta postfijo
@@ -23,6 +25,10 @@ public abstract class AccionSemantica {
 	public static final int AS_TIPO_TOKEN_FLOTANTE = 6;
 	//valida posible palabra reservada
 	public static final int AS_TIPO_TOKEN_PALABRA_RESERVADA = 7;
+	
+	public static final int AS_TIPO_TOKEN_CADENA_CARACTERES = 8;
+	
+
 	
 	public static final int AS_DESCARTAR_TOKEN = 18;
 	//no realiza ninguna accion

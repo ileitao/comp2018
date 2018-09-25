@@ -4,11 +4,11 @@ import compilador.AnalizadorLexico;
 import compilador.TipoToken;
 import compilador.log.EventoLog;
 
-public class ASValidarTokenIdentificador extends ASValidarToken {
+public class ASTokenIdentificador extends ASReconocerToken {
 
 	private final int LARGO_MAXIMO = 25;
 	
-	public ASValidarTokenIdentificador(AnalizadorLexico analizadorLexico) {
+	public ASTokenIdentificador(AnalizadorLexico analizadorLexico) {
 		super(analizadorLexico, TipoToken.IDENTIFICADOR);
 	}
 

@@ -4,7 +4,7 @@ import compilador.AnalizadorLexico;
 import compilador.TipoToken;
 import compilador.accionsemantica.AccionSemantica;
 
-public abstract class ASValidarToken extends AccionSemantica {
+public abstract class ASReconocerToken extends AccionSemantica {
 
 	//Estado resultante de la verificacion, el cual será seteado por cada clase concreta que extienda de esta clase.
 	protected int estadoVerificacion;
@@ -12,7 +12,7 @@ public abstract class ASValidarToken extends AccionSemantica {
 	//Tipo de token reconocido. Es seteado por la clase que extiende.
 	protected TipoToken tipotoken;
 	
-	public ASValidarToken(AnalizadorLexico analizadorLexico, TipoToken tipoToken) {
+	public ASReconocerToken(AnalizadorLexico analizadorLexico, TipoToken tipoToken) {
 		super(analizadorLexico);
 		this.tipotoken = tipoToken;
 	}

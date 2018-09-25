@@ -3,9 +3,9 @@ package compilador.accionsemantica.validacion;
 import compilador.AnalizadorLexico;
 import compilador.TipoToken;
 
-public class ASValidarTokenFlotante extends ASValidarToken {
+public class ASTokenFlotante extends ASReconocerToken {
 
-	public ASValidarTokenFlotante(AnalizadorLexico analizadorLexico) {
+	public ASTokenFlotante(AnalizadorLexico analizadorLexico) {
 		super(analizadorLexico, TipoToken.CONSTANTE_FLOTANTE);
 	}
 
@@ -16,7 +16,6 @@ public class ASValidarTokenFlotante extends ASValidarToken {
 
 	@Override
 	public void hacer() {
-		this.analizadorLexico.setTipoToken(this.tipotoken);
 		System.out.println("Validacion flotante");
 	}
 
