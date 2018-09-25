@@ -1,7 +1,5 @@
 /*** 1-DECLARATION SECTION ***/
 %{
-package compilador.analizadorsintactico;
-
 import java.io.IOException;
 import compilador.AnalizadorLexico;
 import compilador.TablaDeSimbolos;
@@ -108,7 +106,7 @@ public int yylex() throws IOException
 {
 	this.tokenActual = analizadorLexico.getToken();
 	//tokenfy(this.tokenActual.toString(), this.tokenActual.getLine());
-	//yylval = new SymbolItem(this.tokenActual);
+	// yylval = new SymbolItem(this.tokenActual);
 	return 0;
 	//return this.tokenActual.getCode();
 }

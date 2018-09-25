@@ -13,11 +13,11 @@
 
 
 
+package compilador.analizadorsintactico;
 
 
 
 //#line 3 "Gramatica.y"
-package compilador.analizadorsintactico;
 
 import java.io.IOException;
 import compilador.AnalizadorLexico;
