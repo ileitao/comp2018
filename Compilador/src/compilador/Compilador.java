@@ -36,10 +36,13 @@ public class Compilador {
 			token = analizadorLexico.getToken();
 		}
 		
+		System.out.println("************************************************");
+		System.out.println(analizadorLexico.getTiraTokens());
+		System.out.println("************************************************");
 		analizadorLexico.getLogger().imprimir();
 		System.out.println("************************************************");
-		
 		analizadorLexico.getTablaSimbolos().imprimirTablaDeSimbolos();
+		System.out.println("************************************************");
 		
 	}
 

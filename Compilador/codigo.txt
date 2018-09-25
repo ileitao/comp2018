@@ -1,10 +1,19 @@
-int _i
-if _var1
-		123_iu
-	
-	.5
-	2.
-	6.2F3
-	7.1F-2
-	
+usinteger _i := 123_ui,
+
+if ( _var1 > 10 )
+
+	_i := _i * 2,
+
 endif
+
+	.5
+
+	2.
+
+	6.2F3
+	
+print('este * esta dentro de un comentario con un + en una sola linea'),
+
+single _myfloat := 7.1F-2,
+ 
+single _MYFLOAT := _myfloat + 1.2F1 - 2.,
