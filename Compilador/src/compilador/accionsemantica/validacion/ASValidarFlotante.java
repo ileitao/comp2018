@@ -18,10 +18,19 @@ public class ASValidarFlotante implements Validable {
 	@Override
 	public boolean evaluar(AnalizadorLexico aLexico, TipoToken tipoToken) {
 		
+		//Se retrocede el lector para volver a leer el ultimo caracter leido.
+		aLexico.retrocederLectura();
+		
 		String[] lexema = aLexico.getLexemaParcial().toString().split("F");
 		
 		String mantisa = lexema[0];
 		String exp = "0";
+		
+		if (mantisa.equals(".")) {
+			aLexico.getLogger().log(new EventoLog("Token . inesperado", EventoLog.ERROR, aLexico.getLineaActual()));
+			aLexico.reiniciar();
+			return true;
+		}
 		
 		if (lexema.length > 1)
 			exp = lexema[1];
@@ -40,8 +49,6 @@ public class ASValidarFlotante implements Validable {
 
 	@Override
 	public void procesar(AnalizadorLexico aLexico) {
-		//TODO
-		System.out.println("Validacion flotante");
 		
 		aLexico.getLogger().log(
 				new EventoLog("El flotante no se encuentra dentro de rango permitido."

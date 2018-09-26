@@ -18,6 +18,7 @@ import compilador.accionsemantica.validacion.ASCadenaCaracteres;
 import compilador.accionsemantica.validacion.ASComparador;
 import compilador.accionsemantica.validacion.ASOperador;
 import compilador.accionsemantica.validacion.ASReconocerToken;
+import compilador.accionsemantica.validacion.ASTokenOtro;
 import compilador.accionsemantica.validacion.ASValidarEnteroSinSigno;
 import compilador.accionsemantica.validacion.ASValidarFlotante;
 import compilador.accionsemantica.validacion.ASValidarIdentificador;
@@ -88,7 +89,7 @@ public class AnalizadorLexico {
 		{  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1 },// 22| " "
 		{  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1 },// 23| "/n"
 		{  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1 },// 24| "/t"
-		{  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1 },// 25| "otro"
+		{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, 12, -1, -1, -1, -1 },// 25| "otro"
 		{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },// 26| $
 
 	};
@@ -172,8 +173,7 @@ public class AnalizadorLexico {
 	public Token getToken() {
 
 		// Seteo estado inicial del automata
-		this.estadoActual = ESTADO_INICIAL;
-		this.lexemaParcial = new StringBuffer();
+		reiniciar();
 
 		// Se itera hasta llegar al estado final
 		while (this.estadoActual != ESTADO_FINAL) {
@@ -197,6 +197,8 @@ public class AnalizadorLexico {
 		// estado.
 		if (!this.charActual.equals('$')) {
 
+			System.out.println(this.getLexemaParcial());
+			
 			int posicionToken = lector.getPuntero();
 			int lineaToken = lector.getNroLinea();
 
@@ -204,7 +206,7 @@ public class AnalizadorLexico {
 			// Si no existe en la tabla de simbolos cargo el registro, sino devuelvo el
 			// token existente.
 			if (reg == null) {
-				reg = this.tablaSimbolos.crearRegTabla(this.lexemaParcial.toString(), this.tipoToken, lineaToken, posicionToken);
+				reg = this.tablaSimbolos.createRegTabla(this.lexemaParcial.toString(), this.tipoToken, lineaToken, posicionToken);
 				this.tablaSimbolos.agregarSimbolo(reg);
 			}
 			
@@ -309,6 +311,7 @@ public class AnalizadorLexico {
 		this.accionesSemanticas.put(AccionSemantica.AS_TOKEN_COMPARADOR_COMPUESTO, new ASReconocerToken(this, TipoToken.COMPARADOR, new ASComparador(true)));
 		this.accionesSemanticas.put(AccionSemantica.AS_TOKEN_CADENA_CARACTERES, new ASReconocerToken(this, TipoToken.CADENA_CARACTERES, new ASCadenaCaracteres()));
 		this.accionesSemanticas.put(AccionSemantica.AS_TOKEN_PALABRA_RESERVADA, new ASReconocerToken(this, TipoToken.PALABRA_RESERVADA, new ASValidarPalabraReservada()));
+		this.accionesSemanticas.put(AccionSemantica.AS_TOKEN_OTRO, new ASReconocerToken(this, TipoToken.OTRO, new ASTokenOtro()));
 		
 	}
 	
@@ -324,22 +327,36 @@ public class AnalizadorLexico {
 		
 		//ESTADO 0
 		for (int fila : listaFilas) {
-			if (fila == 1)
-				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_ERROR); 
-			else
-				if (Arrays.asList(7,8,9,10).contains(fila))
-					matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_OPERADOR_ARITMETICO);
-				else
-					if (fila == 12)
-						matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_COMPARADOR_SIMPLE);
-					else
-						if (Arrays.asList(13,14,15).contains(fila))
-							matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_INICIALIZAR_LEXEMA);
-						else
-							if (Arrays.asList(22,23,24,25).contains(fila))
-								matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_DESCARTAR_TOKEN);
-							else
-								matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_INICIALIZAR_LEXEMA);
+			switch (fila) {
+			case 1:
+				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_ERROR);
+				break;
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_OPERADOR_ARITMETICO);
+				break;
+			case 12:
+				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_COMPARADOR_SIMPLE);
+				break;
+			case 13:
+			case 14:
+			case 15:
+				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_INICIALIZAR_LEXEMA);
+				break;
+			case 22:
+			case 23:
+			case 24:
+				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_DESCARTAR_TOKEN);
+				break;
+			case 25:
+				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_OTRO);
+				break;
+			default:
+				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_INICIALIZAR_LEXEMA);
+				break;
+			}
 		}
 		
 		//ESTADO 1

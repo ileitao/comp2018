@@ -27,26 +27,30 @@ public class Compilador {
         LectorDeArchivo lector = new LectorDeArchivo(rutaDelArchivo);
         AnalizadorLexico analizadorLexico = new AnalizadorLexico(lector);
         //testLectorArchivos(rutaDelArchivo);
-        testAnalizadorLexico(analizadorLexico);
+//        testAnalizadorLexico(analizadorLexico);
         Parser p = new Parser(analizadorLexico, tablaDeSimbolos);
         p.Run();
     }
 
-    private static void testAnalizadorLexico(AnalizadorLexico analizadorLexico) {
-        Token token = analizadorLexico.getToken();
-	while(token != null) {
-            //System.out.println(token.toString());
-            token = analizadorLexico.getToken();
-	}
+	private static void testAnalizadorLexico(AnalizadorLexico analizadorLexico) {
+
+		Token token = analizadorLexico.getToken();
 		
-	System.out.println("************************************************");
-	System.out.println(analizadorLexico.getTiraTokens());
-	System.out.println("************************************************");
-	analizadorLexico.getLogger().imprimir();
-	System.out.println("************************************************");
-	analizadorLexico.getTablaSimbolos().imprimirTablaDeSimbolos();
-	System.out.println("************************************************");
-    }
+		while(token != null) {
+//			System.out.println(token.toString());
+			token = analizadorLexico.getToken();
+		}
+		
+		System.out.println("************************************************");
+		System.out.println(analizadorLexico.getTiraTokens());
+		System.out.println("Cant. Tokens detectados: " + analizadorLexico.getTiraTokens().size());
+		System.out.println("************************************************");
+		analizadorLexico.getLogger().imprimir();
+		System.out.println("************************************************");
+		analizadorLexico.getTablaSimbolos().imprimirTablaDeSimbolos();
+		System.out.println("************************************************");
+		
+	}
 
     private static void testLectorArchivos(LectorDeArchivo lector) throws IOException {
 	//// Probando que lector de archivos funciona correctamente

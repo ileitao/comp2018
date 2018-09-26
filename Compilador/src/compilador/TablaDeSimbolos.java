@@ -2,6 +2,8 @@ package compilador;
 
 import java.util.HashMap;
 
+import compilador.analizadorsintactico.Parser;
+
 /**
  * Clase TablaDeSimbolos
  * 
@@ -14,14 +16,13 @@ import java.util.HashMap;
  */
 public class TablaDeSimbolos {
 
-	public static int nextTokenId = 1;
+	public static int nextTokenId = 300;
 	
     private HashMap<String, RegTablaSimbolos> tablaDeSimbolos;
     
     public TablaDeSimbolos() {
         this.tablaDeSimbolos = new HashMap<String, RegTablaSimbolos>();
         cargarPalabrasReservadas();
-        nextTokenId = 257;
     }
     
     public HashMap<String, RegTablaSimbolos> getTablaDeSimbolos() {
@@ -46,92 +47,99 @@ public class TablaDeSimbolos {
     private void cargarPalabrasReservadas() {
     	RegTablaSimbolos reg;
     	
-    	reg = crearRegTabla("if", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._IF, "if", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("else", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._ELSE, "else", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("endif", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._ENDIF, "endif", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("print", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._PRINT, "print", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("usinteger", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._USINTEGER, "usinteger", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("single", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._SINGLE, "single", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("for", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._FOR, "for", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("void", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._VOID, "void", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("fun", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._FUN, "fun", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("return", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._RETURN, "return", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("+", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._PLUS, "+", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("-", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._MINUS, "-", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("*", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._MULT, "*", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("/", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._DIV, "/", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla(":=", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._ASSIGN, ":=", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla(">=", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._GREATER_OR_EQUAL, ">=", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("<=", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._LESSER_OR_EQUAL, "<=", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla(">", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._GREATER, ">", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);	
     	
-    	reg = crearRegTabla("<", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._LESSER, "<", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("=", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._EQUAL, "=", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("!=", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._UNEQUAL, "!=", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("(", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._LPAREN, "(", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla(")", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._RPAREN, ")", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("{", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._LCBRACE, "{", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("}", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._RCBRACE, "}", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla(",", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._COMMA, ",", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla(";", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = registrarNuevoToken(Parser._SEMICOLON, ";", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     }
     
-    public RegTablaSimbolos crearRegTabla(String lexemaToken, TipoToken tipoToken, int linea, int posicion) {
+    /**
+     * Metodo publico para registrar nuevos tokens con el ID consecutivo privado.
+     */
+    public RegTablaSimbolos createRegTabla(String lexemaToken, TipoToken tipoToken, int linea, int posicion) {
+    	
+    	return registrarNuevoToken(getNextTokenId(), lexemaToken, tipoToken, linea, posicion);
+    }
+    
+    private RegTablaSimbolos registrarNuevoToken(long idToken, String lexemaToken, TipoToken tipoToken, int linea, int posicion) {
     	
     	Token token = new Token(lexemaToken, getNextTokenId());
-    	
     	return new RegTablaSimbolos(token, tipoToken, linea, posicion);
     }
     
