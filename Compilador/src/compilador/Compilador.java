@@ -27,26 +27,29 @@ public class Compilador {
         LectorDeArchivo lector = new LectorDeArchivo(rutaDelArchivo);
         AnalizadorLexico analizadorLexico = new AnalizadorLexico(lector);
         //testLectorArchivos(rutaDelArchivo);
-        //testAnalizadorLexico(analizadorLexico);
+        testAnalizadorLexico(analizadorLexico);
         Parser p = new Parser(analizadorLexico, tablaDeSimbolos);
         p.Run();
     }
 
     private static void testAnalizadorLexico(AnalizadorLexico analizadorLexico) {
         Token token = analizadorLexico.getToken();
-        while(token != null) {
-        //System.out.println(token.toString());
+	while(token != null) {
+            //System.out.println(token.toString());
             token = analizadorLexico.getToken();
-        }
-
-        analizadorLexico.getLogger().imprimir();
-        System.out.println("************************************************");
-
-        analizadorLexico.getTablaSimbolos().imprimirTablaDeSimbolos();		
+	}
+		
+	System.out.println("************************************************");
+	System.out.println(analizadorLexico.getTiraTokens());
+	System.out.println("************************************************");
+	analizadorLexico.getLogger().imprimir();
+	System.out.println("************************************************");
+	analizadorLexico.getTablaSimbolos().imprimirTablaDeSimbolos();
+	System.out.println("************************************************");
     }
 
     private static void testLectorArchivos(LectorDeArchivo lector) throws IOException {
-        // Probando que lector de archivos funciona correctamente
+	//// Probando que lector de archivos funciona correctamente
         System.out.println(lector.getLineaActual());
         lector.leerLinea();
         System.out.println(lector.getLineaActual());
@@ -54,7 +57,7 @@ public class Compilador {
         for (int i = 0; i < 50; i++) {
             lector.leerChar();
         }
-
+        
         lector.retrocederPuntero();
         lector.retrocederPuntero();
         lector.retrocederPuntero();
@@ -62,6 +65,9 @@ public class Compilador {
         lector.retrocederPuntero();
         //lector.retrocederPuntero();
         System.out.println(lector.getLineaActual());
-        System.out.println(lector.leerChar());		
+        System.out.println(lector.leerChar());
+        //// TablaDeSimbolos tablaDeSimbolos = new TablaDeSimbolos();
+        //// LectorDeArchivo lectorDeArchivo = new LectorDeArchivo(rutaDelAchivo);
+        //// AnalizadorLexico analizadorLexico = new AnalizadorLexico(lectorDeArchivo, tablaDeSimbolos);
     }
 }

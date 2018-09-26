@@ -1,1 +1,1 @@
-usinteger_var1 := 1,
+usinteger _var1 := 1_ui,

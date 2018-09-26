@@ -46,8 +46,17 @@ public class TablaDeSimbolos {
     private void cargarPalabrasReservadas() {
     	RegTablaSimbolos reg;
     	
-//    	reg = crearRegTabla("if", TipoToken.PALABRA_RESERVADA, 0, 0);
-//    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	reg = crearRegTabla("if", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("else", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("endif", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("print", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
     	reg = crearRegTabla("usinteger", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
@@ -64,7 +73,58 @@ public class TablaDeSimbolos {
     	reg = crearRegTabla("fun", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     	
-    	reg = crearRegTabla("return	", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	reg = crearRegTabla("return", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("+", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("-", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("*", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("/", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla(":=", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla(">=", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("<=", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla(">", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);	
+    	
+    	reg = crearRegTabla("<", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("=", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("!=", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("(", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla(")", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("{", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla("}", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla(",", TipoToken.PALABRA_RESERVADA, 0, 0);
+    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
+    	
+    	reg = crearRegTabla(";", TipoToken.PALABRA_RESERVADA, 0, 0);
     	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     }
     
