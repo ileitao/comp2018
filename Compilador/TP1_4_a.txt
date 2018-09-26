@@ -1,0 +1,8 @@
+_IDmenorLongitud
+_EsteEsUnIdentificadorQueSuperaCantCaracteres
+_HayOtroIdentificadorLargo
+
+#Se espera que el compilador reconozca 3 identificadores.
+El primero es valido, mientras que el segundo supera la longitud maxima por varios caracteres.
+El tercer identificador se excede solo por 1 caracter.
+Se debe setear un error indicando el motivo del mismo.#

@@ -139,7 +139,7 @@ public class TablaDeSimbolos {
     
     private RegTablaSimbolos registrarNuevoToken(long idToken, String lexemaToken, TipoToken tipoToken, int linea, int posicion) {
     	
-    	Token token = new Token(lexemaToken, getNextTokenId());
+    	Token token = new Token(lexemaToken, idToken);
     	return new RegTablaSimbolos(token, tipoToken, linea, posicion);
     }
     

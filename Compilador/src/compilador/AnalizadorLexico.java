@@ -199,7 +199,7 @@ public class AnalizadorLexico {
 
 			System.out.println(this.getLexemaParcial());
 			
-			int posicionToken = lector.getPuntero();
+			int posicionToken = lector.getPuntero() - this.lexemaParcial.length();
 			int lineaToken = lector.getNroLinea();
 
 			RegTablaSimbolos reg = tablaSimbolos.getRegistro(this.lexemaParcial.toString());

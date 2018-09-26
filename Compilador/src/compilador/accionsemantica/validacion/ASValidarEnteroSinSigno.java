@@ -33,6 +33,7 @@ public class ASValidarEnteroSinSigno implements Validable {
 		//En caso de estar fuera del rango se utiliza la tecnica de reemplazo con el maximo valor permitido.
 		//Se setea un warning.
 		String numero = aLexico.getLexemaParcial().toString();
+		numero = numero.substring(0, numero.length()-2);
 		int linea = aLexico.getLineaActual();
 		
 		aLexico.getLogger().log(new EventoLog("Se ha truncado la constante " + numero

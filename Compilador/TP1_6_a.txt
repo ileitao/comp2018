@@ -1,0 +1,3 @@
+IDmenosDe25
+
+#Se espera que el compilador encuentre errores al intentar leer un identificar mal formado.#

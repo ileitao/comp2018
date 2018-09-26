@@ -27,9 +27,9 @@ public class Compilador {
         LectorDeArchivo lector = new LectorDeArchivo(rutaDelArchivo);
         AnalizadorLexico analizadorLexico = new AnalizadorLexico(lector);
         //testLectorArchivos(rutaDelArchivo);
-//        testAnalizadorLexico(analizadorLexico);
-        Parser p = new Parser(analizadorLexico, tablaDeSimbolos);
-        p.Run();
+        testAnalizadorLexico(analizadorLexico);
+//        Parser p = new Parser(analizadorLexico, tablaDeSimbolos);
+//        p.Run();
     }
 
 	private static void testAnalizadorLexico(AnalizadorLexico analizadorLexico) {

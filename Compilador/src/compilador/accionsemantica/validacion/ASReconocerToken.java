@@ -5,9 +5,6 @@ import compilador.TipoToken;
 import compilador.accionsemantica.AccionSemantica;
 
 public class ASReconocerToken extends AccionSemantica {
-
-	//Estado resultante de la verificacion, el cual será seteado por cada clase concreta que extienda de esta clase.
-	protected int estadoVerificacion;
 	
 	//Tipo de token reconocido. Es seteado por la clase que extiende.
 	protected TipoToken tipotoken;

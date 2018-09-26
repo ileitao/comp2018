@@ -36,11 +36,11 @@ public class ASValidarFlotante implements Validable {
 			exp = lexema[1];
 			
 		//Se valida MIN
-		if (Float.parseFloat(mantisa) < MANTISA_MIN && Float.parseFloat(exp) < EXP_MIN)
+		if (Float.parseFloat(mantisa) <= MANTISA_MIN && Float.parseFloat(exp) <= EXP_MIN)
 			return false;
 		
 		//Se valida MAX
-		if (Float.parseFloat(mantisa) > MANTISA_MAX && Float.parseFloat(exp) > EXP_MAX)
+		if (Float.parseFloat(mantisa) >= MANTISA_MAX && Float.parseFloat(exp) >= EXP_MAX)
 			return false;
 		
 		//Se encuentra dentro del rango permitido
