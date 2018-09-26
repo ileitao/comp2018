@@ -18,17 +18,13 @@ package compilador.analizadorsintactico;
 
 
 //#line 3 "Gramatica.y"
-
 import java.io.IOException;
 import compilador.AnalizadorLexico;
 import compilador.TablaDeSimbolos;
 import compilador.Token;
 import compilador.log.Logger;
 import compilador.log.EventoLog;
-/**
- * Los imports van acá
- */
-//#line 29 "Parser.java"
+//#line 24 "Parser.java"
 
 
 
@@ -195,7 +191,6 @@ public final static short _RCBRACE=282;
 public final static short _COMMA=283;
 public final static short _SEMICOLON=284;
 public final static short _QUOTE=285;
-public final static short _HASH=286;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
     0,    1,    2,    2,    3,    3,
@@ -234,7 +229,7 @@ yycheck = new short[] {                        261,
 };
 }
 final static short YYFINAL=3;
-final static short YYMAXTOKEN=286;
+final static short YYMAXTOKEN=285;
 final static String yyname[] = {
 "end-of-file",null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
@@ -256,7 +251,7 @@ null,null,null,"_IF","_ELSE","_ENDIF","_PRINT","_USINTEGER","_SINGLE","_FOR",
 "_VOID","_FUN","_RETURN","_IDENTIFIER","_PLUS","_MINUS","_MULT","_DIV",
 "_ASSIGN","_EQUAL","_LESSER","_LESSER_OR_EQUAL","_GREATER","_GREATER_OR_EQUAL",
 "_UNEQUAL","_LPAREN","_RPAREN","_LCBRACE","_RCBRACE","_COMMA","_SEMICOLON",
-"_QUOTE","_HASH",
+"_QUOTE",
 };
 final static String yyrule[] = {
 "$accept : programa",
@@ -270,7 +265,7 @@ final static String yyrule[] = {
 
 //#line 73 "Gramatica.y"
 
-/*** 3-CODE ***/
+/*** 4-CODE ***/
 AnalizadorLexico analizadorLexico;
 TablaDeSimbolos tablaDeSimbolos;
 Logger logger;
@@ -280,6 +275,7 @@ Token tokenActual;
 
 public void notify(String msg)
 {
+	System.out.println(msg);
 	//this.syntaxLog.addLog(msg, lexAnalyzer.getLineNumber());
 }
 
@@ -307,7 +303,7 @@ public int yylex() throws IOException
 {
 	this.tokenActual = analizadorLexico.getToken();
 	//tokenfy(this.tokenActual.toString(), this.tokenActual.getLine());
-	//yylval = new SymbolItem(this.tokenActual);
+	// yylval = new SymbolItem(this.tokenActual);
 	return 0;
 	//return this.tokenActual.getCode();
 }
@@ -323,7 +319,7 @@ public void Run() throws IOException
 {
   yyparse();
 }
-//#line 255 "Parser.java"
+//#line 250 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -478,6 +474,13 @@ boolean doaction;
     switch(yyn)
       {
 //########## USER-SUPPLIED ACTIONS ##########
+case 1:
+//#line 39 "Gramatica.y"
+{
+		notify("programa válido ");
+	}
+break;
+//#line 405 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

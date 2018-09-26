@@ -31,13 +31,13 @@ public class LectorDeArchivo {
 	private String rutaDelArchivo;
 
 	public LectorDeArchivo(String archivo) {
-		try {
-			this.rutaDelArchivo = archivo;
-			inicializar();
-			System.out.println("Archivo abierto exitosamente.");
-		} catch (IOException exc) {
-			System.out.println("Archivo o ruta de archivo incorrecta.");
-		}
+            try {
+                this.rutaDelArchivo = archivo;
+                inicializar();
+                //System.out.println("Archivo abierto exitosamente.");
+            } catch (IOException exc) {
+                //System.out.println("Archivo o ruta de archivo incorrecta.");
+            }
 	}
 
 	/**
@@ -46,14 +46,14 @@ public class LectorDeArchivo {
 	 * nroLinea
 	 */
 	public void leerLinea() {
-		try {
-			this.lineaAnterior = this.lineaActual;
-			this.lineaActual = this.in.readLine();
-			this.nroLinea++;
-		} catch (IOException exc) {
-			System.out.println("No se pudo leer la linea del archivo.");
-			System.out.println("Ultima linea :" + this.lineaActual + " en linea nro: " + this.nroLinea);
-		}
+            try {
+                this.lineaAnterior = this.lineaActual;
+                this.lineaActual = this.in.readLine();
+                this.nroLinea++;
+            } catch (IOException exc) {
+                System.out.println("No se pudo leer la linea del archivo.");
+                System.out.println("Ultima linea :" + this.lineaActual + " en linea nro: " + this.nroLinea);
+            }
 	}
 
 	/**
@@ -64,35 +64,35 @@ public class LectorDeArchivo {
 	 * @throws IOException
 	 */
 	public Character leerChar() {
-		Character charLeido = ' ';
-		//// Tengo una linea para leer
-		if (this.lineaActual != null) {
-			//// El puntero superó el largo de la linea leída
-			if (this.puntero > this.lineaActual.length()) {
-				//// Leo una linea nueva
-				this.leerLinea();
-				//// Reinicio el puntero a la primer posición
-				this.puntero = 0;
-				//// Pido el primer caracter recursivamente
-				return this.leerChar();
-			} else if (this.puntero == this.lineaActual.length()) {
-				// En caso de llegar al final de la linea se debe retornan el caracter de salto
-				// de linea.
-				charLeido = Character.DIRECTIONALITY_PARAGRAPH_SEPARATOR;
-			} else {
-				// Capturo el siguiente char.
-				charLeido = this.lineaActual.charAt(puntero);
-//				System.out.println("Caracter Parcial: " + charLeido + " en nro linea: " + this.nroLinea
-//						+ " puntero en posicion " + this.puntero);
-			}
+            Character charLeido = ' ';
+            //// Tengo una linea para leer
+            if (this.lineaActual != null) {
+                //// El puntero superó el largo de la linea leída
+                if (this.puntero > this.lineaActual.length()) {
+                    //// Leo una linea nueva
+                    this.leerLinea();
+                    //// Reinicio el puntero a la primer posición
+                    this.puntero = 0;
+                    //// Pido el primer caracter recursivamente
+                    return this.leerChar();
+                } else if (this.puntero == this.lineaActual.length()) {
+                    // En caso de llegar al final de la linea se debe retornan el caracter de salto
+                    // de linea.
+                    charLeido = Character.DIRECTIONALITY_PARAGRAPH_SEPARATOR;
+                } else {
+                    // Capturo el siguiente char.
+                    charLeido = this.lineaActual.charAt(puntero);
+                    //System.out.println("Caracter Parcial: " + charLeido + " en nro linea: " + this.nroLinea
+                    // + " puntero en posicion " + this.puntero);
+                }
 
-			this.puntero++;
-		} else {
-			//// Fin del archivo = devolver caracter simbolico para avanzar al ultimo estado
-			return '$';
-		}
+                this.puntero++;
+            } else {
+                //// Fin del archivo = devolver caracter simbolico para avanzar al ultimo estado
+                return '$';
+            }
 
-		return charLeido;
+            return charLeido;
 	}
 
 	/**

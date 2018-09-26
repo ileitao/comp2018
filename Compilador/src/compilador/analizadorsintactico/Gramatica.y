@@ -6,9 +6,6 @@ import compilador.TablaDeSimbolos;
 import compilador.Token;
 import compilador.log.Logger;
 import compilador.log.EventoLog;
-/**
- * Los imports van acá
- */
 %}
 
 /*** 2-YACC DECLARATIONS ***/
@@ -25,8 +22,8 @@ import compilador.log.EventoLog;
 /* COMPARATORS [ = < <= > >= != ] */
 %token _EQUAL _LESSER _LESSER_OR_EQUAL _GREATER _GREATER_OR_EQUAL _UNEQUAL
 
-/* OTHERS [ ( ) { } , ; ' # ] */
-%token _LPAREN _RPAREN _LCBRACE _RCBRACE _COMMA _SEMICOLON _QUOTE _HASH
+/* OTHERS [ ( ) { } , ; ' ] */
+%token _LPAREN _RPAREN _LCBRACE _RCBRACE _COMMA _SEMICOLON _QUOTE
 
 %right _PLUS _MINUS
 %right _MULT _DIV
@@ -35,8 +32,13 @@ import compilador.log.EventoLog;
 %start programa
 %%
 
+/*** 3-GRAMMAR FOLLOWS ***/
+
 programa :
 	sentencias_de_declaracion_de_variables
+	{
+		notify("programa válido");
+	}
 	;
 
 /**
@@ -53,6 +55,9 @@ sentencias_de_declaracion_de_variables :
  */
 tipo :
 	_USINTEGER
+	{
+		notify("usinteger");
+	}
 	|
 	_SINGLE
 	;
@@ -62,14 +67,72 @@ tipo :
  * Las variables se separan con ";"
  */
 lista_de_variables:
-	_IDENTIFIER
+  asignacion
 	|
-	lista_de_variables _SEMICOLON _IDENTIFIER
+	lista_de_variables _SEMICOLON asignacion
+	;
+
+asignacion:
+  _IDENTIFIER _ASSIGN expresion
+  ;
+
+/**
+ * Expresión
+ * Aritmética, variable o constante
+ */
+expresion :
+	expresion _PLUS termino
+	|
+	expresion _MINUS termino
+	|
+	termino
+	;
+
+/**
+ * Término
+ * Aritmética, variable o constante
+ */
+termino :
+	termino _MULT factor
+	|
+	termino _DIV factor
+	|
+	factor
+	;
+
+/**
+ * Factor
+ * Aritmética, variable o constante
+ */
+factor :
+	_ID
+	{
+		$$ = $1;
+	}
+	|
+	constante
+	{
+		$$ = $1;
+	}
+
+/**
+ * Constante
+ */
+constante :
+	_UINT
+	{
+		this.currentType = SymbolItem.symbolType.UINT;
+	}
+	|
+	_DOUBLE
+	{
+		this.currentType = SymbolItem.symbolType.DOUBLE;
+	}
 	;
 
 %%
 
-/*** 3-CODE ***/
+/*** 4-CODE ***/
 AnalizadorLexico analizadorLexico;
 TablaDeSimbolos tablaDeSimbolos;
 Logger logger;
@@ -79,6 +142,7 @@ Token tokenActual;
 
 public void notify(String msg)
 {
+	System.out.println(msg);
 	//this.syntaxLog.addLog(msg, lexAnalyzer.getLineNumber());
 }
 
