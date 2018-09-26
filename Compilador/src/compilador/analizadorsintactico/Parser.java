@@ -20,11 +20,14 @@ package compilador.analizadorsintactico;
 //#line 3 "Gramatica.y"
 import java.io.IOException;
 import compilador.AnalizadorLexico;
+import compilador.RegTablaSimbolos;
 import compilador.TablaDeSimbolos;
+import compilador.TipoToken;
 import compilador.Token;
 import compilador.log.Logger;
 import compilador.log.EventoLog;
-//#line 24 "Parser.java"
+import static java.lang.Math.toIntExact;
+//#line 27 "Parser.java"
 
 
 
@@ -193,16 +196,18 @@ public final static short _SEMICOLON=284;
 public final static short _QUOTE=285;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
-    0,    1,    2,    2,    3,    3,
+    0,    1,    2,    2,    3,    3,    4,    5,    5,    5,
+    6,    6,    6,    7,    8,    8,
 };
 final static short yylen[] = {                            2,
-    1,    3,    1,    1,    1,    3,
+    1,    3,    1,    1,    1,    3,    3,    3,    3,    1,
+    3,    3,    1,    1,    1,    1,
 };
 final static short yydefred[] = {                         0,
     3,    4,    0,    1,    0,    5,    0,    2,    0,    6,
 };
 final static short yydgoto[] = {                          3,
-    4,    5,    7,
+    4,    5,    7,    0,    0,    0,    0,    0,
 };
 final static short yysindex[] = {                      -261,
     0,    0,    0,    0, -263,    0, -281,    0, -262,    0,
@@ -211,7 +216,7 @@ final static short yyrindex[] = {                         0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 };
 final static short yygindex[] = {                         0,
-    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,
 };
 final static int YYTABLESIZE=5;
 static short yytable[];
@@ -261,16 +266,26 @@ final static String yyrule[] = {
 "tipo : _SINGLE",
 "lista_de_variables : _IDENTIFIER",
 "lista_de_variables : lista_de_variables _SEMICOLON _IDENTIFIER",
+"asignacion : _IDENTIFIER _ASSIGN expresion",
+"expresion : expresion _PLUS termino",
+"expresion : expresion _MINUS termino",
+"expresion : termino",
+"termino : termino _MULT factor",
+"termino : termino _DIV factor",
+"termino : factor",
+"factor : constante",
+"constante : _USINTEGER",
+"constante : _SINGLE",
 };
 
-//#line 73 "Gramatica.y"
+//#line 156 "Gramatica.y"
 
 /*** 4-CODE ***/
 AnalizadorLexico analizadorLexico;
 TablaDeSimbolos tablaDeSimbolos;
 Logger logger;
 Token tokenActual;
-//SymbolItem.symbolType currentType;
+TipoToken tipoActual;
 //int currentLine;
 
 public void notify(String msg)
@@ -303,9 +318,13 @@ public int yylex() throws IOException
 {
 	this.tokenActual = analizadorLexico.getToken();
 	//tokenfy(this.tokenActual.toString(), this.tokenActual.getLine());
-	// yylval = new SymbolItem(this.tokenActual);
-	return 0;
-	//return this.tokenActual.getCode();
+	//yylval = this.tablaDeSimbolos.createRegTabla(this.tokenActual.toString(), this.tipoToken, lineaToken, posicionToken);
+	if (this.tokenActual.getId() == -1)
+	{
+		return 0;
+	}
+
+	return toIntExact(this.tokenActual.getId());
 }
 
 public Parser(AnalizadorLexico analizadorLexico, TablaDeSimbolos tablaDeSimbolos)
@@ -319,7 +338,7 @@ public void Run() throws IOException
 {
   yyparse();
 }
-//#line 250 "Parser.java"
+//#line 269 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -475,12 +494,66 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 39 "Gramatica.y"
+//#line 42 "Gramatica.y"
 {
-		notify("programa válido ");
+		notify("programa válido");
 	}
 break;
-//#line 405 "Parser.java"
+case 3:
+//#line 61 "Gramatica.y"
+{
+		this.tipoActual = TipoToken.CONSTANTE_ENTERO_SIN_SIGNO;
+		notify("usinteger");
+
+	}
+break;
+case 4:
+//#line 68 "Gramatica.y"
+{
+		this.tipoActual = TipoToken.CONSTANTE_FLOTANTE;
+		notify("single");
+	}
+break;
+case 5:
+//#line 80 "Gramatica.y"
+{
+		notify("asignacion");
+		this.tipoActual = TipoToken.IDENTIFICADOR;
+		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro(val_peek(0).toString());
+		if (reg == null) {
+			reg = this.tablaDeSimbolos.createRegTabla(val_peek(0).toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
+			this.tablaDeSimbolos.agregarSimbolo(reg);
+		}
+	}
+break;
+case 6:
+//#line 91 "Gramatica.y"
+{
+		notify("asignacion");
+		this.tipoActual = TipoToken.IDENTIFICADOR;
+		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro(val_peek(0).toString());
+		if (reg == null) {
+			reg = this.tablaDeSimbolos.createRegTabla(val_peek(0).toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
+			this.tablaDeSimbolos.agregarSimbolo(reg);
+		}
+	}
+break;
+case 7:
+//#line 104 "Gramatica.y"
+{
+		notify(val_peek(2).toString());
+		notify(val_peek(1).toString());
+		notify(val_peek(0).toString());
+	}
+break;
+case 14:
+//#line 141 "Gramatica.y"
+{
+		yyval = val_peek(0);
+		notify(val_peek(0).toString());
+	}
+break;
+//#line 478 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

@@ -2,10 +2,13 @@
 %{
 import java.io.IOException;
 import compilador.AnalizadorLexico;
+import compilador.RegTablaSimbolos;
 import compilador.TablaDeSimbolos;
+import compilador.TipoToken;
 import compilador.Token;
 import compilador.log.Logger;
 import compilador.log.EventoLog;
+import static java.lang.Math.toIntExact;
 %}
 
 /*** 2-YACC DECLARATIONS ***/
@@ -56,10 +59,16 @@ sentencias_de_declaracion_de_variables :
 tipo :
 	_USINTEGER
 	{
+		this.tipoActual = TipoToken.CONSTANTE_ENTERO_SIN_SIGNO;
 		notify("usinteger");
+
 	}
 	|
 	_SINGLE
+	{
+		this.tipoActual = TipoToken.CONSTANTE_FLOTANTE;
+		notify("single");
+	}
 	;
 
 /**
@@ -67,14 +76,37 @@ tipo :
  * Las variables se separan con ";"
  */
 lista_de_variables:
-  asignacion
+  _IDENTIFIER
+  {
+		notify("asignacion");
+		this.tipoActual = TipoToken.IDENTIFICADOR;
+		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro($1.toString());
+		if (reg == null) {
+			reg = this.tablaDeSimbolos.createRegTabla($1.toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
+			this.tablaDeSimbolos.agregarSimbolo(reg);
+		}
+	}
 	|
-	lista_de_variables _SEMICOLON asignacion
+	lista_de_variables _SEMICOLON _IDENTIFIER
+	{
+		notify("asignacion");
+		this.tipoActual = TipoToken.IDENTIFICADOR;
+		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro($3.toString());
+		if (reg == null) {
+			reg = this.tablaDeSimbolos.createRegTabla($3.toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
+			this.tablaDeSimbolos.agregarSimbolo(reg);
+		}
+	}
 	;
 
 asignacion:
   _IDENTIFIER _ASSIGN expresion
-  ;
+  {
+		notify($1.toString());
+		notify($2.toString());
+		notify($3.toString());
+	}
+ ;
 
 /**
  * Expresión
@@ -105,29 +137,19 @@ termino :
  * Aritmética, variable o constante
  */
 factor :
-	_ID
-	{
-		$$ = $1;
-	}
-	|
 	constante
 	{
 		$$ = $1;
+		notify($1.toString());
 	}
 
 /**
  * Constante
  */
 constante :
-	_UINT
-	{
-		this.currentType = SymbolItem.symbolType.UINT;
-	}
+	_USINTEGER
 	|
-	_DOUBLE
-	{
-		this.currentType = SymbolItem.symbolType.DOUBLE;
-	}
+	_SINGLE
 	;
 
 %%
@@ -137,7 +159,7 @@ AnalizadorLexico analizadorLexico;
 TablaDeSimbolos tablaDeSimbolos;
 Logger logger;
 Token tokenActual;
-//SymbolItem.symbolType currentType;
+TipoToken tipoActual;
 //int currentLine;
 
 public void notify(String msg)
@@ -170,9 +192,13 @@ public int yylex() throws IOException
 {
 	this.tokenActual = analizadorLexico.getToken();
 	//tokenfy(this.tokenActual.toString(), this.tokenActual.getLine());
-	// yylval = new SymbolItem(this.tokenActual);
-	return 0;
-	//return this.tokenActual.getCode();
+	//yylval = this.tablaDeSimbolos.createRegTabla(this.tokenActual.toString(), this.tipoToken, lineaToken, posicionToken);
+	if (this.tokenActual.getId() == -1)
+	{
+		return 0;
+	}
+
+	return toIntExact(this.tokenActual.getId());
 }
 
 public Parser(AnalizadorLexico analizadorLexico, TablaDeSimbolos tablaDeSimbolos)
