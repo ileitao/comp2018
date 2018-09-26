@@ -1,8 +1,8 @@
 usinteger _i := 123_ui,
 
-if ( _var1 > 10 )
+if (_var1 > 10_ui)
 
-	_i := _i * 2,
+	_i := _i * 2_ui,
 
 endif
 
@@ -10,10 +10,15 @@ endif
 
 	2.
 
+#ashdnksfdklf,sa
+
+sdlfsdf
+#
+
 	6.2F3
 	
 print('este * esta dentro de un comentario con un + en una sola linea'),
 
-single _myfloat := 7.1F-2,
+single _myfloat := 987654321.1F40,
  
 single _MYFLOAT := _myfloat + 1.2F1 - 2.,

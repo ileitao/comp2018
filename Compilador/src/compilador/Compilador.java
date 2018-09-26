@@ -38,6 +38,7 @@ public class Compilador {
 		
 		System.out.println("************************************************");
 		System.out.println(analizadorLexico.getTiraTokens());
+		System.out.println("Cant. Tokens detectados: " + analizadorLexico.getTiraTokens().size());
 		System.out.println("************************************************");
 		analizadorLexico.getLogger().imprimir();
 		System.out.println("************************************************");

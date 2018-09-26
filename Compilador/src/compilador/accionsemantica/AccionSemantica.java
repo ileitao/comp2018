@@ -34,6 +34,7 @@ public abstract class AccionSemantica {
 	
 	public static final int AS_TOKEN_CADENA_CARACTERES = 11;
 	
+	public static final int AS_TOKEN_OTRO = 12;
 
 	
 	public static final int AS_DESCARTAR_TOKEN = 18;
