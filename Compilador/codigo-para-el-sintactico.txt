@@ -1,0 +1,1 @@
+usinteger_var1 := 1,
