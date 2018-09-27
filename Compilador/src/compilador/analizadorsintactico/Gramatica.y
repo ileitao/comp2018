@@ -26,7 +26,7 @@ import static java.lang.Math.toIntExact;
 %token _EQUAL _LESSER _LESSER_OR_EQUAL _GREATER _GREATER_OR_EQUAL _UNEQUAL
 
 /* OTHERS [ ( ) { } , ; ' ] */
-%token _LPAREN _RPAREN _LCBRACE _RCBRACE _COMMA _SEMICOLON _QUOTE _IDENTIFIER
+%token _LPAREN _RPAREN _LCBRACE _RCBRACE _COMMA _SEMICOLON _QUOTE _IDENTIFIER _CONSTANT
 
 %right _PLUS _MINUS
 %right _MULT _DIV
@@ -44,6 +44,7 @@ import static java.lang.Math.toIntExact;
 programa :
 	bloque_declarativo bloque { notify("Compilación terminada.");	}
 	|	bloque_declarativo { notify("Compilación terminada.");	}
+	| bloque { notify("Compilación terminada."); }
 	;
 
 /**
@@ -51,7 +52,8 @@ programa :
  * Tira de sentencias declarativas
  */
 bloque_declarativo :
-  sentencias_de_declaracion_de_variables
+  bloque_declarativo sentencias_de_declaracion_de_variables
+	|	sentencias_de_declaracion_de_variables
   ;
 
 /**
@@ -59,7 +61,7 @@ bloque_declarativo :
  * Sentencias ejecutables
  */
 bloque :
-	bloque_declarativo bloque
+	bloque sentencia
 	|	sentencia
 	;
 
@@ -68,7 +70,7 @@ bloque :
  *
  */
 sentencia :
-	seleccion {	notify("Sentencia IF " + this.lineaActual + ".");	}
+	seleccion {	notify("Sentencia IF en línea " + this.lineaActual + ".");	}
 	;
 
 /**
@@ -85,8 +87,7 @@ seleccion :
  * @TODO Agregar while
  */
 bloque_de_seleccion :
-	| asignacion
-	| bloque
+	asignacion
 	;
 
 /**
@@ -179,19 +180,11 @@ termino :
  * Aritmética, variable o constante
  */
 factor :
-	constante
+	_CONSTANT
 	{
 		$$ = $1;
 		notify($1.toString());
 	}
-	;
-
-/**
- * Constante
- */
-constante :
-	_USINTEGER
-	|	_SINGLE
 	;
 
 /**
