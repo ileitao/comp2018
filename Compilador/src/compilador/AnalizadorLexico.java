@@ -23,6 +23,7 @@ import compilador.accionsemantica.validacion.ASValidarEnteroSinSigno;
 import compilador.accionsemantica.validacion.ASValidarFlotante;
 import compilador.accionsemantica.validacion.ASValidarIdentificador;
 import compilador.accionsemantica.validacion.ASValidarPalabraReservada;
+import compilador.analizadorsintactico.Parser;
 import compilador.log.Logger;
 
 /**
@@ -141,6 +142,10 @@ public class AnalizadorLexico {
 	public int getLineaActual() {
 		return this.lector.getNroLinea() + 1;
 	}
+        
+        public int getPunteroActual() {
+                return this.lector.getPuntero();
+        }
 
 	public TablaDeSimbolos getTablaSimbolos() {
 		return tablaSimbolos;
@@ -197,7 +202,7 @@ public class AnalizadorLexico {
 		// estado.
 		if (!this.charActual.equals('$')) {
 
-			System.out.println(this.getLexemaParcial());
+			//System.out.println(this.getLexemaParcial());
 			
 			int posicionToken = lector.getPuntero() - this.lexemaParcial.length();
 			int lineaToken = lector.getNroLinea();
