@@ -14,7 +14,7 @@ import static java.lang.Math.toIntExact;
 /*** 2-YACC DECLARATIONS ***/
 
 /* RESERVED KEYS [if else endif print usinteger single for void fun return ]*/
-%token _IF _ELSE _ENDIF _PRINT _USINTEGER _SINGLE _FOR _VOID _FUN _RETURN _IDENTIFIER
+%token _IF _ELSE _ENDIF _PRINT _USINTEGER _SINGLE _FOR _VOID _FUN _RETURN
 
 /* ARITHMETIC OPERATORS [ + - * / ] */
 %token _PLUS _MINUS _MULT _DIV
@@ -26,7 +26,7 @@ import static java.lang.Math.toIntExact;
 %token _EQUAL _LESSER _LESSER_OR_EQUAL _GREATER _GREATER_OR_EQUAL _UNEQUAL
 
 /* OTHERS [ ( ) { } , ; ' ] */
-%token _LPAREN _RPAREN _LCBRACE _RCBRACE _COMMA _SEMICOLON _QUOTE
+%token _LPAREN _RPAREN _LCBRACE _RCBRACE _COMMA _SEMICOLON _QUOTE _IDENTIFIER
 
 %right _PLUS _MINUS
 %right _MULT _DIV
@@ -37,19 +37,72 @@ import static java.lang.Math.toIntExact;
 
 /*** 3-GRAMMAR FOLLOWS ***/
 
+/**
+ * Programa
+ * Conjunto de sentencias declarativas o ejecutables sin delimitador
+ */
 programa :
-	sentencias_de_declaracion_de_variables
-	{
-		notify("programa válido");
-	}
+	bloque_declarativo bloque { notify("Compilación terminada.");	}
+	|	bloque_declarativo { notify("Compilación terminada.");	}
 	;
+
+/**
+ * Bloque_declarativo
+ * Tira de sentencias declarativas
+ */
+bloque_declarativo :
+  sentencias_de_declaracion_de_variables
+  ;
+
+/**
+ * Bloque
+ * Sentencias ejecutables
+ */
+bloque :
+	bloque_declarativo bloque
+	|	sentencia
+	;
+
+/**
+ * Sentencias
+ *
+ */
+sentencia :
+	seleccion {	notify("Sentencia IF " + this.lineaActual + ".");	}
+	;
+
+/**
+ * Selección
+ * if ( <condicion> ) <bloque_de_sentencias> else <bloque_de_sentencias>
+ */
+seleccion :
+	_IF _LPAREN condicion _RPAREN bloque_de_seleccion
+	;
+
+/**
+ * Bloque de selección
+ * Asignaciones, selecciones y sentencias de control
+ * @TODO Agregar while
+ */
+bloque_de_seleccion :
+	| asignacion
+	| bloque
+	;
+
+/**
+ * Condicion
+ * Comparación entre expresiones aritméticas, variables o constantes
+ */
+condicion :
+	expresion comparador expresion
+  ;
 
 /**
  * Sentencias de declaracion de variables
  * <tipo> <lista_de_variables> ","
  */
 sentencias_de_declaracion_de_variables :
-	tipo lista_de_variables _COMMA
+	tipo lista_de_variables _COMMA { notify("Sentencia de declaración de variables en línea " + this.lineaActual + "."); }
 	;
 
 /**
@@ -57,18 +110,8 @@ sentencias_de_declaracion_de_variables :
  * Tipos _USINTEGER Y _SINGLE
  */
 tipo :
-	_USINTEGER
-	{
-		this.tipoActual = TipoToken.CONSTANTE_ENTERO_SIN_SIGNO;
-		notify("usinteger");
-
-	}
-	|
-	_SINGLE
-	{
-		this.tipoActual = TipoToken.CONSTANTE_FLOTANTE;
-		notify("single");
-	}
+	_USINTEGER { this.tipoActual = TipoToken.CONSTANTE_ENTERO_SIN_SIGNO; }
+	|	_SINGLE { this.tipoActual = TipoToken.CONSTANTE_FLOTANTE;	}
 	;
 
 /**
@@ -78,29 +121,32 @@ tipo :
 lista_de_variables:
   _IDENTIFIER
   {
-		notify("asignacion");
-		this.tipoActual = TipoToken.IDENTIFICADOR;
+		notify("Identificador " + $$.sval + ".");
+		/*this.tipoActual = TipoToken.IDENTIFICADOR;
 		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro($1.toString());
 		if (reg == null) {
 			reg = this.tablaDeSimbolos.createRegTabla($1.toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
 			this.tablaDeSimbolos.agregarSimbolo(reg);
-		}
+		}*/
 	}
-	|
-	lista_de_variables _SEMICOLON _IDENTIFIER
+	|	_IDENTIFIER _SEMICOLON lista_de_variables
 	{
-		notify("asignacion");
-		this.tipoActual = TipoToken.IDENTIFICADOR;
+		notify("Identificador " + $$.sval + ".");
+		/*this.tipoActual = TipoToken.IDENTIFICADOR;
 		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro($3.toString());
 		if (reg == null) {
 			reg = this.tablaDeSimbolos.createRegTabla($3.toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
 			this.tablaDeSimbolos.agregarSimbolo(reg);
-		}
+		}*/
 	}
 	;
 
+/**
+ * Asignación
+ * <_IDENTIFIER> := <expresion>
+ */
 asignacion:
-  _IDENTIFIER _ASSIGN expresion
+  _IDENTIFIER _ASSIGN expresion _COMMA
   {
 		notify($1.toString());
 		notify($2.toString());
@@ -114,10 +160,8 @@ asignacion:
  */
 expresion :
 	expresion _PLUS termino
-	|
-	expresion _MINUS termino
-	|
-	termino
+	|	expresion _MINUS termino
+	|	termino
 	;
 
 /**
@@ -126,10 +170,8 @@ expresion :
  */
 termino :
 	termino _MULT factor
-	|
-	termino _DIV factor
-	|
-	factor
+	|	termino _DIV factor
+	|	factor
 	;
 
 /**
@@ -142,14 +184,27 @@ factor :
 		$$ = $1;
 		notify($1.toString());
 	}
+	;
 
 /**
  * Constante
  */
 constante :
 	_USINTEGER
-	|
-	_SINGLE
+	|	_SINGLE
+	;
+
+/**
+ * Comparador
+ * <, >, <=, >=, ==, != >>
+ */
+comparador :
+	_LESSER
+	|	_GREATER
+	|	_LESSER_OR_EQUAL
+	|	_GREATER_OR_EQUAL
+	|	_EQUAL
+	|	_UNEQUAL
 	;
 
 %%
@@ -160,7 +215,7 @@ TablaDeSimbolos tablaDeSimbolos;
 Logger logger;
 Token tokenActual;
 TipoToken tipoActual;
-//int currentLine;
+int lineaActual;
 
 public void notify(String msg)
 {
@@ -191,14 +246,22 @@ public void yyerror(String error, int line)
 public int yylex() throws IOException
 {
 	this.tokenActual = analizadorLexico.getToken();
+	this.lineaActual = analizadorLexico.getLineaActual();
+	//RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro(this.tokenActual.toString());
+	//yylval = reg.getTipo();
 	//tokenfy(this.tokenActual.toString(), this.tokenActual.getLine());
 	//yylval = this.tablaDeSimbolos.createRegTabla(this.tokenActual.toString(), this.tipoToken, lineaToken, posicionToken);
-	if (this.tokenActual.getId() == -1)
+	if (this.tokenActual != null)
 	{
-		return 0;
+		if (this.tokenActual.getId() == -1)
+		{
+			return 0;
+		}
+
+		return toIntExact(this.tokenActual.getId());
 	}
 
-	return toIntExact(this.tokenActual.getId());
+	return 0;
 }
 
 public Parser(AnalizadorLexico analizadorLexico, TablaDeSimbolos tablaDeSimbolos)

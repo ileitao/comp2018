@@ -175,62 +175,94 @@ public final static short _FOR=263;
 public final static short _VOID=264;
 public final static short _FUN=265;
 public final static short _RETURN=266;
-public final static short _IDENTIFIER=267;
-public final static short _PLUS=268;
-public final static short _MINUS=269;
-public final static short _MULT=270;
-public final static short _DIV=271;
-public final static short _ASSIGN=272;
-public final static short _EQUAL=273;
-public final static short _LESSER=274;
-public final static short _LESSER_OR_EQUAL=275;
-public final static short _GREATER=276;
-public final static short _GREATER_OR_EQUAL=277;
-public final static short _UNEQUAL=278;
-public final static short _LPAREN=279;
-public final static short _RPAREN=280;
-public final static short _LCBRACE=281;
-public final static short _RCBRACE=282;
-public final static short _COMMA=283;
-public final static short _SEMICOLON=284;
-public final static short _QUOTE=285;
+public final static short _PLUS=267;
+public final static short _MINUS=268;
+public final static short _MULT=269;
+public final static short _DIV=270;
+public final static short _ASSIGN=271;
+public final static short _EQUAL=272;
+public final static short _LESSER=273;
+public final static short _LESSER_OR_EQUAL=274;
+public final static short _GREATER=275;
+public final static short _GREATER_OR_EQUAL=276;
+public final static short _UNEQUAL=277;
+public final static short _LPAREN=278;
+public final static short _RPAREN=279;
+public final static short _LCBRACE=280;
+public final static short _RCBRACE=281;
+public final static short _COMMA=282;
+public final static short _SEMICOLON=283;
+public final static short _QUOTE=284;
+public final static short _IDENTIFIER=285;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
-    0,    1,    2,    2,    3,    3,    4,    5,    5,    5,
-    6,    6,    6,    7,    8,    8,
+    0,    0,    1,    2,    2,    4,    5,    7,    7,    7,
+    6,    3,   11,   11,   12,   12,    8,    9,    9,    9,
+   13,   13,   13,   14,   15,   15,   10,   10,   10,   10,
+   10,   10,
 };
 final static short yylen[] = {                            2,
-    1,    3,    1,    1,    1,    3,    3,    3,    3,    1,
-    3,    3,    1,    1,    1,    1,
+    2,    1,    1,    2,    1,    1,    5,    0,    1,    1,
+    3,    3,    1,    1,    1,    3,    4,    3,    3,    1,
+    3,    3,    1,    1,    1,    1,    1,    1,    1,    1,
+    1,    1,
 };
 final static short yydefred[] = {                         0,
-    3,    4,    0,    1,    0,    5,    0,    2,    0,    6,
+   13,   14,    0,    0,    3,    0,    0,    0,    1,    5,
+    6,    0,    0,    0,    4,    0,   12,   25,   26,    0,
+    0,    0,   23,   24,   16,    0,    0,    0,   31,   27,
+   29,   28,   30,   32,    0,    0,    0,    0,   10,    7,
+    9,    0,    0,    0,   21,   22,    0,    0,   17,
 };
 final static short yydgoto[] = {                          3,
-    4,    5,    7,    0,    0,    0,    0,    0,
+    8,    9,    5,   10,   11,   20,   40,   41,   21,   35,
+    6,   13,   22,   23,   24,
 };
-final static short yysindex[] = {                      -261,
-    0,    0,    0,    0, -263,    0, -281,    0, -262,    0,
+final static short yysindex[] = {                      -205,
+    0,    0,    0, -202,    0, -272, -249, -202,    0,    0,
+    0, -248, -256, -200,    0, -272,    0,    0,    0, -237,
+ -223, -206,    0,    0,    0, -257, -200, -200,    0,    0,
+    0,    0,    0,    0, -200, -200, -200, -224,    0,    0,
+    0, -206, -206, -201,    0,    0, -200, -234,    0,
 };
 final static short yyrindex[] = {                         0,
+    0,    0,    0,   58,    0,    0,    0,    0,    0,    0,
+    0, -217,    0,    0,    0,    0,    0,    0,    0,    0,
+    0, -265,    0,    0,    0,   72,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0, -252, -236, -204,    0,    0,    0,    0,    0,
 };
 final static short yygindex[] = {                         0,
-    0,    0,    0,    0,    0,    0,    0,    0,
+   73,   -7,    0,    0,    0,    0,    0,    0,  -29,    0,
+    0,   60,   41,   34,    0,
 };
-final static int YYTABLESIZE=5;
+final static int YYTABLESIZE=76;
 static short yytable[];
 static { yytable();}
 static void yytable(){
-yytable = new short[]{                          1,
-    2,    8,    9,    6,   10,
+yytable = new short[]{                          7,
+   15,   20,   20,    1,    2,   44,   20,   20,   20,   20,
+   20,   20,   12,   20,   18,   18,   20,   48,   39,   18,
+   18,   18,   18,   18,   18,   17,   18,   38,   14,   18,
+   19,   19,   27,   28,   16,   19,   19,   19,   19,   19,
+   19,   26,   19,   27,   28,   19,   47,   49,   29,   30,
+   31,   32,   33,   34,    7,    1,    2,    2,    1,    2,
+   18,   19,   36,   37,   15,   27,   28,   42,   43,   45,
+   46,    8,    4,    0,   11,   25,
 };
 }
 static short yycheck[];
 static { yycheck(); }
 static void yycheck() {
-yycheck = new short[] {                        261,
-  262,  283,  284,  267,  267,
+yycheck = new short[] {                        257,
+    8,  267,  268,  261,  262,   35,  272,  273,  274,  275,
+  276,  277,  285,  279,  267,  268,  282,   47,   26,  272,
+  273,  274,  275,  276,  277,  282,  279,  285,  278,  282,
+  267,  268,  267,  268,  283,  272,  273,  274,  275,  276,
+  277,  279,  279,  267,  268,  282,  271,  282,  272,  273,
+  274,  275,  276,  277,  257,  261,  262,    0,  261,  262,
+  261,  262,  269,  270,  282,  267,  268,   27,   28,   36,
+   37,    0,    0,   -1,  279,   16,
 };
 }
 final static short YYFINAL=3;
@@ -253,20 +285,30 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,"_IF","_ELSE","_ENDIF","_PRINT","_USINTEGER","_SINGLE","_FOR",
-"_VOID","_FUN","_RETURN","_IDENTIFIER","_PLUS","_MINUS","_MULT","_DIV",
-"_ASSIGN","_EQUAL","_LESSER","_LESSER_OR_EQUAL","_GREATER","_GREATER_OR_EQUAL",
-"_UNEQUAL","_LPAREN","_RPAREN","_LCBRACE","_RCBRACE","_COMMA","_SEMICOLON",
-"_QUOTE",
+"_VOID","_FUN","_RETURN","_PLUS","_MINUS","_MULT","_DIV","_ASSIGN","_EQUAL",
+"_LESSER","_LESSER_OR_EQUAL","_GREATER","_GREATER_OR_EQUAL","_UNEQUAL",
+"_LPAREN","_RPAREN","_LCBRACE","_RCBRACE","_COMMA","_SEMICOLON","_QUOTE",
+"_IDENTIFIER",
 };
 final static String yyrule[] = {
 "$accept : programa",
-"programa : sentencias_de_declaracion_de_variables",
+"programa : bloque_declarativo bloque",
+"programa : bloque_declarativo",
+"bloque_declarativo : sentencias_de_declaracion_de_variables",
+"bloque : bloque_declarativo bloque",
+"bloque : sentencia",
+"sentencia : seleccion",
+"seleccion : _IF _LPAREN condicion _RPAREN bloque_de_seleccion",
+"bloque_de_seleccion :",
+"bloque_de_seleccion : asignacion",
+"bloque_de_seleccion : bloque",
+"condicion : expresion comparador expresion",
 "sentencias_de_declaracion_de_variables : tipo lista_de_variables _COMMA",
 "tipo : _USINTEGER",
 "tipo : _SINGLE",
 "lista_de_variables : _IDENTIFIER",
-"lista_de_variables : lista_de_variables _SEMICOLON _IDENTIFIER",
-"asignacion : _IDENTIFIER _ASSIGN expresion",
+"lista_de_variables : _IDENTIFIER _SEMICOLON lista_de_variables",
+"asignacion : _IDENTIFIER _ASSIGN expresion _COMMA",
 "expresion : expresion _PLUS termino",
 "expresion : expresion _MINUS termino",
 "expresion : termino",
@@ -276,9 +318,15 @@ final static String yyrule[] = {
 "factor : constante",
 "constante : _USINTEGER",
 "constante : _SINGLE",
+"comparador : _LESSER",
+"comparador : _GREATER",
+"comparador : _LESSER_OR_EQUAL",
+"comparador : _GREATER_OR_EQUAL",
+"comparador : _EQUAL",
+"comparador : _UNEQUAL",
 };
 
-//#line 156 "Gramatica.y"
+//#line 211 "Gramatica.y"
 
 /*** 4-CODE ***/
 AnalizadorLexico analizadorLexico;
@@ -286,7 +334,7 @@ TablaDeSimbolos tablaDeSimbolos;
 Logger logger;
 Token tokenActual;
 TipoToken tipoActual;
-//int currentLine;
+int lineaActual;
 
 public void notify(String msg)
 {
@@ -317,14 +365,22 @@ public void yyerror(String error, int line)
 public int yylex() throws IOException
 {
 	this.tokenActual = analizadorLexico.getToken();
+	this.lineaActual = analizadorLexico.getLineaActual();
+	//RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro(this.tokenActual.toString());
+	//yylval = reg.getTipo();
 	//tokenfy(this.tokenActual.toString(), this.tokenActual.getLine());
 	//yylval = this.tablaDeSimbolos.createRegTabla(this.tokenActual.toString(), this.tipoToken, lineaToken, posicionToken);
-	if (this.tokenActual.getId() == -1)
+	if (this.tokenActual != null)
 	{
-		return 0;
+		if (this.tokenActual.getId() == -1)
+		{
+			return 0;
+		}
+
+		return toIntExact(this.tokenActual.getId());
 	}
 
-	return toIntExact(this.tokenActual.getId());
+	return 0;
 }
 
 public Parser(AnalizadorLexico analizadorLexico, TablaDeSimbolos tablaDeSimbolos)
@@ -338,7 +394,7 @@ public void Run() throws IOException
 {
   yyparse();
 }
-//#line 269 "Parser.java"
+//#line 325 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -494,66 +550,69 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 42 "Gramatica.y"
-{
-		notify("programa válido");
-	}
+//#line 45 "Gramatica.y"
+{ notify("Compilación terminada.");	}
 break;
-case 3:
-//#line 61 "Gramatica.y"
-{
-		this.tipoActual = TipoToken.CONSTANTE_ENTERO_SIN_SIGNO;
-		notify("usinteger");
-
-	}
-break;
-case 4:
-//#line 68 "Gramatica.y"
-{
-		this.tipoActual = TipoToken.CONSTANTE_FLOTANTE;
-		notify("single");
-	}
-break;
-case 5:
-//#line 80 "Gramatica.y"
-{
-		notify("asignacion");
-		this.tipoActual = TipoToken.IDENTIFICADOR;
-		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro(val_peek(0).toString());
-		if (reg == null) {
-			reg = this.tablaDeSimbolos.createRegTabla(val_peek(0).toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
-			this.tablaDeSimbolos.agregarSimbolo(reg);
-		}
-	}
+case 2:
+//#line 46 "Gramatica.y"
+{ notify("Compilación terminada.");	}
 break;
 case 6:
-//#line 91 "Gramatica.y"
-{
-		notify("asignacion");
-		this.tipoActual = TipoToken.IDENTIFICADOR;
-		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro(val_peek(0).toString());
-		if (reg == null) {
-			reg = this.tablaDeSimbolos.createRegTabla(val_peek(0).toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
-			this.tablaDeSimbolos.agregarSimbolo(reg);
-		}
-	}
+//#line 71 "Gramatica.y"
+{	notify("Sentencia IF " + this.lineaActual + ".");	}
 break;
-case 7:
-//#line 104 "Gramatica.y"
-{
-		notify(val_peek(2).toString());
-		notify(val_peek(1).toString());
-		notify(val_peek(0).toString());
-	}
+case 12:
+//#line 105 "Gramatica.y"
+{ notify("Sentencia de declaración de variables en línea " + this.lineaActual + "."); }
+break;
+case 13:
+//#line 113 "Gramatica.y"
+{ this.tipoActual = TipoToken.CONSTANTE_ENTERO_SIN_SIGNO; }
 break;
 case 14:
-//#line 141 "Gramatica.y"
+//#line 114 "Gramatica.y"
+{ this.tipoActual = TipoToken.CONSTANTE_FLOTANTE;	}
+break;
+case 15:
+//#line 123 "Gramatica.y"
+{
+		notify("Identificador " + yyval.sval + ".");
+		/*this.tipoActual = TipoToken.IDENTIFICADOR;
+		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro($1.toString());
+		if (reg == null) {
+			reg = this.tablaDeSimbolos.createRegTabla($1.toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
+			this.tablaDeSimbolos.agregarSimbolo(reg);
+		}*/
+	}
+break;
+case 16:
+//#line 133 "Gramatica.y"
+{
+		notify("Identificador " + yyval.sval + ".");
+		/*this.tipoActual = TipoToken.IDENTIFICADOR;
+		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro($3.toString());
+		if (reg == null) {
+			reg = this.tablaDeSimbolos.createRegTabla($3.toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
+			this.tablaDeSimbolos.agregarSimbolo(reg);
+		}*/
+	}
+break;
+case 17:
+//#line 150 "Gramatica.y"
+{
+		notify(val_peek(3).toString());
+		notify(val_peek(2).toString());
+		notify(val_peek(1).toString());
+	}
+break;
+case 24:
+//#line 183 "Gramatica.y"
 {
 		yyval = val_peek(0);
 		notify(val_peek(0).toString());
 	}
 break;
-//#line 478 "Parser.java"
+//#line 537 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
