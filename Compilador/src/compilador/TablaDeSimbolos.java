@@ -135,6 +135,9 @@ public class TablaDeSimbolos {
     public RegTablaSimbolos createRegTabla(String lexemaToken, TipoToken tipoToken, int linea, int posicion) {
     	if (tipoToken == TipoToken.IDENTIFICADOR) {
             return registrarNuevoToken(Parser._IDENTIFIER, lexemaToken, tipoToken, linea, posicion); 
+        } else if (tipoToken == TipoToken.CONSTANTE_ENTERO_SIN_SIGNO)
+        {
+            return registrarNuevoToken(Parser._CONSTANT, lexemaToken, tipoToken, linea, posicion);
         }
     	return registrarNuevoToken(getNextTokenId(), lexemaToken, tipoToken, linea, posicion);
     }
