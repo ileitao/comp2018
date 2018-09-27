@@ -133,7 +133,9 @@ public class TablaDeSimbolos {
      * Metodo publico para registrar nuevos tokens con el ID consecutivo privado.
      */
     public RegTablaSimbolos createRegTabla(String lexemaToken, TipoToken tipoToken, int linea, int posicion) {
-    	
+    	if (tipoToken == TipoToken.IDENTIFICADOR) {
+            return registrarNuevoToken(Parser._IDENTIFIER, lexemaToken, tipoToken, linea, posicion); 
+        }
     	return registrarNuevoToken(getNextTokenId(), lexemaToken, tipoToken, linea, posicion);
     }
     
