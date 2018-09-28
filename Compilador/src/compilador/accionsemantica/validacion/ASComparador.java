@@ -29,8 +29,9 @@ public class ASComparador implements Validable {
 			//armo el comparador compuesto
 			aLexico.getLexemaParcial().append(aLexico.getCharActual());
 		else
+                    aLexico.getLexemaParcial().append(aLexico.getCharActual());
 			//es un comparador simple, retrocedo lector
-			aLexico.retrocederLectura();
+			//aLexico.retrocederLectura();
 	}
 
 }
