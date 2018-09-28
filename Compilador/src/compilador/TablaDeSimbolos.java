@@ -133,13 +133,30 @@ public class TablaDeSimbolos {
      * Metodo publico para registrar nuevos tokens con el ID consecutivo privado.
      */
     public RegTablaSimbolos createRegTabla(String lexemaToken, TipoToken tipoToken, int linea, int posicion) {
-    	if (tipoToken == TipoToken.IDENTIFICADOR) {
-            return registrarNuevoToken(Parser._IDENTIFIER, lexemaToken, tipoToken, linea, posicion); 
-        } else if (tipoToken == TipoToken.CONSTANTE_ENTERO_SIN_SIGNO)
-        {
-            return registrarNuevoToken(Parser._CONSTANT, lexemaToken, tipoToken, linea, posicion);
-        }
-    	return registrarNuevoToken(getNextTokenId(), lexemaToken, tipoToken, linea, posicion);
+//    	if (tipoToken.equals(TipoToken.IDENTIFICADOR)) {
+//            return registrarNuevoToken(Parser._IDENTIFIER, lexemaToken, tipoToken, linea, posicion); 
+//        } else if (tipoToken == TipoToken.CONSTANTE_ENTERO_SIN_SIGNO)
+//        {
+//            return registrarNuevoToken(Parser._CONSTANT, lexemaToken, tipoToken, linea, posicion);
+//        }
+    	switch (tipoToken) {
+		
+    	case IDENTIFICADOR:
+			return registrarNuevoToken(Parser._IDENTIFIER, lexemaToken, tipoToken, linea, posicion);
+		
+		case CONSTANTE_ENTERO_SIN_SIGNO:
+			return registrarNuevoToken(Parser._CONSTANT_UNSIGNED_INTEGER, lexemaToken, tipoToken, linea, posicion);
+		
+		case CONSTANTE_FLOTANTE:
+			return registrarNuevoToken(Parser._CONSTANT_SINGLE, lexemaToken, tipoToken, linea, posicion);
+		
+		case CADENA_CARACTERES:
+			return registrarNuevoToken(Parser._CONSTANT_STRING, lexemaToken, tipoToken, linea, posicion);
+			
+		default:
+			return registrarNuevoToken(getNextTokenId(), lexemaToken, tipoToken, linea, posicion);
+
+		}
     }
     
     private RegTablaSimbolos registrarNuevoToken(long idToken, String lexemaToken, TipoToken tipoToken, int linea, int posicion) {

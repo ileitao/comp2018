@@ -14,6 +14,9 @@ public class ASValidarIdentificador implements Validable {
 	@Override
 	public boolean evaluar(AnalizadorLexico aLexico, TipoToken tipoToken) {
 		
+		//Se retrocede el lector para volver a leer el ultimo caracter leido.
+		aLexico.retrocederLectura();
+		
 		//Devuelve false en caso de superar el largo permitido
 		return (aLexico.getLexemaParcial().length() <= LARGO_MAXIMO);
 		

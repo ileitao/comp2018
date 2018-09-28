@@ -194,7 +194,9 @@ public final static short _COMMA=282;
 public final static short _SEMICOLON=283;
 public final static short _QUOTE=284;
 public final static short _IDENTIFIER=285;
-public final static short _CONSTANT=286;
+public final static short _CONSTANT_UNSIGNED_INTEGER=286;
+public final static short _CONSTANT_SINGLE=287;
+public final static short _CONSTANT_STRING=288;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
     0,    0,    1,    1,    2,    4,    5,    5,    6,    6,
