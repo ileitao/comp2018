@@ -26,7 +26,7 @@ import static java.lang.Math.toIntExact;
 %token _EQUAL _LESSER _LESSER_OR_EQUAL _GREATER _GREATER_OR_EQUAL _UNEQUAL
 
 /* OTHERS [ ( ) { } , ; ' ] */
-%token _LPAREN _RPAREN _LCBRACE _RCBRACE _COMMA _SEMICOLON _QUOTE _IDENTIFIER _CONSTANT
+%token _LPAREN _RPAREN _LCBRACE _RCBRACE _COMMA _SEMICOLON _QUOTE _IDENTIFIER _CONSTANT_UNSIGNED_INTEGER _CONSTANT_SINGLE _CONSTANT_STRING
 
 %right _PLUS _MINUS
 %right _MULT _DIV
@@ -90,20 +90,14 @@ lista_de_variables:
 	;
 
 /**
- * Bloque
- * Sentencias ejecutables
- */
-bloque :
-	bloque bloque_ejecutable
-	|	bloque_ejecutable
-	;
-
-/**
  * Bloque ejecutable
- *
+* Sentencias ejecutables
  */
 bloque_ejecutable :
-	seleccion {	notify("Sentencia IF en línea " + this.lineaActual + ".");	}
+	seleccion
+	| iteracion
+	| asignacion
+	| impresion
 	;
 
 /**
@@ -111,7 +105,8 @@ bloque_ejecutable :
  * if ( <condicion> ) <bloque_de_sentencias> else <bloque_de_sentencias>
  */
 seleccion :
-	_IF _LPAREN condicion _RPAREN bloque_de_seleccion
+	_IF _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF {	notify("Sentencia IF en línea " + this.lineaActual + ".");	}
+	| _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF {	notify("Sentencia IF en línea " + this.lineaActual + ".");	}
 	;
 
 /**
@@ -119,8 +114,9 @@ seleccion :
  * Asignaciones, selecciones y sentencias de control
  * @TODO Agregar while
  */
-bloque_de_seleccion :
+bloque_de_sentencias :
 	asignacion
+	| _LCBRACE asignacion_compuesta _RCBRACE
 	;
 
 /**
@@ -135,9 +131,24 @@ condicion :
  * Asignación
  * <_IDENTIFIER> := <expresion>
  */
-asignacion:
-  _IDENTIFIER _ASSIGN expresion _COMMA
+asignacion :
+  _IDENTIFIER _ASSIGN expresion _COMMA {	notify("Sentencia de asignación en línea " + this.lineaActual + ".");	}
  ;
+
+/**
+ * Asignación
+ * <_IDENTIFIER_1> := <expresion>
+ * <_IDENTIFIER_2> := <expresion>
+ * ...
+ */
+asignacion_compuesta :
+	asignacion
+	| asignacion asignacion_compuesta
+	;
+
+impresion :
+  _PRINT _LPAREN _CONSTANT_STRING _RPAREN _COMMA {	notify("Sentencia PRINT en línea " + this.lineaActual + ".");	}
+  ;
 
 /**
  * Expresión
@@ -161,15 +172,17 @@ termino :
 
 /**
  * Factor
- * Aritmética, variable o constante
+ * Constantes unsigned, single o string
  */
 factor :
-	_CONSTANT
+	_CONSTANT_UNSIGNED_INTEGER
+	| _CONSTANT_SINGLE
+	| _CONSTANT_STRING
 	;
 
 /**
  * Comparador
- * <, >, <=, >=, ==, != >>
+ * <, >, <=, >=, ==, !=
  */
 comparador :
 	_LESSER
