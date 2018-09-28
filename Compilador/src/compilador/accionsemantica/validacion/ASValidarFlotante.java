@@ -6,9 +6,10 @@ import compilador.log.EventoLog;
 
 public class ASValidarFlotante implements Validable {
 
+	//Se definen como double para que alcance la precision de decimales
 	//1,17549435E-38 < x < 3,40282347E38 (incluir el 0,0)
-	private final float MANTISA_MIN = 1.17549435f;
-	private final float MANTISA_MAX = 3.40282347f;
+	private final double MANTISA_MIN = 1.17549435;
+	private final double MANTISA_MAX = 3.40282347;
 	private final int EXP_MIN = -38;
 	private final int EXP_MAX = 38;
 	
@@ -36,11 +37,11 @@ public class ASValidarFlotante implements Validable {
 			exp = lexema[1];
 			
 		//Se valida MIN
-		if (Float.parseFloat(mantisa) <= MANTISA_MIN && Float.parseFloat(exp) <= EXP_MIN)
+		if (Double.valueOf(mantisa) <= MANTISA_MIN && Double.valueOf(exp) <= EXP_MIN)
 			return false;
 		
 		//Se valida MAX
-		if (Float.parseFloat(mantisa) >= MANTISA_MAX && Float.parseFloat(exp) >= EXP_MAX)
+		if (Double.valueOf(mantisa) >= MANTISA_MAX && Double.valueOf(exp) >= EXP_MAX)
 			return false;
 		
 		//Se encuentra dentro del rango permitido

@@ -15,6 +15,10 @@ public class ASValidarPalabraReservada implements Validable {
 	 */
 	@Override
 	public boolean evaluar(AnalizadorLexico aLexico, TipoToken tipoToken) {
+		
+		//Se retrocede el lector para volver a leer el ultimo caracter leido.
+		aLexico.retrocederLectura();
+		
 		String lexema = aLexico.getLexemaParcial().toString();
 		RegTablaSimbolos reg = aLexico.getTablaSimbolos().getRegistro(lexema);
 		
