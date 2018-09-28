@@ -39,37 +39,70 @@ import static java.lang.Math.toIntExact;
 
 /**
  * Programa
- * Conjunto de sentencias declarativas o ejecutables sin delimitador
+ * Conjunto de sentencias sin delimitador
  */
 programa :
-	bloque_declarativo bloque { notify("Compilación terminada.");	}
-	|	bloque_declarativo { notify("Compilación terminada.");	}
-	| bloque { notify("Compilación terminada."); }
+	sentencia
+  | programa sentencia
 	;
+
+/**
+ * Sentencia
+ * Declarativas o ejecutables
+ */
+sentencia :
+	bloque_declarativo
+  | bloque_ejecutable
+;
 
 /**
  * Bloque_declarativo
  * Tira de sentencias declarativas
  */
 bloque_declarativo :
-  bloque_declarativo sentencias_de_declaracion_de_variables
-	|	sentencias_de_declaracion_de_variables
+  sentencias_de_declaracion_de_variables
   ;
+
+/**
+ * Sentencias de declaracion de variables
+ * <tipo> <lista_de_variables> ","
+ */
+sentencias_de_declaracion_de_variables :
+	tipo lista_de_variables _COMMA { notify("Sentencia de declaración de variables en línea " + this.lineaActual + "."); }
+	;
+
+/**
+ * Tipo
+ * Tipos _USINTEGER Y _SINGLE
+ */
+tipo :
+	_USINTEGER { this.tipoActual = TipoToken.CONSTANTE_ENTERO_SIN_SIGNO; }
+	|	_SINGLE { this.tipoActual = TipoToken.CONSTANTE_FLOTANTE;	}
+	;
+
+/**
+ * Lista de variables
+ * Las variables se separan con ";"
+ */
+lista_de_variables:
+  _IDENTIFIER
+	|	_IDENTIFIER _SEMICOLON lista_de_variables
+	;
 
 /**
  * Bloque
  * Sentencias ejecutables
  */
 bloque :
-	bloque sentencia
-	|	sentencia
+	bloque bloque_ejecutable
+	|	bloque_ejecutable
 	;
 
 /**
- * Sentencias
+ * Bloque ejecutable
  *
  */
-sentencia :
+bloque_ejecutable :
 	seleccion {	notify("Sentencia IF en línea " + this.lineaActual + ".");	}
 	;
 
@@ -99,60 +132,11 @@ condicion :
   ;
 
 /**
- * Sentencias de declaracion de variables
- * <tipo> <lista_de_variables> ","
- */
-sentencias_de_declaracion_de_variables :
-	tipo lista_de_variables _COMMA { notify("Sentencia de declaración de variables en línea " + this.lineaActual + "."); }
-	;
-
-/**
- * Tipo
- * Tipos _USINTEGER Y _SINGLE
- */
-tipo :
-	_USINTEGER { this.tipoActual = TipoToken.CONSTANTE_ENTERO_SIN_SIGNO; }
-	|	_SINGLE { this.tipoActual = TipoToken.CONSTANTE_FLOTANTE;	}
-	;
-
-/**
- * Lista de variables
- * Las variables se separan con ";"
- */
-lista_de_variables:
-  _IDENTIFIER
-  {
-		notify("Identificador " + $$.sval + ".");
-		/*this.tipoActual = TipoToken.IDENTIFICADOR;
-		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro($1.toString());
-		if (reg == null) {
-			reg = this.tablaDeSimbolos.createRegTabla($1.toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
-			this.tablaDeSimbolos.agregarSimbolo(reg);
-		}*/
-	}
-	|	_IDENTIFIER _SEMICOLON lista_de_variables
-	{
-		notify("Identificador " + $$.sval + ".");
-		/*this.tipoActual = TipoToken.IDENTIFICADOR;
-		RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro($3.toString());
-		if (reg == null) {
-			reg = this.tablaDeSimbolos.createRegTabla($3.toString(), this.tipoActual, this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual());
-			this.tablaDeSimbolos.agregarSimbolo(reg);
-		}*/
-	}
-	;
-
-/**
  * Asignación
  * <_IDENTIFIER> := <expresion>
  */
 asignacion:
   _IDENTIFIER _ASSIGN expresion _COMMA
-  {
-		notify($1.toString());
-		notify($2.toString());
-		notify($3.toString());
-	}
  ;
 
 /**
@@ -181,10 +165,6 @@ termino :
  */
 factor :
 	_CONSTANT
-	{
-		$$ = $1;
-		notify($1.toString());
-	}
 	;
 
 /**

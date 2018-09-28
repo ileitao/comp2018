@@ -1,30 +1,31 @@
    0  $accept : programa $end
 
-   1  programa : bloque_declarativo bloque
-   2           | bloque_declarativo
-   3           | bloque
+   1  programa : sentencia
+   2           | programa sentencia
 
-   4  bloque_declarativo : bloque_declarativo sentencias_de_declaracion_de_variables
-   5                     | sentencias_de_declaracion_de_variables
+   3  sentencia : bloque_declarativo
+   4            | bloque_ejecutable
 
-   6  bloque : bloque sentencia
-   7         | sentencia
+   5  bloque_declarativo : sentencias_de_declaracion_de_variables
 
-   8  sentencia : seleccion
+   6  sentencias_de_declaracion_de_variables : tipo lista_de_variables _COMMA
 
-   9  seleccion : _IF _LPAREN condicion _RPAREN bloque_de_seleccion
+   7  tipo : _USINTEGER
+   8       | _SINGLE
 
-  10  bloque_de_seleccion : asignacion
+   9  lista_de_variables : _IDENTIFIER
+  10                     | _IDENTIFIER _SEMICOLON lista_de_variables
 
-  11  condicion : expresion comparador expresion
+  11  bloque : bloque bloque_ejecutable
+  12         | bloque_ejecutable
 
-  12  sentencias_de_declaracion_de_variables : tipo lista_de_variables _COMMA
+  13  bloque_ejecutable : seleccion
 
-  13  tipo : _USINTEGER
-  14       | _SINGLE
+  14  seleccion : _IF _LPAREN condicion _RPAREN bloque_de_seleccion
 
-  15  lista_de_variables : _IDENTIFIER
-  16                     | _IDENTIFIER _SEMICOLON lista_de_variables
+  15  bloque_de_seleccion : asignacion
+
+  16  condicion : expresion comparador expresion
 
   17  asignacion : _IDENTIFIER _ASSIGN expresion _COMMA
 
@@ -54,182 +55,161 @@ state 0
 	.  error
 
 	programa  goto 4
-	bloque_declarativo  goto 5
-	bloque  goto 6
-	sentencias_de_declaracion_de_variables  goto 7
-	sentencia  goto 8
-	seleccion  goto 9
-	tipo  goto 10
+	sentencia  goto 5
+	bloque_declarativo  goto 6
+	bloque_ejecutable  goto 7
+	sentencias_de_declaracion_de_variables  goto 8
+	tipo  goto 9
+	seleccion  goto 10
 
 
 state 1
-	seleccion : _IF . _LPAREN condicion _RPAREN bloque_de_seleccion  (9)
+	seleccion : _IF . _LPAREN condicion _RPAREN bloque_de_seleccion  (14)
 
 	_LPAREN  shift 11
 	.  error
 
 
 state 2
-	tipo : _USINTEGER .  (13)
+	tipo : _USINTEGER .  (7)
 
-	.  reduce 13
+	.  reduce 7
 
 
 state 3
-	tipo : _SINGLE .  (14)
+	tipo : _SINGLE .  (8)
 
-	.  reduce 14
+	.  reduce 8
 
 
 state 4
 	$accept : programa . $end  (0)
+	programa : programa . sentencia  (2)
 
 	$end  accept
-
-
-state 5
-	programa : bloque_declarativo . bloque  (1)
-	programa : bloque_declarativo .  (2)
-	bloque_declarativo : bloque_declarativo . sentencias_de_declaracion_de_variables  (4)
-
 	_IF  shift 1
 	_USINTEGER  shift 2
 	_SINGLE  shift 3
-	$end  reduce 2
+	.  error
 
-	bloque  goto 12
-	sentencias_de_declaracion_de_variables  goto 13
-	sentencia  goto 8
-	seleccion  goto 9
-	tipo  goto 10
+	sentencia  goto 12
+	bloque_declarativo  goto 6
+	bloque_ejecutable  goto 7
+	sentencias_de_declaracion_de_variables  goto 8
+	tipo  goto 9
+	seleccion  goto 10
+
+
+state 5
+	programa : sentencia .  (1)
+
+	.  reduce 1
 
 
 state 6
-	programa : bloque .  (3)
-	bloque : bloque . sentencia  (6)
+	sentencia : bloque_declarativo .  (3)
 
-	_IF  shift 1
-	$end  reduce 3
-
-	sentencia  goto 14
-	seleccion  goto 9
+	.  reduce 3
 
 
 state 7
+	sentencia : bloque_ejecutable .  (4)
+
+	.  reduce 4
+
+
+state 8
 	bloque_declarativo : sentencias_de_declaracion_de_variables .  (5)
 
 	.  reduce 5
 
 
-state 8
-	bloque : sentencia .  (7)
-
-	.  reduce 7
-
-
 state 9
-	sentencia : seleccion .  (8)
+	sentencias_de_declaracion_de_variables : tipo . lista_de_variables _COMMA  (6)
 
-	.  reduce 8
+	_IDENTIFIER  shift 13
+	.  error
+
+	lista_de_variables  goto 14
 
 
 state 10
-	sentencias_de_declaracion_de_variables : tipo . lista_de_variables _COMMA  (12)
+	bloque_ejecutable : seleccion .  (13)
 
-	_IDENTIFIER  shift 15
-	.  error
-
-	lista_de_variables  goto 16
+	.  reduce 13
 
 
 state 11
-	seleccion : _IF _LPAREN . condicion _RPAREN bloque_de_seleccion  (9)
+	seleccion : _IF _LPAREN . condicion _RPAREN bloque_de_seleccion  (14)
 
-	_CONSTANT  shift 17
+	_CONSTANT  shift 15
 	.  error
 
-	condicion  goto 18
-	expresion  goto 19
-	termino  goto 20
-	factor  goto 21
+	condicion  goto 16
+	expresion  goto 17
+	termino  goto 18
+	factor  goto 19
 
 
 state 12
-	programa : bloque_declarativo bloque .  (1)
-	bloque : bloque . sentencia  (6)
+	programa : programa sentencia .  (2)
 
-	_IF  shift 1
-	$end  reduce 1
-
-	sentencia  goto 14
-	seleccion  goto 9
+	.  reduce 2
 
 
 state 13
-	bloque_declarativo : bloque_declarativo sentencias_de_declaracion_de_variables .  (4)
+	lista_de_variables : _IDENTIFIER .  (9)
+	lista_de_variables : _IDENTIFIER . _SEMICOLON lista_de_variables  (10)
 
-	.  reduce 4
+	_SEMICOLON  shift 20
+	_COMMA  reduce 9
 
 
 state 14
-	bloque : bloque sentencia .  (6)
+	sentencias_de_declaracion_de_variables : tipo lista_de_variables . _COMMA  (6)
 
-	.  reduce 6
-
-
-state 15
-	lista_de_variables : _IDENTIFIER .  (15)
-	lista_de_variables : _IDENTIFIER . _SEMICOLON lista_de_variables  (16)
-
-	_SEMICOLON  shift 22
-	_COMMA  reduce 15
-
-
-state 16
-	sentencias_de_declaracion_de_variables : tipo lista_de_variables . _COMMA  (12)
-
-	_COMMA  shift 23
+	_COMMA  shift 21
 	.  error
 
 
-state 17
+state 15
 	factor : _CONSTANT .  (24)
 
 	.  reduce 24
 
 
-state 18
-	seleccion : _IF _LPAREN condicion . _RPAREN bloque_de_seleccion  (9)
+state 16
+	seleccion : _IF _LPAREN condicion . _RPAREN bloque_de_seleccion  (14)
 
-	_RPAREN  shift 24
+	_RPAREN  shift 22
 	.  error
 
 
-state 19
-	condicion : expresion . comparador expresion  (11)
+state 17
+	condicion : expresion . comparador expresion  (16)
 	expresion : expresion . _PLUS termino  (18)
 	expresion : expresion . _MINUS termino  (19)
 
-	_PLUS  shift 25
-	_MINUS  shift 26
-	_EQUAL  shift 27
-	_LESSER  shift 28
-	_LESSER_OR_EQUAL  shift 29
-	_GREATER  shift 30
-	_GREATER_OR_EQUAL  shift 31
-	_UNEQUAL  shift 32
+	_PLUS  shift 23
+	_MINUS  shift 24
+	_EQUAL  shift 25
+	_LESSER  shift 26
+	_LESSER_OR_EQUAL  shift 27
+	_GREATER  shift 28
+	_GREATER_OR_EQUAL  shift 29
+	_UNEQUAL  shift 30
 	.  error
 
-	comparador  goto 33
+	comparador  goto 31
 
 
-state 20
+state 18
 	expresion : termino .  (20)
 	termino : termino . _MULT factor  (21)
 	termino : termino . _DIV factor  (22)
 
-	_MULT  shift 34
-	_DIV  shift 35
+	_MULT  shift 32
+	_DIV  shift 33
 	_PLUS  reduce 20
 	_MINUS  reduce 20
 	_EQUAL  reduce 20
@@ -242,154 +222,154 @@ state 20
 	_COMMA  reduce 20
 
 
-state 21
+state 19
 	termino : factor .  (23)
 
 	.  reduce 23
 
 
-state 22
-	lista_de_variables : _IDENTIFIER _SEMICOLON . lista_de_variables  (16)
+state 20
+	lista_de_variables : _IDENTIFIER _SEMICOLON . lista_de_variables  (10)
 
-	_IDENTIFIER  shift 15
+	_IDENTIFIER  shift 13
 	.  error
 
-	lista_de_variables  goto 36
+	lista_de_variables  goto 34
+
+
+state 21
+	sentencias_de_declaracion_de_variables : tipo lista_de_variables _COMMA .  (6)
+
+	.  reduce 6
+
+
+state 22
+	seleccion : _IF _LPAREN condicion _RPAREN . bloque_de_seleccion  (14)
+
+	_IDENTIFIER  shift 35
+	.  error
+
+	bloque_de_seleccion  goto 36
+	asignacion  goto 37
 
 
 state 23
-	sentencias_de_declaracion_de_variables : tipo lista_de_variables _COMMA .  (12)
+	expresion : expresion _PLUS . termino  (18)
 
-	.  reduce 12
+	_CONSTANT  shift 15
+	.  error
+
+	termino  goto 38
+	factor  goto 19
 
 
 state 24
-	seleccion : _IF _LPAREN condicion _RPAREN . bloque_de_seleccion  (9)
+	expresion : expresion _MINUS . termino  (19)
 
-	_IDENTIFIER  shift 37
+	_CONSTANT  shift 15
 	.  error
 
-	bloque_de_seleccion  goto 38
-	asignacion  goto 39
+	termino  goto 39
+	factor  goto 19
 
 
 state 25
-	expresion : expresion _PLUS . termino  (18)
-
-	_CONSTANT  shift 17
-	.  error
-
-	termino  goto 40
-	factor  goto 21
-
-
-state 26
-	expresion : expresion _MINUS . termino  (19)
-
-	_CONSTANT  shift 17
-	.  error
-
-	termino  goto 41
-	factor  goto 21
-
-
-state 27
 	comparador : _EQUAL .  (29)
 
 	.  reduce 29
 
 
-state 28
+state 26
 	comparador : _LESSER .  (25)
 
 	.  reduce 25
 
 
-state 29
+state 27
 	comparador : _LESSER_OR_EQUAL .  (27)
 
 	.  reduce 27
 
 
-state 30
+state 28
 	comparador : _GREATER .  (26)
 
 	.  reduce 26
 
 
-state 31
+state 29
 	comparador : _GREATER_OR_EQUAL .  (28)
 
 	.  reduce 28
 
 
-state 32
+state 30
 	comparador : _UNEQUAL .  (30)
 
 	.  reduce 30
 
 
-state 33
-	condicion : expresion comparador . expresion  (11)
+state 31
+	condicion : expresion comparador . expresion  (16)
 
-	_CONSTANT  shift 17
+	_CONSTANT  shift 15
 	.  error
 
-	expresion  goto 42
-	termino  goto 20
-	factor  goto 21
+	expresion  goto 40
+	termino  goto 18
+	factor  goto 19
+
+
+state 32
+	termino : termino _MULT . factor  (21)
+
+	_CONSTANT  shift 15
+	.  error
+
+	factor  goto 41
+
+
+state 33
+	termino : termino _DIV . factor  (22)
+
+	_CONSTANT  shift 15
+	.  error
+
+	factor  goto 42
 
 
 state 34
-	termino : termino _MULT . factor  (21)
-
-	_CONSTANT  shift 17
-	.  error
-
-	factor  goto 43
-
-
-state 35
-	termino : termino _DIV . factor  (22)
-
-	_CONSTANT  shift 17
-	.  error
-
-	factor  goto 44
-
-
-state 36
-	lista_de_variables : _IDENTIFIER _SEMICOLON lista_de_variables .  (16)
-
-	.  reduce 16
-
-
-state 37
-	asignacion : _IDENTIFIER . _ASSIGN expresion _COMMA  (17)
-
-	_ASSIGN  shift 45
-	.  error
-
-
-state 38
-	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_seleccion .  (9)
-
-	.  reduce 9
-
-
-state 39
-	bloque_de_seleccion : asignacion .  (10)
+	lista_de_variables : _IDENTIFIER _SEMICOLON lista_de_variables .  (10)
 
 	.  reduce 10
 
 
-state 40
+state 35
+	asignacion : _IDENTIFIER . _ASSIGN expresion _COMMA  (17)
+
+	_ASSIGN  shift 43
+	.  error
+
+
+state 36
+	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_seleccion .  (14)
+
+	.  reduce 14
+
+
+state 37
+	bloque_de_seleccion : asignacion .  (15)
+
+	.  reduce 15
+
+
+state 38
 	expresion : expresion _PLUS termino .  (18)
 	termino : termino . _MULT factor  (21)
 	termino : termino . _DIV factor  (22)
 
-	_MULT  shift 34
-	_DIV  shift 35
+	_MULT  shift 32
+	_DIV  shift 33
 	_PLUS  reduce 18
 	_MINUS  reduce 18
 	_EQUAL  reduce 18
@@ -402,13 +382,13 @@ state 40
 	_COMMA  reduce 18
 
 
-state 41
+state 39
 	expresion : expresion _MINUS termino .  (19)
 	termino : termino . _MULT factor  (21)
 	termino : termino . _DIV factor  (22)
 
-	_MULT  shift 34
-	_DIV  shift 35
+	_MULT  shift 32
+	_DIV  shift 33
 	_PLUS  reduce 19
 	_MINUS  reduce 19
 	_EQUAL  reduce 19
@@ -421,55 +401,60 @@ state 41
 	_COMMA  reduce 19
 
 
-state 42
-	condicion : expresion comparador expresion .  (11)
+state 40
+	condicion : expresion comparador expresion .  (16)
 	expresion : expresion . _PLUS termino  (18)
 	expresion : expresion . _MINUS termino  (19)
 
-	_PLUS  shift 25
-	_MINUS  shift 26
-	_RPAREN  reduce 11
+	_PLUS  shift 23
+	_MINUS  shift 24
+	_RPAREN  reduce 16
 
 
-state 43
+state 41
 	termino : termino _MULT factor .  (21)
 
 	.  reduce 21
 
 
-state 44
+state 42
 	termino : termino _DIV factor .  (22)
 
 	.  reduce 22
 
 
-state 45
+state 43
 	asignacion : _IDENTIFIER _ASSIGN . expresion _COMMA  (17)
 
-	_CONSTANT  shift 17
+	_CONSTANT  shift 15
 	.  error
 
-	expresion  goto 46
-	termino  goto 20
-	factor  goto 21
+	expresion  goto 44
+	termino  goto 18
+	factor  goto 19
 
 
-state 46
+state 44
 	asignacion : _IDENTIFIER _ASSIGN expresion . _COMMA  (17)
 	expresion : expresion . _PLUS termino  (18)
 	expresion : expresion . _MINUS termino  (19)
 
-	_PLUS  shift 25
-	_MINUS  shift 26
-	_COMMA  shift 47
+	_PLUS  shift 23
+	_MINUS  shift 24
+	_COMMA  shift 45
 	.  error
 
 
-state 47
+state 45
 	asignacion : _IDENTIFIER _ASSIGN expresion _COMMA .  (17)
 
 	.  reduce 17
 
 
-32 terminals, 16 nonterminals
-31 grammar rules, 48 states
+Rules never reduced:
+	bloque : bloque bloque_ejecutable  (11)
+	bloque : bloque_ejecutable  (12)
+
+
+32 terminals, 17 nonterminals
+31 grammar rules, 46 states
