@@ -22,7 +22,12 @@ public class ASValidarPalabraReservada implements Validable {
 		String lexema = aLexico.getLexemaParcial().toString();
 		RegTablaSimbolos reg = aLexico.getTablaSimbolos().getRegistro(lexema);
 		
-		return (reg != null) && (reg.getTipo().equals(tipoToken));
+		boolean valido = (reg != null) && (reg.getTipo().equals(tipoToken));
+		
+		if (valido)
+			aLexico.setEstadoSiguiente(AnalizadorLexico.ESTADO_FINAL);
+		
+		return valido;
 	}
 
 	/**

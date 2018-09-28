@@ -37,7 +37,7 @@ public class AnalizadorLexico {
 
 	public static final int ESTADO_INICIAL = 0;
 
-	private static final int ESTADO_FINAL = -1;
+	public static final int ESTADO_FINAL = -1;
 
 	private static final int CANTIDAD_ESTADOS = 17;
 
@@ -540,6 +540,10 @@ public class AnalizadorLexico {
 		setEstadoActual(ESTADO_INICIAL);
 		setEstadoSiguiente(ESTADO_INICIAL);
 		setLexemaParcial("");
+	}
+
+	public Hashtable<Integer, AccionSemantica> getAccionesSemanticas() {
+		return accionesSemanticas;
 	}
 
 }
