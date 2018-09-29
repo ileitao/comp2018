@@ -7,4 +7,4 @@ endif
 if ( 2_ui + 3_ui = 5_ui )  
 endif
 
-#Se espera que el compilador reconozca sentencias ejecutables.#
+#Se espera que el compilador reconozca errores en sentencias ejecutables.#
