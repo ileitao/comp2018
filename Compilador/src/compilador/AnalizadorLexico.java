@@ -14,6 +14,7 @@ import compilador.accionsemantica.general.ASDescartarToken;
 import compilador.accionsemantica.general.ASError;
 import compilador.accionsemantica.general.ASInicializarLexema;
 import compilador.accionsemantica.general.ASNoAccion;
+import compilador.accionsemantica.general.ASRetroceder;
 import compilador.accionsemantica.validacion.ASCadenaCaracteres;
 import compilador.accionsemantica.validacion.ASComparador;
 import compilador.accionsemantica.validacion.ASOperador;
@@ -305,6 +306,7 @@ public class AnalizadorLexico {
 		this.accionesSemanticas.put(AccionSemantica.AS_CONCATENAR_LEXEMA, new ASConcatenarLexema(this));
 		this.accionesSemanticas.put(AccionSemantica.AS_ERROR, new ASError(this));
 		this.accionesSemanticas.put(AccionSemantica.AS_DESCARTAR_TOKEN, new ASDescartarToken(this));
+		this.accionesSemanticas.put(AccionSemantica.AS_RETROCEDER, new ASRetroceder(this));
 		
 		//Acciones semanticas de reconocimiento
 		this.accionesSemanticas.put(AccionSemantica.AS_TOKEN_IDENTIFICADOR, new ASReconocerToken(this, TipoToken.IDENTIFICADOR, new ASValidarIdentificador()));
@@ -343,10 +345,10 @@ public class AnalizadorLexico {
 				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_OPERADOR_ARITMETICO);
 				break;
 			case 12:
-				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_COMPARADOR_SIMPLE);
-				break;
 			case 13:
 			case 14:
+				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_COMPARADOR_SIMPLE);
+				break;
 			case 15:
 				matAccSem[fila][0] = accionesSemanticas.get(AccionSemantica.AS_INICIALIZAR_LEXEMA);
 				break;
@@ -483,7 +485,7 @@ public class AnalizadorLexico {
 			if (fila == 12) 
 				matAccSem[fila][13] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_COMPARADOR_COMPUESTO);
 			else
-				matAccSem[fila][13] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_COMPARADOR_SIMPLE);
+				matAccSem[fila][13] = accionesSemanticas.get(AccionSemantica.AS_RETROCEDER);
 		}
 		
 		//ESTADO 14
@@ -491,7 +493,7 @@ public class AnalizadorLexico {
 			if (fila == 12) 
 				matAccSem[fila][14] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_COMPARADOR_COMPUESTO);
 			else
-				matAccSem[fila][14] = accionesSemanticas.get(AccionSemantica.AS_TOKEN_COMPARADOR_SIMPLE);
+				matAccSem[fila][14] = accionesSemanticas.get(AccionSemantica.AS_RETROCEDER);
 		}
 		
 		//ESTADO 15
