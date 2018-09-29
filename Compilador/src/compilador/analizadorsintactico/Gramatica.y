@@ -70,6 +70,7 @@ bloque_declarativo :
 sentencias_de_declaracion_de_variables :
 	tipo lista_de_variables _COMMA { notify("Sentencia de declaración de variables en línea " + this.lineaActual + "."); }
 	| tipo error _COMMA { yyerror("ERROR: No se definió ninguna variable en sentencia de declaración de variables", this.lineaActual); }
+	| declaracion_de_funcion
 	;
 
 /**
@@ -92,6 +93,51 @@ lista_de_variables:
 	;
 
 /**
+ * Declaración de función
+ * fun ID () {
+ *   <cuerpo_de_funcion> // conjunto de sentencias declarativas y ejecutables
+ *   return ( <retorno> ) ","
+ * }
+ *
+ * void ID () {
+ *   <cuerpo_de_funcion> // conjunto de sentencias declarativas y ejecutables
+ * }
+ */
+declaracion_de_funcion :
+	_FUN _IDENTIFIER _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE { notify("Sentencia de declaración de función con retorno " + this.lineaActual + "."); }
+	| _VOID _IDENTIFIER _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE { notify("Sentencia de declaración de función sin retorno " + this.lineaActual + "."); }
+	| _FUN error _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE { yyerror("ERROR: No se definió nombre para la función", this.lineaActual); }
+	| _VOID error _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE { yyerror("ERROR: No se definió nombre para la función", this.lineaActual); }
+	| _FUN _IDENTIFIER _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion error _RCBRACE { yyerror("ERROR: Falta retorno de la función", this.lineaActual); }
+	;
+
+/**
+ * Cuerpo de función
+ * Conjunto de sentencias declarativas y ejecutables
+ */
+cuerpo_de_funcion :
+	sentencia
+	| sentencia cuerpo_de_funcion
+  ;
+
+/**
+ * Retorno de función
+ * return ( <retorno> ) ","
+ */
+retorno_de_funcion :
+  _RETURN _LPAREN retorno _RPAREN _COMMA
+  ;
+
+/**
+ * Retorno
+ * Un identificador seguido de "()" o el cuerpo de una función
+ */
+retorno :
+  _IDENTIFIER _LPAREN _RPAREN
+  | cuerpo_de_funcion
+  ;
+
+/**
  * Bloque ejecutable
  * Sentencias ejecutables
  */
@@ -100,6 +146,7 @@ bloque_ejecutable :
 	| iteracion
 	| asignacion
 	| impresion
+	| invocacion_de_funcion
 	;
 
 /**
@@ -137,6 +184,7 @@ condicion :
  */
 asignacion :
   _IDENTIFIER _ASSIGN expresion _COMMA {	notify("Sentencia de asignación en línea " + this.lineaActual + ".");	}
+  | _IDENTIFIER _ASSIGN invocacion_de_funcion {	notify("Sentencia de asignación en línea " + this.lineaActual + ".");	}
  ;
 
 /**
@@ -161,7 +209,7 @@ impresion :
 
 /**
  * Iteración
- *  for (i := n ; <condicion> ; j ) <bloque_de_sentencias> ,
+ *  for ( <condiciones_de_iteracion> ) <bloque_de_sentencias> ,
  */
 iteracion :
 	_FOR _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA {	notify("Sentencia FOR en línea " + this.lineaActual + ".");	}
@@ -169,9 +217,21 @@ iteracion :
 	| _FOR _LPAREN condiciones_de_iteracion _RPAREN error _COMMA {	yyerror("ERROR: No se especificó  ningún bloque de condiciones en sentencia FOR", this.lineaActual);	}
 	;
 
+/**
+ * Condiciones_de_iteracion
+ * (i := n ; <condicion> ; j )
+ */
 condiciones_de_iteracion :
   _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER
   ;
+
+/**
+ * Invocación de función
+ * fun () ,
+ */
+invocacion_de_funcion :
+	_IDENTIFIER _LPAREN _RPAREN _COMMA
+	;
 
 /**
  * Expresión
