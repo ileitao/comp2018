@@ -1,10 +1,12 @@
+#Se espera que el compilador reconozca errores en sentencias ejecutables.#
+
 # Falta condición entre () #
 if ( ) { 
   _var3 := 5_ui , 
 } 
 endif
 
+# Falta bloque de sentencias #
 if ( 2_ui + 3_ui = 5_ui )  
 endif
 
-#Se espera que el compilador reconozca errores en sentencias ejecutables.#

@@ -1,3 +1,5 @@
+#Se espera que el compilador reconozca sentencias de control.#
+
 for ( _uivar1 := 1_ui ; _uivar1 > 5_ui ; 10_ui ) 
   _var2 := 4_ui , ,
 
@@ -5,5 +7,3 @@ for ( _uivar1 := 1_ui ; _uivar1 > 5_ui ; 10_ui ) {
   _var2 := 4_ui ,
   _var2 := 4_ui , 
 },
-
-#Se espera que el compilador reconozca sentencias de control.#

@@ -1,3 +1,5 @@
+#Se espera que el compilador reconozca sentencias ejecutables.#
+
 if ( 2_ui + 3_ui = 5_ui ) 
   _var2 := 4_ui , 
 endif
@@ -28,5 +30,3 @@ else {
   _var2 := 4_ui , 
 } 
 endif
-
-#Se espera que el compilador reconozca sentencias ejecutables.#
