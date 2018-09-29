@@ -91,7 +91,7 @@ lista_de_variables:
 
 /**
  * Bloque ejecutable
-* Sentencias ejecutables
+ * Sentencias ejecutables
  */
 bloque_ejecutable :
 	seleccion
@@ -146,8 +146,24 @@ asignacion_compuesta :
 	| asignacion asignacion_compuesta
 	;
 
+/**
+ * Impresión
+ * print <(cadena)> ,
+ */
 impresion :
   _PRINT _LPAREN _CONSTANT_STRING _RPAREN _COMMA {	notify("Sentencia PRINT en línea " + this.lineaActual + ".");	}
+  ;
+
+/**
+ * Iteración
+ *  for (i := n ; <condicion> ; j ) <bloque_de_sentencias> ,
+ */
+iteracion :
+	_FOR _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA {	notify("Sentencia FOR en línea " + this.lineaActual + ".");	}
+	;
+
+condiciones_de_iteracion :
+  _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER
   ;
 
 /**
@@ -172,12 +188,13 @@ termino :
 
 /**
  * Factor
- * Constantes unsigned, single o string
+ * Constantes unsigned integer, single, string o identificador
  */
 factor :
 	_CONSTANT_UNSIGNED_INTEGER
 	| _CONSTANT_SINGLE
 	| _CONSTANT_STRING
+	| _IDENTIFIER
 	;
 
 /**
