@@ -1,0 +1,7 @@
+usinteger _id1 ,
+usinteger _id2 ; _id3 ,
+single _id4 ,
+single _id5 ; _id6 ,
+
+#Se espera que el compilador reconozca sentencias declarativas de una o más variables.
+2 de tipo usinteger y 2 de tipo single.#

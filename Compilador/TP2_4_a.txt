@@ -1,0 +1,10 @@
+# Falta condición entre () #
+if ( ) { 
+  _var3 := 5_ui , 
+} 
+endif
+
+if ( 2_ui + 3_ui = 5_ui )  
+endif
+
+#Se espera que el compilador reconozca sentencias ejecutables.#
