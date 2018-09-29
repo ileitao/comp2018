@@ -1,5 +1,7 @@
-print('hola'),
+if ( 2_ui + 3_ui = 5_ui ) _var2 := 4_ui , endif
+print('hola  '),
 print('chau'),
+for ( _uivar1 := 1_ui ; _uivar1 > 5_ui ; 10_ui ) _var2 := 4_ui , ,
 usinteger _var1 ,
 usinteger _var2 ; _var3 ,
 single _single1 ,
@@ -12,4 +14,3 @@ if ( 2_ui + 3_ui = 5_ui ) _var2 := 4_ui , else { _var2 := 4_ui , _var2 := 4_ui ,
 if ( 2_ui + 3_ui = _var2 ) _var2 := 4_ui , endif
 print('hola'),
 print('chau'),
-for ( _uivar1 := 1_ui ; _uivar1 >= 5_ui ; 10_ui ) _var2 := 4_ui , ,
