@@ -69,6 +69,7 @@ bloque_declarativo :
  */
 sentencias_de_declaracion_de_variables :
 	tipo lista_de_variables _COMMA { notify("Sentencia de declaración de variables en línea " + this.lineaActual + "."); }
+	| tipo error _COMMA { yyerror("ERROR: No se definió ninguna variable en sentencia de declaración de variables", this.lineaActual); }
 	;
 
 /**
@@ -76,8 +77,8 @@ sentencias_de_declaracion_de_variables :
  * Tipos _USINTEGER Y _SINGLE
  */
 tipo :
-	_USINTEGER { this.tipoActual = TipoToken.CONSTANTE_ENTERO_SIN_SIGNO; }
-	|	_SINGLE { this.tipoActual = TipoToken.CONSTANTE_FLOTANTE;	}
+	_USINTEGER { /*this.tipoActual = TipoToken.CONSTANTE_ENTERO_SIN_SIGNO;*/ }
+	|	_SINGLE { /*this.tipoActual = TipoToken.CONSTANTE_FLOTANTE;*/	}
 	;
 
 /**
@@ -87,6 +88,7 @@ tipo :
 lista_de_variables:
   _IDENTIFIER
 	|	_IDENTIFIER _SEMICOLON lista_de_variables
+	| _IDENTIFIER error lista_de_variables { yyerror("ERROR: Falta ; para separar variables en la sentencia de declaración de variables", this.lineaActual); }
 	;
 
 /**
@@ -107,6 +109,8 @@ bloque_ejecutable :
 seleccion :
 	_IF _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF {	notify("Sentencia IF en línea " + this.lineaActual + ".");	}
 	| _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF {	notify("Sentencia IF en línea " + this.lineaActual + ".");	}
+	| _IF _LPAREN error _RPAREN bloque_de_sentencias _ENDIF {	yyerror("ERROR: Faltó condición en IF", this.lineaActual);	}
+	| _IF _LPAREN condicion _RPAREN error _ENDIF {	yyerror("ERROR: Faltó bloque de sentencias en IF", this.lineaActual);	}
 	;
 
 /**
@@ -115,7 +119,7 @@ seleccion :
  * @TODO Agregar while
  */
 bloque_de_sentencias :
-	asignacion
+	bloque_ejecutable
 	| _LCBRACE asignacion_compuesta _RCBRACE
 	;
 
@@ -142,8 +146,8 @@ asignacion :
  * ...
  */
 asignacion_compuesta :
-	asignacion
-	| asignacion asignacion_compuesta
+	bloque_ejecutable
+	| bloque_ejecutable asignacion_compuesta
 	;
 
 /**
@@ -277,4 +281,5 @@ public Parser(AnalizadorLexico analizadorLexico, TablaDeSimbolos tablaDeSimbolos
 public void Run() throws IOException
 {
   yyparse();
+  this.logger.imprimir();
 }

@@ -9,56 +9,60 @@
    5  bloque_declarativo : sentencias_de_declaracion_de_variables
 
    6  sentencias_de_declaracion_de_variables : tipo lista_de_variables _COMMA
+   7                                         | tipo error _COMMA
 
-   7  tipo : _USINTEGER
-   8       | _SINGLE
+   8  tipo : _USINTEGER
+   9       | _SINGLE
 
-   9  lista_de_variables : _IDENTIFIER
-  10                     | _IDENTIFIER _SEMICOLON lista_de_variables
+  10  lista_de_variables : _IDENTIFIER
+  11                     | _IDENTIFIER _SEMICOLON lista_de_variables
+  12                     | _IDENTIFIER error lista_de_variables
 
-  11  bloque_ejecutable : seleccion
-  12                    | iteracion
-  13                    | asignacion
-  14                    | impresion
+  13  bloque_ejecutable : seleccion
+  14                    | iteracion
+  15                    | asignacion
+  16                    | impresion
 
-  15  seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF
-  16            | _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF
+  17  seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF
+  18            | _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF
+  19            | _IF _LPAREN error _RPAREN bloque_de_sentencias _ENDIF
+  20            | _IF _LPAREN condicion _RPAREN error _ENDIF
 
-  17  bloque_de_sentencias : asignacion
-  18                       | _LCBRACE asignacion_compuesta _RCBRACE
+  21  bloque_de_sentencias : bloque_ejecutable
+  22                       | _LCBRACE asignacion_compuesta _RCBRACE
 
-  19  condicion : expresion comparador expresion
+  23  condicion : expresion comparador expresion
 
-  20  asignacion : _IDENTIFIER _ASSIGN expresion _COMMA
+  24  asignacion : _IDENTIFIER _ASSIGN expresion _COMMA
 
-  21  asignacion_compuesta : asignacion
-  22                       | asignacion asignacion_compuesta
+  25  asignacion_compuesta : bloque_ejecutable
+  26                       | bloque_ejecutable asignacion_compuesta
 
-  23  impresion : _PRINT _LPAREN _CONSTANT_STRING _RPAREN _COMMA
+  27  impresion : _PRINT _LPAREN _CONSTANT_STRING _RPAREN _COMMA
 
-  24  iteracion : _FOR _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA
+  28  iteracion : _FOR _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA
 
-  25  condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER
+  29  condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER
 
-  26  expresion : expresion _PLUS termino
-  27            | expresion _MINUS termino
-  28            | termino
+  30  expresion : expresion _PLUS termino
+  31            | expresion _MINUS termino
+  32            | termino
 
-  29  termino : termino _MULT factor
-  30          | termino _DIV factor
-  31          | factor
+  33  termino : termino _MULT factor
+  34          | termino _DIV factor
+  35          | factor
 
-  32  factor : _CONSTANT_UNSIGNED_INTEGER
-  33         | _CONSTANT_SINGLE
-  34         | _CONSTANT_STRING
-  35         | _IDENTIFIER
+  36  factor : _CONSTANT_UNSIGNED_INTEGER
+  37         | _CONSTANT_SINGLE
+  38         | _CONSTANT_STRING
+  39         | _IDENTIFIER
 
-  36  comparador : _LESSER
-  37             | _GREATER
-  38             | _LESSER_OR_EQUAL
-  39             | _GREATER_OR_EQUAL
-  40             | _EQUAL
-  41             | _UNEQUAL
+  40  comparador : _LESSER
+  41             | _GREATER
+  42             | _LESSER_OR_EQUAL
+  43             | _GREATER_OR_EQUAL
+  44             | _EQUAL
+  45             | _UNEQUAL
 
 state 0
 	$accept : . programa $end  (0)
@@ -84,41 +88,43 @@ state 0
 
 
 state 1
-	seleccion : _IF . _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF  (15)
-	seleccion : _IF . _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF  (16)
+	seleccion : _IF . _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF  (17)
+	seleccion : _IF . _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF  (18)
+	seleccion : _IF . _LPAREN error _RPAREN bloque_de_sentencias _ENDIF  (19)
+	seleccion : _IF . _LPAREN condicion _RPAREN error _ENDIF  (20)
 
 	_LPAREN  shift 17
 	.  error
 
 
 state 2
-	impresion : _PRINT . _LPAREN _CONSTANT_STRING _RPAREN _COMMA  (23)
+	impresion : _PRINT . _LPAREN _CONSTANT_STRING _RPAREN _COMMA  (27)
 
 	_LPAREN  shift 18
 	.  error
 
 
 state 3
-	tipo : _USINTEGER .  (7)
-
-	.  reduce 7
-
-
-state 4
-	tipo : _SINGLE .  (8)
+	tipo : _USINTEGER .  (8)
 
 	.  reduce 8
 
 
+state 4
+	tipo : _SINGLE .  (9)
+
+	.  reduce 9
+
+
 state 5
-	iteracion : _FOR . _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA  (24)
+	iteracion : _FOR . _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA  (28)
 
 	_LPAREN  shift 19
 	.  error
 
 
 state 6
-	asignacion : _IDENTIFIER . _ASSIGN expresion _COMMA  (20)
+	asignacion : _IDENTIFIER . _ASSIGN expresion _COMMA  (24)
 
 	_ASSIGN  shift 20
 	.  error
@@ -174,81 +180,86 @@ state 11
 
 state 12
 	sentencias_de_declaracion_de_variables : tipo . lista_de_variables _COMMA  (6)
+	sentencias_de_declaracion_de_variables : tipo . error _COMMA  (7)
 
-	_IDENTIFIER  shift 22
+	error  shift 22
+	_IDENTIFIER  shift 23
 	.  error
 
-	lista_de_variables  goto 23
+	lista_de_variables  goto 24
 
 
 state 13
-	bloque_ejecutable : seleccion .  (11)
-
-	.  reduce 11
-
-
-state 14
-	bloque_ejecutable : iteracion .  (12)
-
-	.  reduce 12
-
-
-state 15
-	bloque_ejecutable : asignacion .  (13)
+	bloque_ejecutable : seleccion .  (13)
 
 	.  reduce 13
 
 
-state 16
-	bloque_ejecutable : impresion .  (14)
+state 14
+	bloque_ejecutable : iteracion .  (14)
 
 	.  reduce 14
 
 
-state 17
-	seleccion : _IF _LPAREN . condicion _RPAREN bloque_de_sentencias _ENDIF  (15)
-	seleccion : _IF _LPAREN . condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF  (16)
+state 15
+	bloque_ejecutable : asignacion .  (15)
 
-	_IDENTIFIER  shift 24
-	_CONSTANT_UNSIGNED_INTEGER  shift 25
-	_CONSTANT_SINGLE  shift 26
-	_CONSTANT_STRING  shift 27
+	.  reduce 15
+
+
+state 16
+	bloque_ejecutable : impresion .  (16)
+
+	.  reduce 16
+
+
+state 17
+	seleccion : _IF _LPAREN . condicion _RPAREN bloque_de_sentencias _ENDIF  (17)
+	seleccion : _IF _LPAREN . condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF  (18)
+	seleccion : _IF _LPAREN . error _RPAREN bloque_de_sentencias _ENDIF  (19)
+	seleccion : _IF _LPAREN . condicion _RPAREN error _ENDIF  (20)
+
+	error  shift 25
+	_IDENTIFIER  shift 26
+	_CONSTANT_UNSIGNED_INTEGER  shift 27
+	_CONSTANT_SINGLE  shift 28
+	_CONSTANT_STRING  shift 29
 	.  error
 
-	condicion  goto 28
-	expresion  goto 29
-	termino  goto 30
-	factor  goto 31
+	condicion  goto 30
+	expresion  goto 31
+	termino  goto 32
+	factor  goto 33
 
 
 state 18
-	impresion : _PRINT _LPAREN . _CONSTANT_STRING _RPAREN _COMMA  (23)
+	impresion : _PRINT _LPAREN . _CONSTANT_STRING _RPAREN _COMMA  (27)
 
-	_CONSTANT_STRING  shift 32
+	_CONSTANT_STRING  shift 34
 	.  error
 
 
 state 19
-	iteracion : _FOR _LPAREN . condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA  (24)
+	iteracion : _FOR _LPAREN . condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA  (28)
 
-	_IDENTIFIER  shift 33
+	_IDENTIFIER  shift 35
 	.  error
 
-	condiciones_de_iteracion  goto 34
+	condiciones_de_iteracion  goto 36
 
 
 state 20
-	asignacion : _IDENTIFIER _ASSIGN . expresion _COMMA  (20)
+	asignacion : _IDENTIFIER _ASSIGN . expresion _COMMA  (24)
 
-	_IDENTIFIER  shift 24
-	_CONSTANT_UNSIGNED_INTEGER  shift 25
-	_CONSTANT_SINGLE  shift 26
-	_CONSTANT_STRING  shift 27
+	_IDENTIFIER  shift 26
+	_CONSTANT_UNSIGNED_INTEGER  shift 27
+	_CONSTANT_SINGLE  shift 28
+	_CONSTANT_STRING  shift 29
 	.  error
 
-	expresion  goto 35
-	termino  goto 30
-	factor  goto 31
+	expresion  goto 37
+	termino  goto 32
+	factor  goto 33
 
 
 state 21
@@ -258,509 +269,628 @@ state 21
 
 
 state 22
-	lista_de_variables : _IDENTIFIER .  (9)
-	lista_de_variables : _IDENTIFIER . _SEMICOLON lista_de_variables  (10)
+	sentencias_de_declaracion_de_variables : tipo error . _COMMA  (7)
 
-	_SEMICOLON  shift 36
-	_COMMA  reduce 9
-
-
-state 23
-	sentencias_de_declaracion_de_variables : tipo lista_de_variables . _COMMA  (6)
-
-	_COMMA  shift 37
+	_COMMA  shift 38
 	.  error
 
 
+state 23
+	lista_de_variables : _IDENTIFIER .  (10)
+	lista_de_variables : _IDENTIFIER . _SEMICOLON lista_de_variables  (11)
+	lista_de_variables : _IDENTIFIER . error lista_de_variables  (12)
+
+	error  shift 39
+	_SEMICOLON  shift 40
+	_COMMA  reduce 10
+
+
 state 24
-	factor : _IDENTIFIER .  (35)
+	sentencias_de_declaracion_de_variables : tipo lista_de_variables . _COMMA  (6)
+
+	_COMMA  shift 41
+	.  error
+
+
+state 25
+	seleccion : _IF _LPAREN error . _RPAREN bloque_de_sentencias _ENDIF  (19)
+
+	_RPAREN  shift 42
+	.  error
+
+
+state 26
+	factor : _IDENTIFIER .  (39)
+
+	.  reduce 39
+
+
+state 27
+	factor : _CONSTANT_UNSIGNED_INTEGER .  (36)
+
+	.  reduce 36
+
+
+state 28
+	factor : _CONSTANT_SINGLE .  (37)
+
+	.  reduce 37
+
+
+state 29
+	factor : _CONSTANT_STRING .  (38)
+
+	.  reduce 38
+
+
+state 30
+	seleccion : _IF _LPAREN condicion . _RPAREN bloque_de_sentencias _ENDIF  (17)
+	seleccion : _IF _LPAREN condicion . _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF  (18)
+	seleccion : _IF _LPAREN condicion . _RPAREN error _ENDIF  (20)
+
+	_RPAREN  shift 43
+	.  error
+
+
+state 31
+	condicion : expresion . comparador expresion  (23)
+	expresion : expresion . _PLUS termino  (30)
+	expresion : expresion . _MINUS termino  (31)
+
+	_PLUS  shift 44
+	_MINUS  shift 45
+	_EQUAL  shift 46
+	_LESSER  shift 47
+	_LESSER_OR_EQUAL  shift 48
+	_GREATER  shift 49
+	_GREATER_OR_EQUAL  shift 50
+	_UNEQUAL  shift 51
+	.  error
+
+	comparador  goto 52
+
+
+state 32
+	expresion : termino .  (32)
+	termino : termino . _MULT factor  (33)
+	termino : termino . _DIV factor  (34)
+
+	_MULT  shift 53
+	_DIV  shift 54
+	_PLUS  reduce 32
+	_MINUS  reduce 32
+	_EQUAL  reduce 32
+	_LESSER  reduce 32
+	_LESSER_OR_EQUAL  reduce 32
+	_GREATER  reduce 32
+	_GREATER_OR_EQUAL  reduce 32
+	_UNEQUAL  reduce 32
+	_RPAREN  reduce 32
+	_COMMA  reduce 32
+
+
+state 33
+	termino : factor .  (35)
 
 	.  reduce 35
 
 
-state 25
-	factor : _CONSTANT_UNSIGNED_INTEGER .  (32)
-
-	.  reduce 32
-
-
-state 26
-	factor : _CONSTANT_SINGLE .  (33)
-
-	.  reduce 33
-
-
-state 27
-	factor : _CONSTANT_STRING .  (34)
-
-	.  reduce 34
-
-
-state 28
-	seleccion : _IF _LPAREN condicion . _RPAREN bloque_de_sentencias _ENDIF  (15)
-	seleccion : _IF _LPAREN condicion . _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF  (16)
-
-	_RPAREN  shift 38
-	.  error
-
-
-state 29
-	condicion : expresion . comparador expresion  (19)
-	expresion : expresion . _PLUS termino  (26)
-	expresion : expresion . _MINUS termino  (27)
-
-	_PLUS  shift 39
-	_MINUS  shift 40
-	_EQUAL  shift 41
-	_LESSER  shift 42
-	_LESSER_OR_EQUAL  shift 43
-	_GREATER  shift 44
-	_GREATER_OR_EQUAL  shift 45
-	_UNEQUAL  shift 46
-	.  error
-
-	comparador  goto 47
-
-
-state 30
-	expresion : termino .  (28)
-	termino : termino . _MULT factor  (29)
-	termino : termino . _DIV factor  (30)
-
-	_MULT  shift 48
-	_DIV  shift 49
-	_PLUS  reduce 28
-	_MINUS  reduce 28
-	_EQUAL  reduce 28
-	_LESSER  reduce 28
-	_LESSER_OR_EQUAL  reduce 28
-	_GREATER  reduce 28
-	_GREATER_OR_EQUAL  reduce 28
-	_UNEQUAL  reduce 28
-	_RPAREN  reduce 28
-	_COMMA  reduce 28
-
-
-state 31
-	termino : factor .  (31)
-
-	.  reduce 31
-
-
-state 32
-	impresion : _PRINT _LPAREN _CONSTANT_STRING . _RPAREN _COMMA  (23)
-
-	_RPAREN  shift 50
-	.  error
-
-
-state 33
-	condiciones_de_iteracion : _IDENTIFIER . _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (25)
-
-	_ASSIGN  shift 51
-	.  error
-
-
 state 34
-	iteracion : _FOR _LPAREN condiciones_de_iteracion . _RPAREN bloque_de_sentencias _COMMA  (24)
+	impresion : _PRINT _LPAREN _CONSTANT_STRING . _RPAREN _COMMA  (27)
 
-	_RPAREN  shift 52
+	_RPAREN  shift 55
 	.  error
 
 
 state 35
-	asignacion : _IDENTIFIER _ASSIGN expresion . _COMMA  (20)
-	expresion : expresion . _PLUS termino  (26)
-	expresion : expresion . _MINUS termino  (27)
+	condiciones_de_iteracion : _IDENTIFIER . _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (29)
 
-	_PLUS  shift 39
-	_MINUS  shift 40
-	_COMMA  shift 53
+	_ASSIGN  shift 56
 	.  error
 
 
 state 36
-	lista_de_variables : _IDENTIFIER _SEMICOLON . lista_de_variables  (10)
+	iteracion : _FOR _LPAREN condiciones_de_iteracion . _RPAREN bloque_de_sentencias _COMMA  (28)
 
-	_IDENTIFIER  shift 22
+	_RPAREN  shift 57
 	.  error
-
-	lista_de_variables  goto 54
 
 
 state 37
+	asignacion : _IDENTIFIER _ASSIGN expresion . _COMMA  (24)
+	expresion : expresion . _PLUS termino  (30)
+	expresion : expresion . _MINUS termino  (31)
+
+	_PLUS  shift 44
+	_MINUS  shift 45
+	_COMMA  shift 58
+	.  error
+
+
+state 38
+	sentencias_de_declaracion_de_variables : tipo error _COMMA .  (7)
+
+	.  reduce 7
+
+
+state 39
+	lista_de_variables : _IDENTIFIER error . lista_de_variables  (12)
+
+	_IDENTIFIER  shift 23
+	.  error
+
+	lista_de_variables  goto 59
+
+
+state 40
+	lista_de_variables : _IDENTIFIER _SEMICOLON . lista_de_variables  (11)
+
+	_IDENTIFIER  shift 23
+	.  error
+
+	lista_de_variables  goto 60
+
+
+state 41
 	sentencias_de_declaracion_de_variables : tipo lista_de_variables _COMMA .  (6)
 
 	.  reduce 6
 
 
-state 38
-	seleccion : _IF _LPAREN condicion _RPAREN . bloque_de_sentencias _ENDIF  (15)
-	seleccion : _IF _LPAREN condicion _RPAREN . bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF  (16)
+state 42
+	seleccion : _IF _LPAREN error _RPAREN . bloque_de_sentencias _ENDIF  (19)
 
-	_LCBRACE  shift 55
+	_IF  shift 1
+	_PRINT  shift 2
+	_FOR  shift 5
+	_LCBRACE  shift 61
 	_IDENTIFIER  shift 6
 	.  error
 
-	asignacion  goto 56
-	bloque_de_sentencias  goto 57
+	bloque_ejecutable  goto 62
+	seleccion  goto 13
+	iteracion  goto 14
+	asignacion  goto 15
+	impresion  goto 16
+	bloque_de_sentencias  goto 63
 
 
-state 39
-	expresion : expresion _PLUS . termino  (26)
+state 43
+	seleccion : _IF _LPAREN condicion _RPAREN . bloque_de_sentencias _ENDIF  (17)
+	seleccion : _IF _LPAREN condicion _RPAREN . bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF  (18)
+	seleccion : _IF _LPAREN condicion _RPAREN . error _ENDIF  (20)
 
-	_IDENTIFIER  shift 24
-	_CONSTANT_UNSIGNED_INTEGER  shift 25
-	_CONSTANT_SINGLE  shift 26
-	_CONSTANT_STRING  shift 27
+	error  shift 64
+	_IF  shift 1
+	_PRINT  shift 2
+	_FOR  shift 5
+	_LCBRACE  shift 61
+	_IDENTIFIER  shift 6
 	.  error
 
-	termino  goto 58
-	factor  goto 31
+	bloque_ejecutable  goto 62
+	seleccion  goto 13
+	iteracion  goto 14
+	asignacion  goto 15
+	impresion  goto 16
+	bloque_de_sentencias  goto 65
 
 
-state 40
-	expresion : expresion _MINUS . termino  (27)
+state 44
+	expresion : expresion _PLUS . termino  (30)
 
-	_IDENTIFIER  shift 24
-	_CONSTANT_UNSIGNED_INTEGER  shift 25
-	_CONSTANT_SINGLE  shift 26
-	_CONSTANT_STRING  shift 27
+	_IDENTIFIER  shift 26
+	_CONSTANT_UNSIGNED_INTEGER  shift 27
+	_CONSTANT_SINGLE  shift 28
+	_CONSTANT_STRING  shift 29
 	.  error
 
-	termino  goto 59
-	factor  goto 31
+	termino  goto 66
+	factor  goto 33
 
 
-state 41
-	comparador : _EQUAL .  (40)
+state 45
+	expresion : expresion _MINUS . termino  (31)
+
+	_IDENTIFIER  shift 26
+	_CONSTANT_UNSIGNED_INTEGER  shift 27
+	_CONSTANT_SINGLE  shift 28
+	_CONSTANT_STRING  shift 29
+	.  error
+
+	termino  goto 67
+	factor  goto 33
+
+
+state 46
+	comparador : _EQUAL .  (44)
+
+	.  reduce 44
+
+
+state 47
+	comparador : _LESSER .  (40)
 
 	.  reduce 40
 
 
-state 42
-	comparador : _LESSER .  (36)
+state 48
+	comparador : _LESSER_OR_EQUAL .  (42)
 
-	.  reduce 36
-
-
-state 43
-	comparador : _LESSER_OR_EQUAL .  (38)
-
-	.  reduce 38
+	.  reduce 42
 
 
-state 44
-	comparador : _GREATER .  (37)
-
-	.  reduce 37
-
-
-state 45
-	comparador : _GREATER_OR_EQUAL .  (39)
-
-	.  reduce 39
-
-
-state 46
-	comparador : _UNEQUAL .  (41)
+state 49
+	comparador : _GREATER .  (41)
 
 	.  reduce 41
 
 
-state 47
-	condicion : expresion comparador . expresion  (19)
-
-	_IDENTIFIER  shift 24
-	_CONSTANT_UNSIGNED_INTEGER  shift 25
-	_CONSTANT_SINGLE  shift 26
-	_CONSTANT_STRING  shift 27
-	.  error
-
-	expresion  goto 60
-	termino  goto 30
-	factor  goto 31
-
-
-state 48
-	termino : termino _MULT . factor  (29)
-
-	_IDENTIFIER  shift 24
-	_CONSTANT_UNSIGNED_INTEGER  shift 25
-	_CONSTANT_SINGLE  shift 26
-	_CONSTANT_STRING  shift 27
-	.  error
-
-	factor  goto 61
-
-
-state 49
-	termino : termino _DIV . factor  (30)
-
-	_IDENTIFIER  shift 24
-	_CONSTANT_UNSIGNED_INTEGER  shift 25
-	_CONSTANT_SINGLE  shift 26
-	_CONSTANT_STRING  shift 27
-	.  error
-
-	factor  goto 62
-
-
 state 50
-	impresion : _PRINT _LPAREN _CONSTANT_STRING _RPAREN . _COMMA  (23)
+	comparador : _GREATER_OR_EQUAL .  (43)
 
-	_COMMA  shift 63
-	.  error
+	.  reduce 43
 
 
 state 51
-	condiciones_de_iteracion : _IDENTIFIER _ASSIGN . _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (25)
+	comparador : _UNEQUAL .  (45)
 
-	_CONSTANT_UNSIGNED_INTEGER  shift 64
-	.  error
+	.  reduce 45
 
 
 state 52
-	iteracion : _FOR _LPAREN condiciones_de_iteracion _RPAREN . bloque_de_sentencias _COMMA  (24)
+	condicion : expresion comparador . expresion  (23)
 
-	_LCBRACE  shift 55
-	_IDENTIFIER  shift 6
+	_IDENTIFIER  shift 26
+	_CONSTANT_UNSIGNED_INTEGER  shift 27
+	_CONSTANT_SINGLE  shift 28
+	_CONSTANT_STRING  shift 29
 	.  error
 
-	asignacion  goto 56
-	bloque_de_sentencias  goto 65
+	expresion  goto 68
+	termino  goto 32
+	factor  goto 33
 
 
 state 53
-	asignacion : _IDENTIFIER _ASSIGN expresion _COMMA .  (20)
+	termino : termino _MULT . factor  (33)
 
-	.  reduce 20
+	_IDENTIFIER  shift 26
+	_CONSTANT_UNSIGNED_INTEGER  shift 27
+	_CONSTANT_SINGLE  shift 28
+	_CONSTANT_STRING  shift 29
+	.  error
+
+	factor  goto 69
 
 
 state 54
-	lista_de_variables : _IDENTIFIER _SEMICOLON lista_de_variables .  (10)
+	termino : termino _DIV . factor  (34)
 
-	.  reduce 10
+	_IDENTIFIER  shift 26
+	_CONSTANT_UNSIGNED_INTEGER  shift 27
+	_CONSTANT_SINGLE  shift 28
+	_CONSTANT_STRING  shift 29
+	.  error
+
+	factor  goto 70
 
 
 state 55
-	bloque_de_sentencias : _LCBRACE . asignacion_compuesta _RCBRACE  (18)
-
-	_IDENTIFIER  shift 6
-	.  error
-
-	asignacion  goto 66
-	asignacion_compuesta  goto 67
-
-
-state 56
-	bloque_de_sentencias : asignacion .  (17)
-
-	.  reduce 17
-
-
-state 57
-	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias . _ENDIF  (15)
-	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias . _ELSE bloque_de_sentencias _ENDIF  (16)
-
-	_ELSE  shift 68
-	_ENDIF  shift 69
-	.  error
-
-
-state 58
-	expresion : expresion _PLUS termino .  (26)
-	termino : termino . _MULT factor  (29)
-	termino : termino . _DIV factor  (30)
-
-	_MULT  shift 48
-	_DIV  shift 49
-	_PLUS  reduce 26
-	_MINUS  reduce 26
-	_EQUAL  reduce 26
-	_LESSER  reduce 26
-	_LESSER_OR_EQUAL  reduce 26
-	_GREATER  reduce 26
-	_GREATER_OR_EQUAL  reduce 26
-	_UNEQUAL  reduce 26
-	_RPAREN  reduce 26
-	_COMMA  reduce 26
-
-
-state 59
-	expresion : expresion _MINUS termino .  (27)
-	termino : termino . _MULT factor  (29)
-	termino : termino . _DIV factor  (30)
-
-	_MULT  shift 48
-	_DIV  shift 49
-	_PLUS  reduce 27
-	_MINUS  reduce 27
-	_EQUAL  reduce 27
-	_LESSER  reduce 27
-	_LESSER_OR_EQUAL  reduce 27
-	_GREATER  reduce 27
-	_GREATER_OR_EQUAL  reduce 27
-	_UNEQUAL  reduce 27
-	_RPAREN  reduce 27
-	_COMMA  reduce 27
-
-
-state 60
-	condicion : expresion comparador expresion .  (19)
-	expresion : expresion . _PLUS termino  (26)
-	expresion : expresion . _MINUS termino  (27)
-
-	_PLUS  shift 39
-	_MINUS  shift 40
-	_RPAREN  reduce 19
-
-
-state 61
-	termino : termino _MULT factor .  (29)
-
-	.  reduce 29
-
-
-state 62
-	termino : termino _DIV factor .  (30)
-
-	.  reduce 30
-
-
-state 63
-	impresion : _PRINT _LPAREN _CONSTANT_STRING _RPAREN _COMMA .  (23)
-
-	.  reduce 23
-
-
-state 64
-	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER . _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (25)
-
-	_SEMICOLON  shift 70
-	.  error
-
-
-state 65
-	iteracion : _FOR _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias . _COMMA  (24)
+	impresion : _PRINT _LPAREN _CONSTANT_STRING _RPAREN . _COMMA  (27)
 
 	_COMMA  shift 71
 	.  error
 
 
-state 66
-	asignacion_compuesta : asignacion .  (21)
-	asignacion_compuesta : asignacion . asignacion_compuesta  (22)
+state 56
+	condiciones_de_iteracion : _IDENTIFIER _ASSIGN . _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (29)
 
-	_IDENTIFIER  shift 6
-	_RCBRACE  reduce 21
-
-	asignacion  goto 66
-	asignacion_compuesta  goto 72
-
-
-state 67
-	bloque_de_sentencias : _LCBRACE asignacion_compuesta . _RCBRACE  (18)
-
-	_RCBRACE  shift 73
+	_CONSTANT_UNSIGNED_INTEGER  shift 72
 	.  error
 
 
-state 68
-	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE . bloque_de_sentencias _ENDIF  (16)
+state 57
+	iteracion : _FOR _LPAREN condiciones_de_iteracion _RPAREN . bloque_de_sentencias _COMMA  (28)
 
-	_LCBRACE  shift 55
+	_IF  shift 1
+	_PRINT  shift 2
+	_FOR  shift 5
+	_LCBRACE  shift 61
 	_IDENTIFIER  shift 6
 	.  error
 
-	asignacion  goto 56
-	bloque_de_sentencias  goto 74
+	bloque_ejecutable  goto 62
+	seleccion  goto 13
+	iteracion  goto 14
+	asignacion  goto 15
+	impresion  goto 16
+	bloque_de_sentencias  goto 73
 
 
-state 69
-	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF .  (15)
-
-	.  reduce 15
-
-
-state 70
-	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON . _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (25)
-
-	_IDENTIFIER  shift 75
-	.  error
-
-
-state 71
-	iteracion : _FOR _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA .  (24)
+state 58
+	asignacion : _IDENTIFIER _ASSIGN expresion _COMMA .  (24)
 
 	.  reduce 24
 
 
-state 72
-	asignacion_compuesta : asignacion asignacion_compuesta .  (22)
+state 59
+	lista_de_variables : _IDENTIFIER error lista_de_variables .  (12)
 
-	.  reduce 22
-
-
-state 73
-	bloque_de_sentencias : _LCBRACE asignacion_compuesta _RCBRACE .  (18)
-
-	.  reduce 18
+	.  reduce 12
 
 
-state 74
-	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias . _ENDIF  (16)
+state 60
+	lista_de_variables : _IDENTIFIER _SEMICOLON lista_de_variables .  (11)
+
+	.  reduce 11
+
+
+state 61
+	bloque_de_sentencias : _LCBRACE . asignacion_compuesta _RCBRACE  (22)
+
+	_IF  shift 1
+	_PRINT  shift 2
+	_FOR  shift 5
+	_IDENTIFIER  shift 6
+	.  error
+
+	bloque_ejecutable  goto 74
+	seleccion  goto 13
+	iteracion  goto 14
+	asignacion  goto 15
+	impresion  goto 16
+	asignacion_compuesta  goto 75
+
+
+state 62
+	bloque_de_sentencias : bloque_ejecutable .  (21)
+
+	.  reduce 21
+
+
+state 63
+	seleccion : _IF _LPAREN error _RPAREN bloque_de_sentencias . _ENDIF  (19)
 
 	_ENDIF  shift 76
 	.  error
 
 
-state 75
-	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER . comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (25)
+state 64
+	seleccion : _IF _LPAREN condicion _RPAREN error . _ENDIF  (20)
 
-	_EQUAL  shift 41
-	_LESSER  shift 42
-	_LESSER_OR_EQUAL  shift 43
-	_GREATER  shift 44
-	_GREATER_OR_EQUAL  shift 45
-	_UNEQUAL  shift 46
+	_ENDIF  shift 77
 	.  error
 
-	comparador  goto 77
+
+state 65
+	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias . _ENDIF  (17)
+	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias . _ELSE bloque_de_sentencias _ENDIF  (18)
+
+	_ELSE  shift 78
+	_ENDIF  shift 79
+	.  error
+
+
+state 66
+	expresion : expresion _PLUS termino .  (30)
+	termino : termino . _MULT factor  (33)
+	termino : termino . _DIV factor  (34)
+
+	_MULT  shift 53
+	_DIV  shift 54
+	_PLUS  reduce 30
+	_MINUS  reduce 30
+	_EQUAL  reduce 30
+	_LESSER  reduce 30
+	_LESSER_OR_EQUAL  reduce 30
+	_GREATER  reduce 30
+	_GREATER_OR_EQUAL  reduce 30
+	_UNEQUAL  reduce 30
+	_RPAREN  reduce 30
+	_COMMA  reduce 30
+
+
+state 67
+	expresion : expresion _MINUS termino .  (31)
+	termino : termino . _MULT factor  (33)
+	termino : termino . _DIV factor  (34)
+
+	_MULT  shift 53
+	_DIV  shift 54
+	_PLUS  reduce 31
+	_MINUS  reduce 31
+	_EQUAL  reduce 31
+	_LESSER  reduce 31
+	_LESSER_OR_EQUAL  reduce 31
+	_GREATER  reduce 31
+	_GREATER_OR_EQUAL  reduce 31
+	_UNEQUAL  reduce 31
+	_RPAREN  reduce 31
+	_COMMA  reduce 31
+
+
+state 68
+	condicion : expresion comparador expresion .  (23)
+	expresion : expresion . _PLUS termino  (30)
+	expresion : expresion . _MINUS termino  (31)
+
+	_PLUS  shift 44
+	_MINUS  shift 45
+	_RPAREN  reduce 23
+
+
+state 69
+	termino : termino _MULT factor .  (33)
+
+	.  reduce 33
+
+
+state 70
+	termino : termino _DIV factor .  (34)
+
+	.  reduce 34
+
+
+state 71
+	impresion : _PRINT _LPAREN _CONSTANT_STRING _RPAREN _COMMA .  (27)
+
+	.  reduce 27
+
+
+state 72
+	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER . _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (29)
+
+	_SEMICOLON  shift 80
+	.  error
+
+
+state 73
+	iteracion : _FOR _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias . _COMMA  (28)
+
+	_COMMA  shift 81
+	.  error
+
+
+state 74
+	asignacion_compuesta : bloque_ejecutable .  (25)
+	asignacion_compuesta : bloque_ejecutable . asignacion_compuesta  (26)
+
+	_IF  shift 1
+	_PRINT  shift 2
+	_FOR  shift 5
+	_IDENTIFIER  shift 6
+	_RCBRACE  reduce 25
+
+	bloque_ejecutable  goto 74
+	seleccion  goto 13
+	iteracion  goto 14
+	asignacion  goto 15
+	impresion  goto 16
+	asignacion_compuesta  goto 82
+
+
+state 75
+	bloque_de_sentencias : _LCBRACE asignacion_compuesta . _RCBRACE  (22)
+
+	_RCBRACE  shift 83
+	.  error
 
 
 state 76
-	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF .  (16)
+	seleccion : _IF _LPAREN error _RPAREN bloque_de_sentencias _ENDIF .  (19)
 
-	.  reduce 16
+	.  reduce 19
 
 
 state 77
-	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador . _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (25)
+	seleccion : _IF _LPAREN condicion _RPAREN error _ENDIF .  (20)
 
-	_CONSTANT_UNSIGNED_INTEGER  shift 78
-	.  error
+	.  reduce 20
 
 
 state 78
-	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER . _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (25)
+	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE . bloque_de_sentencias _ENDIF  (18)
 
-	_SEMICOLON  shift 79
+	_IF  shift 1
+	_PRINT  shift 2
+	_FOR  shift 5
+	_LCBRACE  shift 61
+	_IDENTIFIER  shift 6
 	.  error
+
+	bloque_ejecutable  goto 62
+	seleccion  goto 13
+	iteracion  goto 14
+	asignacion  goto 15
+	impresion  goto 16
+	bloque_de_sentencias  goto 84
 
 
 state 79
-	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON . _CONSTANT_UNSIGNED_INTEGER  (25)
+	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF .  (17)
 
-	_CONSTANT_UNSIGNED_INTEGER  shift 80
-	.  error
+	.  reduce 17
 
 
 state 80
-	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER .  (25)
+	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON . _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (29)
 
-	.  reduce 25
+	_IDENTIFIER  shift 85
+	.  error
+
+
+state 81
+	iteracion : _FOR _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA .  (28)
+
+	.  reduce 28
+
+
+state 82
+	asignacion_compuesta : bloque_ejecutable asignacion_compuesta .  (26)
+
+	.  reduce 26
+
+
+state 83
+	bloque_de_sentencias : _LCBRACE asignacion_compuesta _RCBRACE .  (22)
+
+	.  reduce 22
+
+
+state 84
+	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias . _ENDIF  (18)
+
+	_ENDIF  shift 86
+	.  error
+
+
+state 85
+	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER . comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (29)
+
+	_EQUAL  shift 46
+	_LESSER  shift 47
+	_LESSER_OR_EQUAL  shift 48
+	_GREATER  shift 49
+	_GREATER_OR_EQUAL  shift 50
+	_UNEQUAL  shift 51
+	.  error
+
+	comparador  goto 87
+
+
+state 86
+	seleccion : _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF .  (18)
+
+	.  reduce 18
+
+
+state 87
+	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador . _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (29)
+
+	_CONSTANT_UNSIGNED_INTEGER  shift 88
+	.  error
+
+
+state 88
+	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER . _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (29)
+
+	_SEMICOLON  shift 89
+	.  error
+
+
+state 89
+	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON . _CONSTANT_UNSIGNED_INTEGER  (29)
+
+	_CONSTANT_UNSIGNED_INTEGER  shift 90
+	.  error
+
+
+state 90
+	condiciones_de_iteracion : _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER .  (29)
+
+	.  reduce 29
 
 
 34 terminals, 20 nonterminals
-42 grammar rules, 81 states
+46 grammar rules, 91 states
