@@ -156,6 +156,7 @@ asignacion_compuesta :
  */
 impresion :
   _PRINT _LPAREN _CONSTANT_STRING _RPAREN _COMMA {	notify("Sentencia PRINT en línea " + this.lineaActual + ".");	}
+  | _PRINT _LPAREN error _RPAREN	_COMMA { yyerror("ERROR: No se especificó ninguna cadena en sentencia PRINT", this.lineaActual); }
   ;
 
 /**
@@ -164,6 +165,8 @@ impresion :
  */
 iteracion :
 	_FOR _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA {	notify("Sentencia FOR en línea " + this.lineaActual + ".");	}
+	| _FOR _LPAREN error _RPAREN bloque_de_sentencias _COMMA {	yyerror("ERROR: No se especificó  ninguna condición en sentencia FOR", this.lineaActual);	}
+	| _FOR _LPAREN condiciones_de_iteracion _RPAREN error _COMMA {	yyerror("ERROR: No se especificó  ningún bloque de condiciones en sentencia FOR", this.lineaActual);	}
 	;
 
 condiciones_de_iteracion :
