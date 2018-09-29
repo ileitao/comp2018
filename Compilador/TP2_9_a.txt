@@ -1,0 +1,5 @@
+if ( 2_ui + 3_ui = 5_ui ) 
+  for ( _uivar1 := 1_ui ; _uivar1 > 5_ui ; 10_ui ) _var2 := 4_ui , ,
+endif
+
+#Debe permitirse anidamiento de sentencias de control.#
