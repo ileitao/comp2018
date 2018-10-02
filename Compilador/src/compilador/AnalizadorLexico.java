@@ -120,54 +120,6 @@ public class AnalizadorLexico {
 		mapearMatAccSemanticas();
 	}
 
-	public void setEstadoActual(int estadoActual) {
-		this.estadoActual = estadoActual;
-	}
-
-	public int getEstadoActual() {
-		return this.estadoActual;
-	}
-
-	public int getEstadoSiguiente() {
-		return estadoSiguiente;
-	}
-
-	public void setEstadoSiguiente(int estadoSiguiente) {
-		this.estadoSiguiente = estadoSiguiente;
-	}
-
-	/**
-	 * Inciso C: La numeración de las líneas de código debe comenzar en 1
-	 * @return El numero de linea del lector de archivo mas uno.
-	 */
-	public int getLineaActual() {
-		return this.lector.getNroLinea() + 1;
-	}
-        
-        public int getPunteroActual() {
-                return this.lector.getPuntero();
-        }
-
-	public TablaDeSimbolos getTablaSimbolos() {
-		return tablaSimbolos;
-	}
-
-	public StringBuffer getLexemaParcial() {
-		return this.lexemaParcial;
-	}
-
-	public void setLexemaParcial(String nuevoLexema) {
-		this.lexemaParcial = new StringBuffer(nuevoLexema);
-	}
-
-	public Character getCharActual() {
-		return this.charActual;
-	}
-
-	public void setCharActual(Character caracter) {
-		this.charActual = caracter;
-	}
-
 	/**
 	 * Obtiene el siguiente token pidiendole uno a uno los simbolos al lector de
 	 * archivo.
@@ -208,12 +160,12 @@ public class AnalizadorLexico {
 			int posicionToken = lector.getPuntero() - this.lexemaParcial.length();
 			int lineaToken = lector.getNroLinea();
 
-			RegTablaSimbolos reg = tablaSimbolos.getRegistro(this.lexemaParcial.toString());
+			String lexemaString = lexemaParcial.toString();
+			RegTablaSimbolos reg = tablaSimbolos.getRegistro(lexemaString);
 			// Si no existe en la tabla de simbolos cargo el registro, sino devuelvo el
 			// token existente.
 			if (reg == null) {
-				reg = this.tablaSimbolos.createRegTabla(this.lexemaParcial.toString(), this.tipoToken, lineaToken, posicionToken);
-				this.tablaSimbolos.agregarSimbolo(reg);
+				this.tablaSimbolos.agregarSimbolo(lexemaString, this.tipoToken, lineaToken, posicionToken);
 			}
 			
 			//guardo el token reconocido en la tira de tokens.
@@ -519,6 +471,67 @@ public class AnalizadorLexico {
 		}
 	}
 
+	/**
+	 * Configura el analizador lexico en el estado inicial y setea un nuevo lexema vacio.
+	 */
+	public void reiniciar() {
+		setEstadoActual(ESTADO_INICIAL);
+		setEstadoSiguiente(ESTADO_INICIAL);
+		setLexemaParcial("");
+	}
+
+	public Hashtable<Integer, AccionSemantica> getAccionesSemanticas() {
+		return accionesSemanticas;
+	}
+
+	public void setEstadoActual(int estadoActual) {
+		this.estadoActual = estadoActual;
+	}
+
+	public int getEstadoActual() {
+		return this.estadoActual;
+	}
+
+	public int getEstadoSiguiente() {
+		return estadoSiguiente;
+	}
+
+	public void setEstadoSiguiente(int estadoSiguiente) {
+		this.estadoSiguiente = estadoSiguiente;
+	}
+
+	/**
+	 * Inciso C: La numeración de las líneas de código debe comenzar en 1
+	 * @return El numero de linea del lector de archivo mas uno.
+	 */
+	public int getLineaActual() {
+		return this.lector.getNroLinea() + 1;
+	}
+        
+        public int getPunteroActual() {
+                return this.lector.getPuntero();
+        }
+
+	public TablaDeSimbolos getTablaSimbolos() {
+		return tablaSimbolos;
+	}
+
+	public StringBuffer getLexemaParcial() {
+		return this.lexemaParcial;
+	}
+
+	public void setLexemaParcial(String nuevoLexema) {
+		this.lexemaParcial = new StringBuffer(nuevoLexema);
+	}
+
+	public Character getCharActual() {
+		return this.charActual;
+	}
+
+	public void setCharActual(Character caracter) {
+		this.charActual = caracter;
+	}
+
 	public Logger getLogger() {
 		return logger;
 	}
@@ -533,19 +546,6 @@ public class AnalizadorLexico {
 
 	public List<Token> getTiraTokens() {
 		return tiraTokens;
-	}
-
-	/**
-	 * Configura el analizador lexico en el estado inicial y setea un nuevo lexema vacio.
-	 */
-	public void reiniciar() {
-		setEstadoActual(ESTADO_INICIAL);
-		setEstadoSiguiente(ESTADO_INICIAL);
-		setLexemaParcial("");
-	}
-
-	public Hashtable<Integer, AccionSemantica> getAccionesSemanticas() {
-		return accionesSemanticas;
 	}
 
 }
