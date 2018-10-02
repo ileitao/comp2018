@@ -9,12 +9,12 @@ public class ASCadenaCaracteres implements Validable {
 	}
 	
 	@Override
-	public boolean evaluar(AnalizadorLexico aLexico, TipoToken tipoToken) {
+	public boolean validar(AnalizadorLexico aLexico, TipoToken tipoToken) {
 		return false;
 	}
 
 	@Override
-	public void procesar(AnalizadorLexico aLexico) {
+	public void finalizar(AnalizadorLexico aLexico) {
 		
 		String lexema = aLexico.getLexemaParcial().toString();
 		

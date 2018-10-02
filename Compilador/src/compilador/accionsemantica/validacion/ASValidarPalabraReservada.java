@@ -14,7 +14,7 @@ public class ASValidarPalabraReservada implements Validable {
 	 * Retorna true si la palabra existe en la tabla de simbolos y ademas es palabra reservada.
 	 */
 	@Override
-	public boolean evaluar(AnalizadorLexico aLexico, TipoToken tipoToken) {
+	public boolean validar(AnalizadorLexico aLexico, TipoToken tipoToken) {
 		
 		//Se retrocede el lector para volver a leer el ultimo caracter leido.
 		aLexico.retrocederLectura();
@@ -34,7 +34,7 @@ public class ASValidarPalabraReservada implements Validable {
 	 * Se almacena el error y se reinicia el analizador lexico.
 	 */
 	@Override
-	public void procesar(AnalizadorLexico aLexico) {
+	public void finalizar(AnalizadorLexico aLexico) {
 		String lexema = aLexico.getLexemaParcial().toString();
 		int linea = aLexico.getLineaActual();
 		

@@ -3,7 +3,10 @@ package compilador.accionsemantica.validacion;
 import compilador.AnalizadorLexico;
 import compilador.TipoToken;
 
-public class ASTokenOtro implements Validable {
+public class ASComentario implements Validable {
+
+	public ASComentario() {
+	}
 
 	@Override
 	public boolean validar(AnalizadorLexico aLexico, TipoToken tipoToken) {
@@ -12,7 +15,7 @@ public class ASTokenOtro implements Validable {
 
 	@Override
 	public void finalizar(AnalizadorLexico aLexico) {
-		aLexico.setLexemaParcial(aLexico.getCharActual().toString());
+		aLexico.reiniciar();
 	}
 
 }

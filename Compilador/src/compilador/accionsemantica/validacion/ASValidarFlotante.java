@@ -1,5 +1,7 @@
 package compilador.accionsemantica.validacion;
 
+import java.util.regex.Pattern;
+
 import compilador.AnalizadorLexico;
 import compilador.TipoToken;
 import compilador.log.EventoLog;
@@ -17,10 +19,18 @@ public class ASValidarFlotante implements Validable {
 	}
 
 	@Override
-	public boolean evaluar(AnalizadorLexico aLexico, TipoToken tipoToken) {
+	public boolean validar(AnalizadorLexico aLexico, TipoToken tipoToken) {
 		
 		//Se retrocede el lector para volver a leer el ultimo caracter leido.
 		aLexico.retrocederLectura();
+		
+		// \d	--> digito
+		// +	--> 1 o mas del elemento anterior
+		// 		--> .
+		
+		Pattern expReg = Pattern.compile("\\d+");
+		
+		aLexico.getLexemaParcial().toString();
 		
 		String[] lexema = aLexico.getLexemaParcial().toString().split("F");
 		
@@ -49,7 +59,7 @@ public class ASValidarFlotante implements Validable {
 	}
 
 	@Override
-	public void procesar(AnalizadorLexico aLexico) {
+	public void finalizar(AnalizadorLexico aLexico) {
 		
 		aLexico.getLogger().log(
 				new EventoLog("El flotante no se encuentra dentro de rango permitido."

@@ -14,10 +14,17 @@ public class ASValidarEnteroSinSigno implements Validable {
 	}
 
 	@Override
-	public boolean evaluar(AnalizadorLexico aLexico, TipoToken tipoToken) {
-		
+	public boolean validar(AnalizadorLexico aLexico, TipoToken tipoToken) {
+
+		//Concatena la "i" con la que se va a estado final
+		aLexico.getLexemaParcial().append(aLexico.getCharActual().toString());
 		String lexema = aLexico.getLexemaParcial().toString();
-		lexema = lexema.substring(0, lexema.length()-2);
+		
+		if (!lexema.endsWith("_ui"))
+			return false;
+		
+		//Descarto el postifjo "_ui" para quedarme con el numero.
+		lexema = lexema.split("_")[0];
 		int numero = Integer.parseInt(lexema);
 		
 		if ((numero >= MIN_ENTERO_SIN_SIGNO) && (numero <= MAX_ENTERO_SIN_SIGNO)){
@@ -29,7 +36,8 @@ public class ASValidarEnteroSinSigno implements Validable {
 	}
 
 	@Override
-	public void procesar(AnalizadorLexico aLexico) {
+	public void finalizar(AnalizadorLexico aLexico) {
+		
 		//En caso de estar fuera del rango se utiliza la tecnica de reemplazo con el maximo valor permitido.
 		//Se setea un warning.
 		String numero = aLexico.getLexemaParcial().toString();
@@ -40,6 +48,8 @@ public class ASValidarEnteroSinSigno implements Validable {
 				+ " al maximo valor permitido " + MAX_ENTERO_SIN_SIGNO, EventoLog.WARNING, linea));
 		
 		aLexico.setLexemaParcial(String.valueOf(MAX_ENTERO_SIN_SIGNO));
+		
+		
 	}
 
 }

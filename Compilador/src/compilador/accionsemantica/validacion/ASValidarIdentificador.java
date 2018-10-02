@@ -12,7 +12,7 @@ public class ASValidarIdentificador implements Validable {
 	}
 
 	@Override
-	public boolean evaluar(AnalizadorLexico aLexico, TipoToken tipoToken) {
+	public boolean validar(AnalizadorLexico aLexico, TipoToken tipoToken) {
 		
 		//Se retrocede el lector para volver a leer el ultimo caracter leido.
 		aLexico.retrocederLectura();
@@ -23,7 +23,7 @@ public class ASValidarIdentificador implements Validable {
 	}
 
 	@Override
-	public void procesar(AnalizadorLexico aLexico) {
+	public void finalizar(AnalizadorLexico aLexico) {
 		
 		String lexema = aLexico.getLexemaParcial().toString();
 		int linea = aLexico.getLineaActual();

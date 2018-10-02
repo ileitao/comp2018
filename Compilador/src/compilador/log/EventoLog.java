@@ -61,7 +61,7 @@ public class EventoLog {
 
 	@Override
 	public String toString() {
-		return "EventoLog [mensaje=" + mensaje + ", tipo=" + tipo + ", linea=" + linea + "]";
+		return "EventoLog [linea=" + linea + ", tipo=" + tipo + ", mensaje=" + mensaje + "]";
 	}
 
 }

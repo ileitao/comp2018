@@ -5,14 +5,14 @@ import compilador.TipoToken;
 
 public class ASValidarCadenaCarateres implements Validable {
 
-	public ASValidarCadenaCarateres(AnalizadorLexico analizadorLexico) {
+	public ASValidarCadenaCarateres() {
 	}
 
 	/**
 	 * No requiere validacion, se realiza la accion necesaria.
 	 */
 	@Override
-	public boolean evaluar(AnalizadorLexico aLexico, TipoToken tipoToken) {
+	public boolean validar(AnalizadorLexico aLexico, TipoToken tipoToken) {
 		return false;
 	}
 
@@ -20,7 +20,7 @@ public class ASValidarCadenaCarateres implements Validable {
 	 * Descarta las comillas que determinan la cadena de texto.
 	 */
 	@Override
-	public void procesar(AnalizadorLexico aLexico) {
+	public void finalizar(AnalizadorLexico aLexico) {
 		
 		String lexema = aLexico.getLexemaParcial().toString();
 		lexema = lexema.substring(1, lexema.length()-1);
