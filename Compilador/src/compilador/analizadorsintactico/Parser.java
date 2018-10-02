@@ -503,11 +503,14 @@ public void Run() throws IOException
     System.out.println(analizadorLexico.getTiraTokens());
     System.out.println("Cant. Tokens detectados: " + analizadorLexico.getTiraTokens().size());
     System.out.println("************************************************");
+    System.out.println("Errores léxicos encontrados:");
+    this.analizadorLexico.getLogger().imprimir();
+    System.out.println("************************************************");
     System.out.println("Tabla de Simbolos:");
     this.tablaDeSimbolos.imprimirTablaDeSimbolos();
     System.out.println("************************************************");
 }
-//#line 438 "Parser.java"
+//#line 441 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -746,7 +749,7 @@ case 44:
 //#line 217 "Gramatica.y"
 {	yyerror("ERROR: No se especificó  ningún bloque de condiciones en sentencia FOR", this.lineaActual);	}
 break;
-//#line 671 "Parser.java"
+//#line 674 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
