@@ -1,7 +1,6 @@
 package compilador;
 
 import java.io.IOException;
-import compilador.analizadorsintactico.Parser;
 
 /**
  * Clase Compilador
@@ -12,13 +11,15 @@ import compilador.analizadorsintactico.Parser;
  */
 public class Compilador {
     
-    /**
+    private static final String CODIGO_PARA_EL_SINTACTICO_TXT = "./Compilador/codigo-para-el-sintactico.txt";
+
+	/**
      * @param args the command line arguments
      * @throws IOException 
      */
     public static void main(String[] args) throws IOException {
         String rutaDelArchivo;
-        rutaDelArchivo = "codigo-para-el-sintactico.txt";
+        rutaDelArchivo = CODIGO_PARA_EL_SINTACTICO_TXT;
         if (args.length != 0) {
             rutaDelArchivo = (String)args[0];
         }

@@ -29,8 +29,9 @@ public class TablaDeSimbolos {
         return this.tablaDeSimbolos;
     }
     
-    public void agregarSimbolo(RegTablaSimbolos regSimbolo) {
-        this.tablaDeSimbolos.put(regSimbolo.getToken().getLexema(), regSimbolo);
+    public void agregarSimbolo(String lexema, TipoToken tipoToken, int lineaToken, int posicionToken) {
+		RegTablaSimbolos reg = this.createRegTabla(lexema, tipoToken, lineaToken, posicionToken);
+        this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
     }
     
     public RegTablaSimbolos getRegistro(String lexemaToken) {
@@ -130,9 +131,9 @@ public class TablaDeSimbolos {
     }
     
     /**
-     * Metodo publico para registrar nuevos tokens con el ID consecutivo privado.
+     * Metodo privado para registrar nuevos tokens con el ID consecutivo privado.
      */
-    public RegTablaSimbolos createRegTabla(String lexemaToken, TipoToken tipoToken, int linea, int posicion) {
+    private RegTablaSimbolos createRegTabla(String lexemaToken, TipoToken tipoToken, int linea, int posicion) {
 //    	if (tipoToken.equals(TipoToken.IDENTIFICADOR)) {
 //            return registrarNuevoToken(Parser._IDENTIFIER, lexemaToken, tipoToken, linea, posicion); 
 //        } else if (tipoToken == TipoToken.CONSTANTE_ENTERO_SIN_SIGNO)
