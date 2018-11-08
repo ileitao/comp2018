@@ -343,6 +343,21 @@ public Parser(AnalizadorLexico analizadorLexico, TablaDeSimbolos tablaDeSimbolos
 
 public void Run() throws IOException
 {
-  yyparse();
-  this.logger.imprimir();
+    System.out.println("************************************************");
+    System.out.println("Resultados del Analizador Sintáctico:");
+    yyparse();
+    System.out.println("************************************************");
+    System.out.println("Errores sintácticos encontrados:");
+    this.logger.imprimir();
+    System.out.println("************************************************");
+    System.out.println("Resultados del Analizador Léxico:");
+    System.out.println(analizadorLexico.getTiraTokens());
+    System.out.println("Cant. Tokens detectados: " + analizadorLexico.getTiraTokens().size());
+    System.out.println("************************************************");
+    System.out.println("Errores léxicos encontrados:");
+    this.analizadorLexico.getLogger().imprimir();
+    System.out.println("************************************************");
+    System.out.println("Tabla de Simbolos:");
+    this.tablaDeSimbolos.imprimirTablaDeSimbolos();
+    System.out.println("************************************************");
 }

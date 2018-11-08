@@ -1,0 +1,10 @@
+#Este es
+un comentario, multilinea, bien
+defini-
+do#
+
+#Pero este
+no lo es
+porque no se
+cierra					
+con el caracter de fin de comentario

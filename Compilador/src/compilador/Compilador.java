@@ -18,18 +18,20 @@ public class Compilador {
      */
     public static void main(String[] args) throws IOException {
         String rutaDelArchivo;
+        
+        //archivo por defecto
         rutaDelArchivo = "codigo-para-el-sintactico.txt";
+        
+        //En caso de pasarse, se usa el archivo pasado como argumento
         if (args.length != 0) {
             rutaDelArchivo = (String)args[0];
-        }
+        }  
         
-        TablaDeSimbolos tablaDeSimbolos = new TablaDeSimbolos();
         LectorDeArchivo lector = new LectorDeArchivo(rutaDelArchivo);
         AnalizadorLexico analizadorLexico = new AnalizadorLexico(lector);
-        //testLectorArchivos(rutaDelArchivo);
-        testAnalizadorLexico(analizadorLexico);
-//        Parser p = new Parser(analizadorLexico, tablaDeSimbolos);
-//        p.Run();
+        
+        Parser p = new Parser(analizadorLexico, analizadorLexico.getTablaSimbolos());
+        p.Run();
     }
 
 	private static void testAnalizadorLexico(AnalizadorLexico analizadorLexico) {

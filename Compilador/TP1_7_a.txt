@@ -1,4 +1,2 @@
-if void return
-RETURN VOID FUN
-
-#Se espera que el compilador encuentre errores al intentar leer un identificar mal formado.#
+if VOID return
+RETURN void FUN
