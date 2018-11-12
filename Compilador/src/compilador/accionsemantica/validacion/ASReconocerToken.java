@@ -2,7 +2,9 @@ package compilador.accionsemantica.validacion;
 
 import compilador.AnalizadorLexico;
 import compilador.TipoToken;
+import compilador.accionsemantica.ASTipos;
 import compilador.accionsemantica.AccionSemantica;
+import compilador.accionsemantica.general.ASConcatenarLexema;
 
 public class ASReconocerToken extends AccionSemantica {
 
@@ -32,8 +34,14 @@ public class ASReconocerToken extends AccionSemantica {
 		//ESTADO INICIAL: inicializo lexema y seteo el tipo de token que se esta reconociendo
 		if (this.analizadorLexico.getEstadoActual() == AnalizadorLexico.ESTADO_INICIAL) {
 
-			this.analizadorLexico.setLexemaParcial(this.analizadorLexico.getCharActual().toString());
-			this.analizadorLexico.setTipoToken(this.tipotoken);
+			//En caso de venir una mayuscula setea error
+			if(Character.isUpperCase(this.analizadorLexico.getCharActual()))
+				this.analizadorLexico.getAccionesSemanticas().get(ASTipos.AS_ERROR).execute();
+			
+			else {
+				this.analizadorLexico.setLexemaParcial(this.analizadorLexico.getCharActual().toString());
+				this.analizadorLexico.setTipoToken(this.tipotoken);
+			}
 		}
 		else {
 
@@ -48,6 +56,7 @@ public class ASReconocerToken extends AccionSemantica {
 			else
 				//Si estoy en un estado intermedio solo debo concatenar
 				this.analizadorLexico.getLexemaParcial().append(this.analizadorLexico.getCharActual().toString());
+//				new ASConcatenarLexema(this.analizadorLexico).execute();
 		}
 	}
 

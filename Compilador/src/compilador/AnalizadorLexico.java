@@ -544,7 +544,7 @@ public class AnalizadorLexico {
 				matAccSem[fila][0] = accSem.get(ASTipos.AS_TOKEN_OTRO);
 				break;
 			default:
-				//Si viene simboo de finalizacion $, no se hace nada.
+				//Si viene simbolo de finalizacion $, no se hace nada.
 				break;
 			}
 		}

@@ -1,6 +1,9 @@
 package compilador;
 
 import java.io.IOException;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
 import compilador.analizadorsintactico.Parser;
 
 /**
@@ -30,8 +33,22 @@ public class Compilador {
         LectorDeArchivo lector = new LectorDeArchivo(rutaDelArchivo);
         AnalizadorLexico analizadorLexico = new AnalizadorLexico(lector);
         
-        Parser p = new Parser(analizadorLexico, analizadorLexico.getTablaSimbolos());
-        p.Run();
+        int opcionMenu = -1;
+        
+//        opcionMenu = menu();
+        opcionMenu = 1;
+        
+        switch (opcionMenu) {
+        case 1:
+        	testAnalizadorLexico(analizadorLexico);
+        	break;
+        case 2:
+	        Parser p = new Parser(analizadorLexico, analizadorLexico.getTablaSimbolos());
+	        p.Run();
+	        break;
+        default:
+        	System.out.println("Opcion invalida");
+        }
     }
 
 	private static void testAnalizadorLexico(AnalizadorLexico analizadorLexico) {
@@ -75,5 +92,28 @@ public class Compilador {
         //// TablaDeSimbolos tablaDeSimbolos = new TablaDeSimbolos();
         //// LectorDeArchivo lectorDeArchivo = new LectorDeArchivo(rutaDelAchivo);
         //// AnalizadorLexico analizadorLexico = new AnalizadorLexico(lectorDeArchivo, tablaDeSimbolos);
+    }
+    
+    public static int menu() throws IOException {
+    	Scanner scanner = new Scanner(System.in);
+    	int seleccion = -1;
+	    	
+    	System.out.println("Ingrese el numero de opcion correspondiente a la funcionalidad que desee ejecutar");
+    	System.out.println("1: Analizador Lexico");
+    	System.out.println("2: Analizador Sintactico");
+		try {
+			seleccion = scanner.nextInt();
+			
+			if (seleccion != 1 && seleccion != 2)
+				System.out.println("\nDebe ingresar un numero de las opciones!");
+			
+		} catch (InputMismatchException e) {
+			System.out.println("\nDebe ingresar un numero de las opciones!");
+		}
+    	finally {
+    		scanner.close();
+    	}
+
+    	return seleccion;    	    	
     }
 }
