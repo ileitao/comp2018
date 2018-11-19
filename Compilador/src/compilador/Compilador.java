@@ -36,7 +36,7 @@ public class Compilador {
         int opcionMenu = -1;
         
 //        opcionMenu = menu();
-        opcionMenu = 1;
+        opcionMenu = 2;
         
         switch (opcionMenu) {
         case 1:

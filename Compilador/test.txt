@@ -1,32 +1,17 @@
-#Se espera que el compilador reconozca sentencias ejecutables.#
+#Se espera que el compilador reconozca errores en closures.#
 
-if ( 2_ui + 3_ui = 5_ui ) 
-  _var2 := 4_ui , 
-endif
+void ( ) { 
+  single _single1 , 
+}
 
-if ( 2_ui + 3_ui = 5_ui ) 
-  _var2 := 4_ui , 
-else 
-  _var3 := 5_ui , 
-endif
+fun ( ) { 
+  usinteger _var1 , 
+  return ( _id1() ) , 
+}
 
-if ( 2_ui + 3_ui = 5_ui ) { 
-  _var3 := 5_ui , 
-} 
-endif
-
-if ( 2_ui + 3_ui = 5_ui ) { 
-  _var2 := 4_ui , 
-  _var2 := 4_ui , 
-} else { 
-  _var3 := 5_ui , 
-} 
-endif
-
-if ( 2_ui + 3_ui = 5_ui ) 
-  _var2 := 4_ui , 
-else { 
-  _var2 := 4_ui , 
-  _var2 := 4_ui , 
-} 
-endif
+fun _id ( ) { 
+  usinteger _var1 , 
+  void _id1 ( ) { 
+    single _single1 , 
+  }
+}

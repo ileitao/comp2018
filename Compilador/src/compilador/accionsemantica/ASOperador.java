@@ -20,9 +20,9 @@ public class ASOperador extends AccionSemantica {
 	@Override
 	public void execute() {
 		
-		short codigoToken = 0;
+		aLexico.retrocederLectura();
 		
-		aLexico.getLexemaParcial().append(aLexico.getCharActual().toString());
+		short codigoToken = 0;
 		
 		switch (aLexico.getLexemaParcial().toString()) {
 		case "+":

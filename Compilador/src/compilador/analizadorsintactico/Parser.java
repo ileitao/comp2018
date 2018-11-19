@@ -17,18 +17,17 @@ package compilador.analizadorsintactico;
 
 
 
-import static java.lang.Math.toIntExact;
-//#line 27 "Parser.java"
-
 //#line 3 "Gramatica.y"
 import java.io.IOException;
-
 import compilador.AnalizadorLexico;
+import compilador.RegTablaSimbolos;
 import compilador.TablaDeSimbolos;
 import compilador.TipoToken;
 import compilador.Token;
-import compilador.log.EventoLog;
 import compilador.log.Logger;
+import compilador.log.EventoLog;
+import static java.lang.Math.toIntExact;
+//#line 27 "Parser.java"
 
 
 
@@ -748,7 +747,7 @@ case 43:
 break;
 case 44:
 //#line 217 "Gramatica.y"
-{	yyerror("ERROR: No se especificó  ningún bloque de condiciones en sentencia FOR", this.lineaActual);	}
+{	yyerror("ERROR: No se especificó  ningún bloque de sentencias en sentencia FOR", this.lineaActual);	}
 break;
 //#line 674 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########

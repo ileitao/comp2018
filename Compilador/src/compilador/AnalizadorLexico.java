@@ -51,33 +51,30 @@ public class AnalizadorLexico {
 		 * Estados
 		 * 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17
 		 */
-		{ 10,  1,  0,  0,  0, -1,  0,  0, -1, -1, 10, 11, 12, -1, -1,  0,  0,  0},//  0| [a-z] - [A-Z]
-		{  0,  1,  0,  0,  0,  6,  0,  0,  6, -1,  0, 11, 12, -1, -1,  0,  0,  0},//  1| "F"
-		{ 10,  1,  0,  4,  0, -1,  0,  0, -1, -1, 10, 11, 12, -1, -1,  0,  0,  0},//  2| "u"
-		{ 10,  1,  0,  0, -1, -1,  0,  0, -1, -1, 10, 11, 12, -1, -1,  0,  0,  0},//  3| "i"
-		{  2,  1,  2,  0,  0,  8,  9,  9,  8,  9, -1, 11, 12, -1, -1,  0,  0,  8},//  4| [0-9]
-		{ 17, -1,  5,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},//  5| "."
-		{  1, -1,  3,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},//  6| "_"
-		{ -1, -1,  0,  0,  0, -1,  7,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},//  7| "+"
-		{ -1, -1,  0,  0,  0, -1,  7,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},//  8| "-"
-		{ -1, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},//  9| "*"
-		{ -1, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 10| "/"
-		{ 16, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 11| ":"
-		{ -1, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1, -1, -1,  0},// 12| "="
-		{ 13, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 13| "<"
-		{ 14, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 14| ">"
-		{ 15, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 15| "!"
-		{ -1, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 16| "("
-		{ -1, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 17| ")"
-		{ -1, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 18| "{"
-		{ -1, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 19| "}"
-		{ 11, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1,  0, 12, -1, -1,  0,  0,  0},// 20| "#"
-		{ 12, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, -1, -1, -1,  0,  0,  0},// 21| " ' "
-		{  0, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 22| " "
-		{  0, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11,  0, -1, -1,  0,  0,  0},// 23| "/n"
-		{  0, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 24| "/t"
-		{ -1, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0,  0},// 25| otro
-		{ -1, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1,  0,  0, -1, -1,  0,  0,  0},// 26| "$"
+		{ 10,  1,  0,  0,  0, -1,  0,  0, -1, -1, 10, 11, 12, -1, -1,  0,  0},//  0| [a-z] - [A-Z]
+		{  0,  1,  0,  0,  0,  6,  0,  0,  6, -1,  0, 11, 12, -1, -1,  0,  0},//  1| "F"
+		{ 10,  1,  0,  4,  0, -1,  0,  0, -1, -1, 10, 11, 12, -1, -1,  0,  0},//  2| "u"
+		{ 10,  1,  0,  0, -1, -1,  0,  0, -1, -1, 10, 11, 12, -1, -1,  0,  0},//  3| "i"
+		{  2,  1,  2,  0,  0,  8,  9,  9,  8,  9, -1, 11, 12, -1, -1,  0,  8},//  4| [0-9]
+		{ 17, -1,  5,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},//  5| "."
+		{  1, -1,  3,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},//  6| "_"
+		{ 14, -1,  0,  0,  0, -1,  7,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},//  7| "+"
+		{ 14, -1,  0,  0,  0, -1,  7,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},//  8| "-"
+		{ 14, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},//  9| "*"
+		{ 14, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},// 10| "/"
+		{ 15, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},// 11| ":"
+		{ 14, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, 14, -1, 14,  0},// 12| "="
+		{ 13, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},// 13| "<"
+		{ 13, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},// 14| ">"
+		{ 15, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},// 15| "!"
+		{ 14, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},// 16| "( ) { } , ;"
+		{ 11, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1,  0, 12, -1, -1,  0,  0},// 20| "#"	17
+		{ 12, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, -1, -1, -1,  0,  0},// 21| " ' "	18
+		{  0, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},// 22| " "	19
+		{  0, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11,  0, -1, -1,  0,  0},// 23| "/n"	20
+		{  0, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},// 24| "/t"	21
+		{ -1, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1, 11, 12, -1, -1,  0,  0},// 25| otro	22
+		{ -1, -1,  0,  0,  0, -1,  0,  0, -1, -1, -1,  0,  0, -1, -1,  0,  0},// 26| "$"	23
 	};
 
 	private AccionSemantica asReconoc 	= new ASReconocerToken(this);
@@ -95,35 +92,32 @@ public class AnalizadorLexico {
 	private AccionSemantica[][] matAccSem = {
 		/*
 		 * Estados
-		 *		0		1			2  			3  		  4  		5  			6  			7  		  8  		9			10		  11		  12		13			14			15		 16			17
+		 *		0		1			2  			3  		  4  		5  			6  			7  		  8  		9			10		  11		  12		13			14			15		 16			Simbolo
 		 */
-		{ asReconoc, asReconoc,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asReconoc, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},//  0| [a-z] - [A-Z]
-		{  asErrMay, asReconoc,  asErrSim,  asErrSim,  asErrSim, asReconoc,  asErrSim,  asErrSim, asReconoc, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},//  1| "F"
-		{ asReconoc, asReconoc,  asErrSim, asReconoc,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asReconoc, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},//  2| "u"
-		{ asReconoc, asReconoc,  asErrSim,  asErrSim, asFinUInt, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asReconoc, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},//  3| "i"
-		{ asReconoc, asReconoc, asReconoc,  asErrSim,  asErrSim, asReconoc, asReconoc, asReconoc, asReconoc, asReconoc, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim, asReconoc},//  4| [0-9]
-		{ asReconoc,   asFinID, asReconoc,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},//  5| "."
-		{ asReconoc,   asFinID, asReconoc,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},//  6| "_"
-		{ asFinOper,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot, asReconoc,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},//  7| "+"
-		{ asFinOper,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot, asReconoc,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},//  8| "-"
-		{ asFinOper,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},//  9| "*"
-		{ asFinOper,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 10| "/"
-		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 11| ":"
-		{ asFinOper,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper, asFinOper, asFinOper,  asErrSim},// 12| "="
-		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 13| "<"
-		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 14| ">"
-		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 15| "!"
-		{ asFinOper,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 16| "("
-		{ asFinOper,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 17| ")"
-		{ asFinOper,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 18| "{"
-		{ asFinOper,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 19| "}"
-		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes,  asReinic, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 20| "#"
-		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc,  asFinCad, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 21| " ' "
-		{  asReinic,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 22| " "
-		{  asReinic,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc,  asErrSim, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 23| "/n"
-		{  asReinic,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 24| "/t"
-		{ asFinOper,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 25| "otro"
-		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes,  asErrSim,  asErrSim, asFinOper, asFinOper,  asErrSim,  asErrSim,  asErrSim},// 26| $
+		{ asReconoc, asReconoc,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asReconoc, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},//  0| [a-z] - [A-Z]
+		{  asErrMay, asReconoc,  asErrSim,  asErrSim,  asErrSim, asReconoc,  asErrSim,  asErrSim, asReconoc, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},//  1| "F"
+		{ asReconoc, asReconoc,  asErrSim, asReconoc,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asReconoc, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},//  2| "u"
+		{ asReconoc, asReconoc,  asErrSim,  asErrSim, asFinUInt, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asReconoc, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},//  3| "i"
+		{ asReconoc, asReconoc, asReconoc,  asErrSim,  asErrSim, asReconoc, asReconoc, asReconoc, asReconoc, asReconoc, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim, asReconoc},//  4| [0-9]
+		{ asReconoc,   asFinID, asReconoc,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},//  5| "."
+		{ asReconoc,   asFinID, asReconoc,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},//  6| "_"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot, asReconoc,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},//  7| "+"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot, asReconoc,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},//  8| "-"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},//  9| "*"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},// 10| "/"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},// 11| ":"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asReconoc, asFinOper, asReconoc,  asErrSim},// 12| "="
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},// 13| "<"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},// 14| ">"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},// 15| "!"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},// 16| "( ) { } , ;"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes,  asReinic, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},// 20| "#"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc,  asFinCad, asFinOper, asFinOper,  asErrSim,  asErrSim},// 21| " ' "
+		{  asReinic,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},// 22| " "
+		{  asReinic,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc,  asErrSim, asFinOper, asFinOper,  asErrSim,  asErrSim},// 23| "/n"
+		{  asReinic,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},// 24| "/t"
+		{ asFinOper,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes, asReconoc, asReconoc, asFinOper, asFinOper,  asErrSim,  asErrSim},// 25| "otro"
+		{ asReconoc,   asFinID,  asErrSim,  asErrSim,  asErrSim, asFinFlot,  asErrSim,  asErrSim, asFinFlot, asFinFlot, asFinPRes,  asErrSim,  asErrSim, asFinOper, asFinOper,  asErrSim,  asErrSim},// 26| $
 
 	};
 
@@ -223,8 +217,6 @@ public class AnalizadorLexico {
 		// Solo devuelve el token si no se recibio el caracter simbolico de ultimo
 		// estado.
 		if (!this.charActual.equals('$')) {
-
-			//System.out.println(this.getLexemaParcial());
 			
 			int posicionToken = lector.getPuntero() - this.lexemaParcial.length();
 			int lineaToken = lector.getNroLinea();
@@ -306,25 +298,29 @@ public class AnalizadorLexico {
 		} else if (caracter == '(') {
 			return 16;
 		} else if (caracter == ')') {
-			return 17;
+			return 16;
 		} else if (caracter == '{') {
-			return 18;
+			return 16;
 		} else if (caracter == '}') {
-			return 19;
+			return 16;
+		} else if (caracter == ',') {
+			return 16;
+		} else if (caracter == ';') {
+			return 16;
 		} else if (caracter == '#') {
-			return 20;
+			return 17;
 		} else if (caracter == '\'') {
-			return 21;
+			return 18;
 		} else if (caracter == ' ') {
-			return 22;
+			return 19;
 		} else if (caracter == '\n') {
-			return 23;
+			return 20;
 		} else if (caracter == '\t') {
-			return 24;
+			return 21;
 		} else if (caracter == '$') {
-			return 26;
+			return 23;
 		} else {
-			return 25;
+			return 22;
 		}
 	}
 
@@ -352,6 +348,7 @@ public class AnalizadorLexico {
 		setEstadoSiguiente(ESTADO_INICIAL);
 		setLexemaParcial("");
 		setCodigoTokenReconocido((short) -1);
+		setTipoToken(null);
 	}
 
 	public short getCodigoTokenReconocido() {

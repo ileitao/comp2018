@@ -34,8 +34,9 @@ public class ASValidarPalabraReservada extends AccionSemantica {
 			error.execute();
 		else {
 			short codigo = (short) reg.getToken().getCodigo();
-			//Si la palabra existe pero no esta dentro de las reservadas es ERROR
-			if (! Arrays.asList(	Parser._IF,
+			
+			//Si la palabra existe y es reservada seteo codigo token sino, ERROR
+			if (Arrays.asList(	Parser._IF,
 									Parser._ELSE,
 									Parser._ENDIF,
 									Parser._PRINT,
@@ -47,6 +48,8 @@ public class ASValidarPalabraReservada extends AccionSemantica {
 									Parser._RETURN)
 							.contains(codigo)
 				)
+				aLexico.setCodigoTokenReconocido(codigo);
+			else
 				error.execute();
 		}
 	}

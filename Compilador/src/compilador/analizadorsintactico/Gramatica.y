@@ -214,7 +214,7 @@ impresion :
 iteracion :
 	_FOR _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA {	notify("Sentencia FOR en línea " + this.lineaActual + ".");	}
 	| _FOR _LPAREN error _RPAREN bloque_de_sentencias _COMMA {	yyerror("ERROR: No se especificó  ninguna condición en sentencia FOR", this.lineaActual);	}
-	| _FOR _LPAREN condiciones_de_iteracion _RPAREN error _COMMA {	yyerror("ERROR: No se especificó  ningún bloque de condiciones en sentencia FOR", this.lineaActual);	}
+	| _FOR _LPAREN condiciones_de_iteracion _RPAREN error _COMMA {	yyerror("ERROR: No se especificó  ningún bloque de sentencias en sentencia FOR", this.lineaActual);	}
 	;
 
 /**
@@ -305,12 +305,12 @@ public void tokenfy(String msg, int line)
 
 public void yyerror(String error)
 {
-	this.logger.log(new EventoLog(error, "Error", this.analizadorLexico.getLineaActual()));
+	this.logger.log(new EventoLog(error, "Error", this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual()));
 }
 
 public void yyerror(String error, int line)
 {
-	this.logger.log(new EventoLog(error, "Error", line));
+	this.logger.log(new EventoLog(error, "Error", line, this.analizadorLexico.getPunteroActual()));
 }
 
 public int yylex() throws IOException
@@ -323,12 +323,12 @@ public int yylex() throws IOException
 	//yylval = this.tablaDeSimbolos.createRegTabla(this.tokenActual.toString(), this.tipoToken, lineaToken, posicionToken);
 	if (this.tokenActual != null)
 	{
-		if (this.tokenActual.getId() == -1)
+		if (this.tokenActual.getCodigo() == -1)
 		{
 			return 0;
 		}
 
-		return toIntExact(this.tokenActual.getId());
+		return toIntExact(this.tokenActual.getCodigo());
 	}
 
 	return 0;
