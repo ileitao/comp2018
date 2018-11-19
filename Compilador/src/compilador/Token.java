@@ -15,22 +15,22 @@ package compilador;
 public class Token {
 
 	String lexema;
-	long id;
+	short codigo;
 
-	public Token(String lexema, long id) {
+	public Token(String lexema, short codigo) {
 		this.lexema = lexema;
-		this.id = id;
+		this.codigo = codigo;
 	}
 
 	/**
 	 * @return the id
 	 */
-	public long getId() {
-		return id;
+	public short getCodigo() {
+		return codigo;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setCodigo(short codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class Token {
 	 */
 	@Override
 	public String toString() {
-		return "Token [lexema=" + lexema + ", id=" + id + "]";
+		return "Token [lexema=" + lexema + " | id=" + codigo + "]";
 	}
 
 }

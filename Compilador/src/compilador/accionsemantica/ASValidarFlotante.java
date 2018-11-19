@@ -1,12 +1,10 @@
-package compilador.accionsemantica.validacion;
-
-import java.util.regex.Pattern;
+package compilador.accionsemantica;
 
 import compilador.AnalizadorLexico;
-import compilador.TipoToken;
+import compilador.analizadorsintactico.Parser;
 import compilador.log.EventoLog;
 
-public class ASValidarFlotante implements Validable {
+public class ASValidarFlotante extends AccionSemantica {
 
 	//Se definen como double para que alcance la precision de decimales
 	//1,17549435E-38 < x < 3,40282347E38 (incluir el 0,0)
@@ -15,37 +13,25 @@ public class ASValidarFlotante implements Validable {
 	private final int EXP_MIN = -38;
 	private final int EXP_MAX = 38;
 	
-	public ASValidarFlotante() {
+	public ASValidarFlotante(AnalizadorLexico analizadorLexico) {
+		super(analizadorLexico);
 	}
-
-	@Override
-	public boolean validar(AnalizadorLexico aLexico, TipoToken tipoToken) {
-		
-		//Se retrocede el lector para volver a leer el ultimo caracter leido.
-		aLexico.retrocederLectura();
-		
-		// \d	--> digito
-		// +	--> 1 o mas del elemento anterior
-		// 		--> .
-		
-		Pattern expReg = Pattern.compile("\\d+");
-		
-		aLexico.getLexemaParcial().toString();
+	
+	public boolean validar() {
 		
 		String[] lexema = aLexico.getLexemaParcial().toString().split("F");
 		
 		String mantisa = lexema[0];
 		String exp = "0";
 		
-		if (mantisa.equals(".")) {
-			aLexico.getLogger().log(new EventoLog("Token . inesperado", EventoLog.ERROR, aLexico.getLineaActual()));
-			aLexico.reiniciar();
-			return true;
-		}
-		
 		if (lexema.length > 1)
 			exp = lexema[1];
-			
+		
+		//Si no tiene exponente solo se compara la mantisa
+		if (exp.equals("0"))
+			if (Double.valueOf(mantisa) <= MANTISA_MIN || Double.valueOf(mantisa) >= MANTISA_MAX)
+				return false;
+		
 		//Se valida MIN
 		if (Double.valueOf(mantisa) <= MANTISA_MIN && Double.valueOf(exp) <= EXP_MIN)
 			return false;
@@ -58,16 +44,27 @@ public class ASValidarFlotante implements Validable {
 		return true;
 	}
 
-	@Override
-	public void finalizar(AnalizadorLexico aLexico) {
+	public void finalizar() {
 		
 		aLexico.getLogger().log(
-				new EventoLog("El flotante no se encuentra dentro de rango permitido."
+				new EventoLog("El flotante " +  aLexico.getLexemaParcial().toString() + " no se encuentra dentro de rango permitido."
 								+ " Sera truncado al maximo valor permitido 3.40282347F38",
-								EventoLog.WARNING, aLexico.getLineaActual()
+								EventoLog.WARNING, aLexico.getLineaActual(), aLexico.getPunteroActual()
 							)
 				);
 		aLexico.setLexemaParcial(MANTISA_MAX + "F" + EXP_MAX);
+	}
+
+	@Override
+	public void execute() {
+		
+		aLexico.setCodigoTokenReconocido(Parser._CONSTANT_SINGLE);
+		
+		//Se retrocede el lector para volver a leer el ultimo caracter leido.
+		aLexico.retrocederLectura();
+		
+		if (!validar())
+			finalizar();
 	}
 
 }

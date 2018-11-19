@@ -60,14 +60,19 @@ public class Compilador {
 			token = analizadorLexico.getToken();
 		}
 		
-		System.out.println("************************************************");
-		System.out.println(analizadorLexico.getTiraTokens());
+		System.out.println("************** TIRA DE TOKENS **************");
+		
+		analizadorLexico.getTiraTokens().forEach( t -> System.out.println(t));
 		System.out.println("Cant. Tokens detectados: " + analizadorLexico.getTiraTokens().size());
-		System.out.println("************************************************");
+		System.out.println();
+		
+		System.out.println("************** Logger ************** ");
 		analizadorLexico.getLogger().imprimir();
-		System.out.println("************************************************");
+		System.out.println();
+		
+		System.out.println("************** TABLA DE SIMBOLOS **************");
 		analizadorLexico.getTablaSimbolos().imprimirTablaDeSimbolos();
-		System.out.println("************************************************");
+		
 		
 	}
 

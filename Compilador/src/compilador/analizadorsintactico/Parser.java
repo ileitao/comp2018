@@ -17,17 +17,18 @@ package compilador.analizadorsintactico;
 
 
 
+import static java.lang.Math.toIntExact;
+//#line 27 "Parser.java"
+
 //#line 3 "Gramatica.y"
 import java.io.IOException;
+
 import compilador.AnalizadorLexico;
-import compilador.RegTablaSimbolos;
 import compilador.TablaDeSimbolos;
 import compilador.TipoToken;
 import compilador.Token;
-import compilador.log.Logger;
 import compilador.log.EventoLog;
-import static java.lang.Math.toIntExact;
-//#line 27 "Parser.java"
+import compilador.log.Logger;
 
 
 
@@ -454,12 +455,12 @@ public void tokenfy(String msg, int line)
 
 public void yyerror(String error)
 {
-	this.logger.log(new EventoLog(error, "Error", this.analizadorLexico.getLineaActual()));
+	this.logger.log(new EventoLog(error, "Error", this.analizadorLexico.getLineaActual(), this.analizadorLexico.getPunteroActual()));
 }
 
 public void yyerror(String error, int line)
 {
-	this.logger.log(new EventoLog(error, "Error", line));
+	this.logger.log(new EventoLog(error, "Error", line, this.analizadorLexico.getPunteroActual()));
 }
 
 public int yylex() throws IOException
@@ -472,12 +473,12 @@ public int yylex() throws IOException
 	//yylval = this.tablaDeSimbolos.createRegTabla(this.tokenActual.toString(), this.tipoToken, lineaToken, posicionToken);
 	if (this.tokenActual != null)
 	{
-		if (this.tokenActual.getId() == -1)
+		if (this.tokenActual.getCodigo() == -1)
 		{
 			return 0;
 		}
 
-		return toIntExact(this.tokenActual.getId());
+		return toIntExact(this.tokenActual.getCodigo());
 	}
 
 	return 0;
