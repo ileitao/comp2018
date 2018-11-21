@@ -1,0 +1,2 @@
+print('Esta es una cadena de caracteres
+NO ESTA BIEN porque es multilinea')

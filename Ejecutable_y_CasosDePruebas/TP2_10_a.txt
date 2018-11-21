@@ -1,0 +1,18 @@
+#Se espera que el compilador reconozca closures.#
+
+void _id1 ( ) { 
+  single _single1 , 
+}
+
+fun _id ( ) { 
+  usinteger _var1 , 
+  return ( _id1() ) , 
+}
+
+fun _id ( ) { 
+  usinteger _var1 , 
+  void _id1 ( ) { 
+    single _single1 , 
+  }
+  return ( _id1() ) , 
+}

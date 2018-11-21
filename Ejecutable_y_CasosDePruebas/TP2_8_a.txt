@@ -1,0 +1,7 @@
+#Se espera que el compilador reconozca errores en sentencias de control.#
+
+for ( ) 
+  _var2 := 4_ui , ,
+
+for ( _uivar1 := 1_ui ; _uivar1 > 5_ui ; 10_ui ) {
+},

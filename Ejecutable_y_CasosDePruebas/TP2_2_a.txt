@@ -1,0 +1,4 @@
+#Se espera que el compilador reconozca errores de sintaxis en las sentencias declarativas como ausencia de ";" entre identificadores o falta de identificadores.#
+
+usinteger ,
+usinteger _id2 id3 ,

@@ -1,0 +1,4 @@
+single _IDmenosDe25 ,
+
+#Se espera que el compilador reconozca
+1 identificador compuesto del caracter guion bajo, letras y numeros.#

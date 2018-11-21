@@ -1,0 +1,10 @@
+_usintegerFueraDeRango := 65536_ui ,
+_minSingleFueraDeRango := 1.17549435F-38 ,
+_maxSingleFueraDeRango := 3.40282347F38 ,
+
+#Se espera que el compilador reconozca 3 constantes fuera de rango, que aplique la tecnica de reemplazo de valor y genere un warning de notificacion por cada uno.
+1 de tipo usinteger y 2 de tipo single.
+No se puede generar caso de prueba para el minimo usinteger fuera de rango debido a que el minimo valor no negativo es el 0.
+
+Debido a que se setea el maximo valor disponible para ambas constantes flotantes, solo se almacena 1 en la tabla de simbolos.
+La segunda constante apunta al mismo id de token en la tabla de simbolos.#
