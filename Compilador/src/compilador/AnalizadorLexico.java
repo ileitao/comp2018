@@ -41,6 +41,8 @@ public class AnalizadorLexico {
 
 	private TipoToken tipoToken = null;
 	
+//	private UsoToken usoToken = null;
+	
 	private short codigoTokenReconocido = -1;
 
 	// Representa la matriz de estados y simbolos.
@@ -223,16 +225,38 @@ public class AnalizadorLexico {
 
 			Token token;
 			
+			//Solo se almacenan los tokens detallados en el switch
 			switch(this.codigoTokenReconocido) {
-				//Almacenar token
 				case Parser._IDENTIFIER:
 				case Parser._CONSTANT_STRING:
 				case Parser._CONSTANT_UNSIGNED_INTEGER:
 				case Parser._CONSTANT_SINGLE:
+					//Se genera el registro para insertar en la tabla de simbolos
 					RegTablaSimbolos reg = this.tablaSimbolos.createRegTabla(this.lexemaParcial.toString(), this.codigoTokenReconocido, lineaToken, posicionToken);
+					
+					switch (this.codigoTokenReconocido) {
+					
+					//Se va a setear en el analizador sintactico
+					//En caso de ser identificador seteo el tipo de uso
+//					case Parser._IDENTIFIER:
+//						reg.setUsoToken(this.usoToken);
+//						break;
+					
+					//Se setea tipo de token para constantes
+					case Parser._CONSTANT_UNSIGNED_INTEGER:
+					case Parser._CONSTANT_SINGLE:
+					case Parser._CONSTANT_STRING:
+						//El tipo de token de los identificadores lo setea el A. Sintactico
+						reg.setTipoToken(this.tipoToken);
+						break;
+					default:
+						break;
+					}
+					
 					this.tablaSimbolos.agregarSimbolo(reg);
 					
 					token = reg.getToken();
+					token.setRegTabSimbolos(reg);
 					
 					break;
 				default:

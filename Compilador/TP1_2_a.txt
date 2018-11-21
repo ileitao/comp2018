@@ -1,6 +1,6 @@
-65536_ui
-1.17549435F-38
-3.40282347F38
+_usintegerFueraDeRango := 65536_ui ,
+_minSingleFueraDeRango := 1.17549435F-38 ,
+_maxSingleFueraDeRango := 3.40282347F38 ,
 
 #Se espera que el compilador reconozca 3 constantes fuera de rango, que aplique la tecnica de reemplazo de valor y genere un warning de notificacion por cada uno.
 1 de tipo usinteger y 2 de tipo single.

@@ -1,3 +1,3 @@
-2.17549435
+_varSingle := 2.17549435 ,
 
 #Se espera que el compilador reconozca 1 constante flotante con parte decimal y sin exponente#

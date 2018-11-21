@@ -1,7 +1,7 @@
-0_ui
-65535_ui
-1.17549436F-38
-3.40282346F38
+_minUsintegerValido := 0_ui ,
+_maxUsintegerValido := 65535_ui ,
+_minSingleValido := 1.17549436F-38 ,
+_maxSingleValido := 3.40282346F38 ,
 
 #Se espera que el compilador reconozca 4 constantes.
 2 de tipo usinteger y 2 de tipo single.#

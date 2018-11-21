@@ -1,6 +1,9 @@
 package compilador;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import compilador.analizadorsintactico.Parser;
 
@@ -16,71 +19,59 @@ import compilador.analizadorsintactico.Parser;
  */
 public class TablaDeSimbolos {
 
-	public static short nextTokenId = 300;
+	public short nextTokenId = 256;
 	
-    private HashMap<String, RegTablaSimbolos> tablaDeSimbolos;
+    private List<RegTablaSimbolos> tablaSimbolos = new ArrayList<>();
     
     public TablaDeSimbolos() {
-        this.tablaDeSimbolos = new HashMap<String, RegTablaSimbolos>();
         cargarPalabrasReservadas();
     }
-    
-    public HashMap<String, RegTablaSimbolos> getTablaDeSimbolos() {
-        return this.tablaDeSimbolos;
-    }
-    
+
     public void agregarSimbolo(RegTablaSimbolos regSimbolo) {
-        this.tablaDeSimbolos.put(regSimbolo.getToken().getLexema(), regSimbolo);
+        this.tablaSimbolos.add(regSimbolo);
     }
     
-    public RegTablaSimbolos getRegistro(String lexemaToken) {
-        return this.tablaDeSimbolos.get(lexemaToken);
+    public List<RegTablaSimbolos> getTablaSimbolos() {
+		return tablaSimbolos;
+	}
+
+	public RegTablaSimbolos getRegistro(String lexemaToken) {
+        
+		Optional<RegTablaSimbolos> regTabla = this.tablaSimbolos.stream()
+											.filter(reg -> reg.getToken().getLexema()
+															.equals(lexemaToken))
+											.findFirst();
+		return regTabla.isPresent() ? regTabla.get() : null;
     }
     
     /**
      * Imprime la tabla de simbolos
      */
     public void imprimirTablaDeSimbolos() {
-    	this.tablaDeSimbolos.keySet().forEach(id -> System.out.println(this.tablaDeSimbolos.get(id)));
+    	tablaSimbolos.stream()
+    		.sorted( (reg1, reg2) -> Integer.compare(reg1.getRegId(), reg2.getRegId()))
+    		.forEach(reg -> System.out.println(reg));
     }
     
     private void cargarPalabrasReservadas() {
-    	RegTablaSimbolos reg;
-    	
-    	reg = registrarNuevoToken(Parser._IF, "if", 0, 0);
-    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
-    	
-    	reg = registrarNuevoToken(Parser._ELSE, "else", 0, 0);
-    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
-    	
-    	reg = registrarNuevoToken(Parser._ENDIF, "endif", 0, 0);
-    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
-    	
-    	reg = registrarNuevoToken(Parser._PRINT, "print", 0, 0);
-    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
-    	
-    	reg = registrarNuevoToken(Parser._USINTEGER, "usinteger", 0, 0);
-    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
-    	
-    	reg = registrarNuevoToken(Parser._SINGLE, "single", 0, 0);
-    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
-    	
-    	reg = registrarNuevoToken(Parser._FOR, "for", 0, 0);
-    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
-    	
-    	reg = registrarNuevoToken(Parser._VOID, "void", 0, 0);
-    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
-    	
-    	reg = registrarNuevoToken(Parser._FUN, "fun", 0, 0);
-    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
-    	
-    	reg = registrarNuevoToken(Parser._RETURN, "return", 0, 0);
-    	this.tablaDeSimbolos.put(reg.getToken().getLexema(), reg);
 
+    	Collections.addAll(this.tablaSimbolos,
+				    	    		registrarNuevoToken(Parser._IF, "if", 0, 0),    	    	
+					    	    	registrarNuevoToken(Parser._ELSE, "else", 0, 0),
+					    	    	registrarNuevoToken(Parser._ENDIF, "endif", 0, 0),
+					    	    	registrarNuevoToken(Parser._PRINT, "print", 0, 0),
+					    	    	registrarNuevoToken(Parser._USINTEGER, "usinteger", 0, 0),
+					    	    	registrarNuevoToken(Parser._SINGLE, "single", 0, 0),
+					    	    	registrarNuevoToken(Parser._FOR, "for", 0, 0),
+					    	    	registrarNuevoToken(Parser._VOID, "void", 0, 0),
+					    	    	registrarNuevoToken(Parser._FUN, "fun", 0, 0),
+					    	    	registrarNuevoToken(Parser._RETURN, "return", 0, 0));
     }
     
     /**
      * Metodo publico para registrar nuevos tokens con el ID consecutivo privado.
+     * Solo para aquellos tokens que necesiten guardarse en la tabla de simbolos.
+     * En caso de querer registrar un token que no corresponde se devuevle NULL.
      */
     public RegTablaSimbolos createRegTabla(String lexemaToken, short codigoToken, int linea, int posicion) {
 
@@ -93,7 +84,7 @@ public class TablaDeSimbolos {
 			return registrarNuevoToken(codigoToken, lexemaToken, linea, posicion);
 			
 		default:
-			return registrarNuevoToken(getNextTokenId(), lexemaToken, linea, posicion);
+			return null;
 
 		}
     }
@@ -101,10 +92,10 @@ public class TablaDeSimbolos {
     private RegTablaSimbolos registrarNuevoToken(short idToken, String lexemaToken, int linea, int posicion) {
     	
     	Token token = new Token(lexemaToken, idToken);
-    	return new RegTablaSimbolos(token, linea, posicion);
+    	return new RegTablaSimbolos(getNextTokenId(), token, linea, posicion);
     }
     
-    private short getNextTokenId() {
-    	return nextTokenId++;
+    public short getNextTokenId() {
+    	return ++nextTokenId;
     }
 }

@@ -1,6 +1,6 @@
-_IDmenorLongitud
-_EsteEsUnIdentificadorQueSuperaCantCaracteres
-_HayOtroIdentificadorLargo
+single _IDmenorLongitud ,
+usinteger _EsteEsUnIdentificadorQueSuperaCantCaracteres ,
+usinteger _HayOtroIdentificadorLargo ,
 
 #Se espera que el compilador reconozca 1 identificador como valido.
 El primero es valido, mientras que el segundo supera la longitud maxima por varios caracteres.

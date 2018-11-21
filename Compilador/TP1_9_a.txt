@@ -1,1 +1,1 @@
-'Esta es una cadena de caracteres bien definidaaaaaaaa		en una linea con numeros y caracteres ><={}?\¿,.-{}+´[]'
+print('Esta es una cadena de caracteres bien definidaaaaaaaa		en una linea con numeros y caracteres ><={}?\¿,.-{}+´[]') ,

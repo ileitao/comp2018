@@ -1,6 +1,8 @@
 package compilador;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -49,6 +51,8 @@ public class Compilador {
         default:
         	System.out.println("Opcion invalida");
         }
+        
+//        testCoverage();
     }
 
 	private static void testAnalizadorLexico(AnalizadorLexico analizadorLexico) {
@@ -120,5 +124,24 @@ public class Compilador {
     	}
 
     	return seleccion;    	    	
+    }
+    
+    public static void testCoverage() throws IOException {
+    	
+    	File directory = new File("/home/leandro/Desktop/test-coverage");
+    	
+    	Files.list(directory.toPath())
+    		.sorted((f1, f2) -> f1.compareTo(f2))
+    		.forEach( f -> {
+    			System.out.println("-*-*-*-*-*-*-* FILE: " + f.getFileName());
+    			AnalizadorLexico aLexico = new AnalizadorLexico(new LectorDeArchivo(f.toAbsolutePath().toString()));
+    	    	Parser parser = new Parser(aLexico, aLexico.getTablaSimbolos());
+    			try {
+					parser.Run();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		});
     }
 }

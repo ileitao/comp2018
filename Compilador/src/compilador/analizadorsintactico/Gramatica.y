@@ -5,10 +5,14 @@ import compilador.AnalizadorLexico;
 import compilador.RegTablaSimbolos;
 import compilador.TablaDeSimbolos;
 import compilador.TipoToken;
+import compilador.UsoToken;
 import compilador.Token;
 import compilador.log.Logger;
 import compilador.log.EventoLog;
 import static java.lang.Math.toIntExact;
+import java.util.ArrayList;
+import java.util.List;
+import compilador.accionsemantica.ASValidarFlotante;
 %}
 
 /*** 2-YACC DECLARATIONS ***/
@@ -68,7 +72,9 @@ bloque_declarativo :
  * <tipo> <lista_de_variables> ","
  */
 sentencias_de_declaracion_de_variables :
-	tipo lista_de_variables _COMMA { notify("Sentencia de declaración de variables en línea " + this.lineaActual + "."); }
+	tipo lista_de_variables _COMMA { notify("Sentencia de declaración de variables en línea " + this.lineaActual + ".");
+									 configurarIdentificadores((Token)$2.obj, UsoToken.VARIABLE);
+									 }
 	| tipo error _COMMA { yyerror("ERROR: No se definió ninguna variable en sentencia de declaración de variables", this.lineaActual); }
 	| declaracion_de_funcion
 	;
@@ -78,8 +84,8 @@ sentencias_de_declaracion_de_variables :
  * Tipos _USINTEGER Y _SINGLE
  */
 tipo :
-	_USINTEGER { /*this.tipoActual = TipoToken.CONSTANTE_ENTERO_SIN_SIGNO;*/ }
-	|	_SINGLE { /*this.tipoActual = TipoToken.CONSTANTE_FLOTANTE;*/	}
+	_USINTEGER { this.tipoActual = TipoToken.USINTEGER; }
+	|	_SINGLE { this.tipoActual = TipoToken.SINGLE;	}
 	;
 
 /**
@@ -88,7 +94,7 @@ tipo :
  */
 lista_de_variables:
   _IDENTIFIER
-	|	_IDENTIFIER _SEMICOLON lista_de_variables
+	|	_IDENTIFIER _SEMICOLON lista_de_variables { addIdentifier( (Token) $3.obj); }
 	| _IDENTIFIER error lista_de_variables { yyerror("ERROR: Falta ; para separar variables en la sentencia de declaración de variables", this.lineaActual); }
 	;
 
@@ -104,8 +110,15 @@ lista_de_variables:
  * }
  */
 declaracion_de_funcion :
-	_FUN _IDENTIFIER _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE { notify("Sentencia de declaración de función con retorno " + this.lineaActual + "."); }
-	| _VOID _IDENTIFIER _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE { notify("Sentencia de declaración de función sin retorno " + this.lineaActual + "."); }
+	_FUN _IDENTIFIER _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE { notify("Sentencia de declaración de función con retorno " + this.lineaActual + ".");
+																							  /*Configura tipo y uso de identificadores*/
+																							  this.tipoActual = TipoToken.FUN;
+																							  configurarIdentificadores((Token) $2.obj, UsoToken.FUNCION);
+																							  }
+	| _VOID _IDENTIFIER _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE { notify("Sentencia de declaración de función sin retorno " + this.lineaActual + ".");
+																				this.tipoActual = TipoToken.VOID;
+																				configurarIdentificadores((Token)$2.obj, UsoToken.FUNCION);
+																			}
 	| _FUN error _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE { yyerror("ERROR: No se definió nombre para la función", this.lineaActual); }
 	| _VOID error _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE { yyerror("ERROR: No se definió nombre para la función", this.lineaActual); }
 	| _FUN _IDENTIFIER _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion error _RCBRACE { yyerror("ERROR: Falta retorno de la función", this.lineaActual); }
@@ -260,6 +273,7 @@ termino :
 factor :
 	_CONSTANT_UNSIGNED_INTEGER
 	| _CONSTANT_SINGLE
+	| _MINUS _CONSTANT_SINGLE { validarFlotante((Token) $2.obj); }
 	| _CONSTANT_STRING
 	| _IDENTIFIER
 	;
@@ -287,20 +301,17 @@ Token tokenActual;
 TipoToken tipoActual;
 int lineaActual;
 
+List<Token> tokensIDENTIFIER = new ArrayList<>();
+
 public void notify(String msg)
 {
 	System.out.println(msg);
 	//this.syntaxLog.addLog(msg, lexAnalyzer.getLineNumber());
 }
 
-public void notify(String msg, int line)
+public void actualizarTipoID(String msg, int line)
 {
 	//this.syntaxLog.addLog(msg, line);
-}
-
-public void tokenfy(String msg, int line)
-{
-	//this.tokensLog.addLog(msg, line);
 }
 
 public void yyerror(String error)
@@ -318,7 +329,10 @@ public int yylex() throws IOException
 	this.tokenActual = analizadorLexico.getToken();
 	this.lineaActual = analizadorLexico.getLineaActual();
 	//RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro(this.tokenActual.toString());
-	//yylval = reg.getTipo();
+	
+	//Se almacena el token actual
+	yylval = new ParserVal(tokenActual);
+	
 	//tokenfy(this.tokenActual.toString(), this.tokenActual.getLine());
 	//yylval = this.tablaDeSimbolos.createRegTabla(this.tokenActual.toString(), this.tipoToken, lineaToken, posicionToken);
 	if (this.tokenActual != null)
@@ -346,18 +360,62 @@ public void Run() throws IOException
     System.out.println("************************************************");
     System.out.println("Resultados del Analizador Sintáctico:");
     yyparse();
+    
+    System.out.println();
     System.out.println("************************************************");
     System.out.println("Errores sintácticos encontrados:");
     this.logger.imprimir();
+    
+    System.out.println();
     System.out.println("************************************************");
     System.out.println("Resultados del Analizador Léxico:");
     System.out.println(analizadorLexico.getTiraTokens());
     System.out.println("Cant. Tokens detectados: " + analizadorLexico.getTiraTokens().size());
+    
+    System.out.println();
     System.out.println("************************************************");
     System.out.println("Errores léxicos encontrados:");
     this.analizadorLexico.getLogger().imprimir();
+    
+    System.out.println();
     System.out.println("************************************************");
     System.out.println("Tabla de Simbolos:");
     this.tablaDeSimbolos.imprimirTablaDeSimbolos();
     System.out.println("************************************************");
+}
+
+public void addIdentifier(Token token){
+	tokensIDENTIFIER.add(token);
+}
+
+public void setTipoIdentificador(){
+	tokensIDENTIFIER.forEach( token -> token.getRegTabSimbolos().setTipoToken(this.tipoActual));
+	this.tipoActual = null;
+}
+
+public void setUsoIdentificador(UsoToken usoToken) {
+	tokensIDENTIFIER.forEach( token -> token.getRegTabSimbolos().setUsoToken(usoToken) );
+}
+
+/**
+* Configura tipo y uso de identificadores.
+* Para funciones se utiliza la misma lista para reuso de la funcionalidad.
+*/
+public void configurarIdentificadores(Token tokenIdentificador, UsoToken usoToken) {
+	addIdentifier(tokenIdentificador);
+	setTipoIdentificador();
+	setUsoIdentificador(usoToken);
+	tokensIDENTIFIER.clear();
+}
+
+public void validarFlotante(Token tokenFlotante) {
+	
+	String lexema = "-" + tokenFlotante.getLexema();
+	if (! ASValidarFlotante.validar(lexema)){
+		lexema = ASValidarFlotante.truncar(this.analizadorLexico.getLogger(),
+											lexema,
+											this.analizadorLexico.getLineaActual(),
+											this.analizadorLexico.getPunteroActual());
+	}
+	tokenFlotante.setLexema(lexema);
 }

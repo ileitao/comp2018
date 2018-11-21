@@ -1,6 +1,7 @@
 package compilador.accionsemantica;
 
 import compilador.AnalizadorLexico;
+import compilador.TipoToken;
 import compilador.analizadorsintactico.Parser;
 
 /**
@@ -21,6 +22,7 @@ public class ASValidarCadenaCarateres extends AccionSemantica {
 	public void execute() {
 		
 		aLexico.setCodigoTokenReconocido(Parser._CONSTANT_STRING);
+		aLexico.setTipoToken(TipoToken.CADENA_CARACTERES);
 		
 		String lexema = aLexico.getLexemaParcial().toString();
 		lexema = lexema.substring(1, lexema.length()-1);

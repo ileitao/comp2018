@@ -12,11 +12,15 @@ package compilador;
  */
 public class RegTablaSimbolos {
 
+	private short regId = -1;
 	private Token token;
+	private TipoToken tipoToken;
+	private UsoToken usoToken;
 	private int linea;
 	private int posicion;
 
-	public RegTablaSimbolos(Token token, int linea, int posicion) {
+	public RegTablaSimbolos(short regId, Token token, int linea, int posicion) {
+		this.regId = regId;
 		this.token = token;    	
 		this.linea = linea;
 		this.posicion = posicion;
@@ -59,11 +63,35 @@ public class RegTablaSimbolos {
 	public void setPosicion(int posicion) {
 		this.posicion = posicion;
 	}
+	
+	public short getRegId() {
+		return regId;
+	}
+
+	public void setRegId(short regId) {
+		this.regId = regId;
+	}
+	
+	public TipoToken getTipoToken() {
+		return tipoToken;
+	}
+
+	public void setTipoToken(TipoToken tipoToken) {
+		this.tipoToken = tipoToken;
+	}
+
+	public UsoToken getUsoToken() {
+		return usoToken;
+	}
+
+	public void setUsoToken(UsoToken usoToken) {
+		this.usoToken = usoToken;
+	}
 
 	@Override
 	public String toString() {
-		return "RegTablaSimbolos [token=" + token + ", linea=" + linea + ", posicion=" + posicion
-				+ "]";
+		return "RegTS [regId=" + regId + ", " + token + ", tipoToken=" + tipoToken + ", usoToken="
+				+ usoToken + ", linea=" + linea + ", posicion=" + posicion + "]";
 	}
 
 }

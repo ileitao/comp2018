@@ -1,2 +1,14 @@
-if VOID return
-RETURN void FUN
+#Uso de la palabra reservada if#
+if ( 2_ui + 3_ui = 5_ui ) 
+  print('IF') , 
+endif
+
+#Uso de la palabra reservada fun, void y return#
+fun _id ( ) { 
+  print('FUN y VOID') ,
+  void _id1 ( ) { 
+    single _single1 , 
+  }
+  print('RETURN') ,
+  return ( _id1() ) , 
+}

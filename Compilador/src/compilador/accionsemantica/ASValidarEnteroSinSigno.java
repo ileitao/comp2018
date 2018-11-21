@@ -1,6 +1,7 @@
 package compilador.accionsemantica;
 
 import compilador.AnalizadorLexico;
+import compilador.TipoToken;
 import compilador.analizadorsintactico.Parser;
 import compilador.log.EventoLog;
 
@@ -28,6 +29,7 @@ public class ASValidarEnteroSinSigno extends AccionSemantica {
 		
 		//Seteo el codigo de token que se va a reconocer
 		this.aLexico.setCodigoTokenReconocido(Parser._CONSTANT_UNSIGNED_INTEGER);
+		this.aLexico.setTipoToken(TipoToken.CONSTANTE_ENTERO_SIN_SIGNO);
 		
 		//Descarto el postifjo "_ui" para quedarme con el numero.
 		String lexema = aLexico.getLexemaParcial().toString().split("_")[0];

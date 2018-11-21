@@ -1,17 +1,7 @@
-#Se espera que el compilador reconozca errores en closures.#
+#Debe permitirse anidamiento de sentencias de control.#
 
-void ( ) { 
-  single _single1 , 
-}
-
-fun ( ) { 
-  usinteger _var1 , 
-  return ( _id1() ) , 
-}
-
-fun _id ( ) { 
-  usinteger _var1 , 
-  void _id1 ( ) { 
-    single _single1 , 
-  }
-}
+if ( 2_ui + 3_ui = 5_ui ) 
+  for ( _uivar1 := 1_ui ; _uivar1 > 5_ui ; 10_ui ) _var2 := 4_ui , ,
+else
+	for ( _uivar1 := 1_ui ; _uivar1 > 5_ui ; 10_ui ) _var2 := 4_ui , ,
+endif

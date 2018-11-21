@@ -16,6 +16,9 @@ public class Token {
 
 	String lexema;
 	short codigo;
+	
+	//Referencia al registro en la tabla de simbolos al que pertenece
+	RegTablaSimbolos regTabSimbolos;
 
 	public Token(String lexema, short codigo) {
 		this.lexema = lexema;
@@ -47,6 +50,14 @@ public class Token {
 	public void setLexema(String lexema) {
 		this.lexema = lexema;
 	}
+	
+	public RegTablaSimbolos getRegTabSimbolos() {
+		return regTabSimbolos;
+	}
+
+	public void setRegTabSimbolos(RegTablaSimbolos regTabSimbolos) {
+		this.regTabSimbolos = regTabSimbolos;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -55,7 +66,7 @@ public class Token {
 	 */
 	@Override
 	public String toString() {
-		return "Token [lexema=" + lexema + " | id=" + codigo + "]";
+		return "Token [lexema=" + lexema + "\t| id=" + codigo + "]";
 	}
 
 }
