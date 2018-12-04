@@ -40,13 +40,6 @@ public class ASValidarFlotante extends AccionSemantica {
 		
 		if (numLexema <= numRangoMin || numLexema >= numRangoMax)
 			return false;
-//		//Se valida MIN
-//		if (Double.valueOf(mantisa) <= MANTISA_MIN && Double.valueOf(exp) <= EXP_MIN)
-//			return false;
-//		
-//		//Se valida MAX
-//		if (Double.valueOf(mantisa) >= MANTISA_MAX && Double.valueOf(exp) >= EXP_MAX)
-//			return false;
 		
 		//Se encuentra dentro del rango permitido
 		return true;

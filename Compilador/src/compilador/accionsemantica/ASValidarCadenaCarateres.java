@@ -25,7 +25,7 @@ public class ASValidarCadenaCarateres extends AccionSemantica {
 		aLexico.setTipoToken(TipoToken.CADENA_CARACTERES);
 		
 		String lexema = aLexico.getLexemaParcial().toString();
-		lexema = lexema.substring(1, lexema.length()-1);
+		lexema = lexema.substring(1, lexema.length());
 		
 		aLexico.setLexemaParcial(lexema);
 		
