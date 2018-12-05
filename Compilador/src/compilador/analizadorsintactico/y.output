@@ -77,8 +77,8 @@
   53  factor : _CONSTANT_UNSIGNED_INTEGER
   54         | _CONSTANT_SINGLE
   55         | _MINUS _CONSTANT_SINGLE
-  56         | _CONSTANT_STRING
-  57         | _IDENTIFIER
+  56         | _IDENTIFIER
+  57         | error
 
   58  comparador : _LESSER
   59             | _GREATER
@@ -292,21 +292,20 @@ state 21
 	_IDENTIFIER  shift 36
 	_CONSTANT_UNSIGNED_INTEGER  shift 37
 	_CONSTANT_SINGLE  shift 38
-	_CONSTANT_STRING  shift 39
 	.  error
 
-	condicion  goto 40
-	expresion  goto 41
-	termino  goto 42
-	factor  goto 43
+	condicion  goto 39
+	expresion  goto 40
+	termino  goto 41
+	factor  goto 42
 
 
 state 22
 	impresion : _PRINT _LPAREN . _CONSTANT_STRING _RPAREN _COMMA  (40)
 	impresion : _PRINT _LPAREN . error _RPAREN _COMMA  (41)
 
-	error  shift 44
-	_CONSTANT_STRING  shift 45
+	error  shift 43
+	_CONSTANT_STRING  shift 44
 	.  error
 
 
@@ -315,31 +314,31 @@ state 23
 	iteracion : _FOR _LPAREN . error _RPAREN bloque_de_sentencias _COMMA  (43)
 	iteracion : _FOR _LPAREN . condiciones_de_iteracion _RPAREN error _COMMA  (44)
 
-	error  shift 46
-	_IDENTIFIER  shift 47
+	error  shift 45
+	_IDENTIFIER  shift 46
 	.  error
 
-	condiciones_de_iteracion  goto 48
+	condiciones_de_iteracion  goto 47
 
 
 state 24
 	declaracion_de_funcion : _VOID error . _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE  (17)
 
-	_LPAREN  shift 49
+	_LPAREN  shift 48
 	.  error
 
 
 state 25
 	declaracion_de_funcion : _VOID _IDENTIFIER . _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE  (15)
 
-	_LPAREN  shift 50
+	_LPAREN  shift 49
 	.  error
 
 
 state 26
 	declaracion_de_funcion : _FUN error . _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE  (16)
 
-	_LPAREN  shift 51
+	_LPAREN  shift 50
 	.  error
 
 
@@ -347,7 +346,7 @@ state 27
 	declaracion_de_funcion : _FUN _IDENTIFIER . _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE  (14)
 	declaracion_de_funcion : _FUN _IDENTIFIER . _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion error _RCBRACE  (18)
 
-	_LPAREN  shift 52
+	_LPAREN  shift 51
 	.  error
 
 
@@ -355,17 +354,17 @@ state 28
 	asignacion : _IDENTIFIER _ASSIGN . expresion _COMMA  (36)
 	asignacion : _IDENTIFIER _ASSIGN . invocacion_de_funcion  (37)
 
+	error  shift 52
 	_MINUS  shift 35
 	_IDENTIFIER  shift 53
 	_CONSTANT_UNSIGNED_INTEGER  shift 37
 	_CONSTANT_SINGLE  shift 38
-	_CONSTANT_STRING  shift 39
 	.  error
 
 	invocacion_de_funcion  goto 54
 	expresion  goto 55
-	termino  goto 42
-	factor  goto 43
+	termino  goto 41
+	factor  goto 42
 
 
 state 29
@@ -407,9 +406,19 @@ state 33
 
 state 34
 	seleccion : _IF _LPAREN error . _RPAREN bloque_de_sentencias _ENDIF  (31)
+	factor : error .  (57)
 
 	_RPAREN  shift 61
-	.  error
+	_PLUS  reduce 57
+	_MINUS  reduce 57
+	_MULT  reduce 57
+	_DIV  reduce 57
+	_EQUAL  reduce 57
+	_LESSER  reduce 57
+	_LESSER_OR_EQUAL  reduce 57
+	_GREATER  reduce 57
+	_GREATER_OR_EQUAL  reduce 57
+	_UNEQUAL  reduce 57
 
 
 state 35
@@ -420,9 +429,9 @@ state 35
 
 
 state 36
-	factor : _IDENTIFIER .  (57)
+	factor : _IDENTIFIER .  (56)
 
-	.  reduce 57
+	.  reduce 56
 
 
 state 37
@@ -438,12 +447,6 @@ state 38
 
 
 state 39
-	factor : _CONSTANT_STRING .  (56)
-
-	.  reduce 56
-
-
-state 40
 	seleccion : _IF _LPAREN condicion . _RPAREN bloque_de_sentencias _ENDIF  (29)
 	seleccion : _IF _LPAREN condicion . _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF  (30)
 	seleccion : _IF _LPAREN condicion . _RPAREN error _ENDIF  (32)
@@ -452,7 +455,7 @@ state 40
 	.  error
 
 
-state 41
+state 40
 	condicion : expresion . comparador expresion  (35)
 	expresion : expresion . _PLUS termino  (47)
 	expresion : expresion . _MINUS termino  (48)
@@ -470,7 +473,7 @@ state 41
 	comparador  goto 72
 
 
-state 42
+state 41
 	expresion : termino .  (49)
 	termino : termino . _MULT factor  (50)
 	termino : termino . _DIV factor  (51)
@@ -489,41 +492,41 @@ state 42
 	_COMMA  reduce 49
 
 
-state 43
+state 42
 	termino : factor .  (52)
 
 	.  reduce 52
 
 
-state 44
+state 43
 	impresion : _PRINT _LPAREN error . _RPAREN _COMMA  (41)
 
 	_RPAREN  shift 75
 	.  error
 
 
-state 45
+state 44
 	impresion : _PRINT _LPAREN _CONSTANT_STRING . _RPAREN _COMMA  (40)
 
 	_RPAREN  shift 76
 	.  error
 
 
-state 46
+state 45
 	iteracion : _FOR _LPAREN error . _RPAREN bloque_de_sentencias _COMMA  (43)
 
 	_RPAREN  shift 77
 	.  error
 
 
-state 47
+state 46
 	condiciones_de_iteracion : _IDENTIFIER . _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER  (45)
 
 	_ASSIGN  shift 78
 	.  error
 
 
-state 48
+state 47
 	iteracion : _FOR _LPAREN condiciones_de_iteracion . _RPAREN bloque_de_sentencias _COMMA  (42)
 	iteracion : _FOR _LPAREN condiciones_de_iteracion . _RPAREN error _COMMA  (44)
 
@@ -531,28 +534,28 @@ state 48
 	.  error
 
 
-state 49
+state 48
 	declaracion_de_funcion : _VOID error _LPAREN . _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE  (17)
 
 	_RPAREN  shift 80
 	.  error
 
 
-state 50
+state 49
 	declaracion_de_funcion : _VOID _IDENTIFIER _LPAREN . _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE  (15)
 
 	_RPAREN  shift 81
 	.  error
 
 
-state 51
+state 50
 	declaracion_de_funcion : _FUN error _LPAREN . _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE  (16)
 
 	_RPAREN  shift 82
 	.  error
 
 
-state 52
+state 51
 	declaracion_de_funcion : _FUN _IDENTIFIER _LPAREN . _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE  (14)
 	declaracion_de_funcion : _FUN _IDENTIFIER _LPAREN . _RPAREN _LCBRACE cuerpo_de_funcion error _RCBRACE  (18)
 
@@ -560,16 +563,22 @@ state 52
 	.  error
 
 
+state 52
+	factor : error .  (57)
+
+	.  reduce 57
+
+
 state 53
 	invocacion_de_funcion : _IDENTIFIER . _LPAREN _RPAREN _COMMA  (46)
-	factor : _IDENTIFIER .  (57)
+	factor : _IDENTIFIER .  (56)
 
 	_LPAREN  shift 29
-	_PLUS  reduce 57
-	_MINUS  reduce 57
-	_MULT  reduce 57
-	_DIV  reduce 57
-	_COMMA  reduce 57
+	_PLUS  reduce 56
+	_MINUS  reduce 56
+	_MULT  reduce 56
+	_DIV  reduce 56
+	_COMMA  reduce 56
 
 
 state 54
@@ -676,29 +685,29 @@ state 63
 state 64
 	expresion : expresion _PLUS . termino  (47)
 
+	error  shift 52
 	_MINUS  shift 35
 	_IDENTIFIER  shift 36
 	_CONSTANT_UNSIGNED_INTEGER  shift 37
 	_CONSTANT_SINGLE  shift 38
-	_CONSTANT_STRING  shift 39
 	.  error
 
 	termino  goto 93
-	factor  goto 43
+	factor  goto 42
 
 
 state 65
 	expresion : expresion _MINUS . termino  (48)
 
+	error  shift 52
 	_MINUS  shift 35
 	_IDENTIFIER  shift 36
 	_CONSTANT_UNSIGNED_INTEGER  shift 37
 	_CONSTANT_SINGLE  shift 38
-	_CONSTANT_STRING  shift 39
 	.  error
 
 	termino  goto 94
-	factor  goto 43
+	factor  goto 42
 
 
 state 66
@@ -740,26 +749,26 @@ state 71
 state 72
 	condicion : expresion comparador . expresion  (35)
 
+	error  shift 52
 	_MINUS  shift 35
 	_IDENTIFIER  shift 36
 	_CONSTANT_UNSIGNED_INTEGER  shift 37
 	_CONSTANT_SINGLE  shift 38
-	_CONSTANT_STRING  shift 39
 	.  error
 
 	expresion  goto 95
-	termino  goto 42
-	factor  goto 43
+	termino  goto 41
+	factor  goto 42
 
 
 state 73
 	termino : termino _MULT . factor  (50)
 
+	error  shift 52
 	_MINUS  shift 35
 	_IDENTIFIER  shift 36
 	_CONSTANT_UNSIGNED_INTEGER  shift 37
 	_CONSTANT_SINGLE  shift 38
-	_CONSTANT_STRING  shift 39
 	.  error
 
 	factor  goto 96
@@ -768,11 +777,11 @@ state 73
 state 74
 	termino : termino _DIV . factor  (51)
 
+	error  shift 52
 	_MINUS  shift 35
 	_IDENTIFIER  shift 36
 	_CONSTANT_UNSIGNED_INTEGER  shift 37
 	_CONSTANT_SINGLE  shift 38
-	_CONSTANT_STRING  shift 39
 	.  error
 
 	factor  goto 97

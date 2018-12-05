@@ -13,6 +13,8 @@ import static java.lang.Math.toIntExact;
 import java.util.ArrayList;
 import java.util.List;
 import compilador.accionsemantica.ASValidarFlotante;
+import compilador.codigointermedio.PolacaInversa;
+import compilador.codigointermedio.ElementoPI;
 %}
 
 /*** 2-YACC DECLARATIONS ***/
@@ -196,7 +198,9 @@ condicion :
  * <_IDENTIFIER> := <expresion>
  */
 asignacion :
-  _IDENTIFIER _ASSIGN expresion _COMMA {	notify("Sentencia de asignación en línea " + this.lineaActual + ".");	}
+  _IDENTIFIER _ASSIGN expresion _COMMA { notify("Sentencia de asignación en línea " + this.lineaActual + ".");
+					 polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));
+					 polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));}
   | _IDENTIFIER _ASSIGN invocacion_de_funcion {	notify("Sentencia de asignación en línea " + this.lineaActual + ".");	}
  ;
 
@@ -251,8 +255,8 @@ invocacion_de_funcion :
  * Aritmética, variable o constante
  */
 expresion :
-	expresion _PLUS termino
-	|	expresion _MINUS termino
+	expresion _PLUS termino { polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));}
+	|	expresion _MINUS termino { polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));}
 	|	termino
 	;
 
@@ -261,8 +265,8 @@ expresion :
  * Aritmética, variable o constante
  */
 termino :
-	termino _MULT factor
-	|	termino _DIV factor
+	termino _MULT factor { polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));}
+	|	termino _DIV factor { polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));}
 	|	factor
 	;
 
@@ -271,11 +275,15 @@ termino :
  * Constantes unsigned integer, single, string o identificador
  */
 factor :
-	_CONSTANT_UNSIGNED_INTEGER
-	| _CONSTANT_SINGLE
-	| _MINUS _CONSTANT_SINGLE { validarFlotante((Token) $2.obj); }
+	_CONSTANT_UNSIGNED_INTEGER { polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));}
+	| _CONSTANT_SINGLE { polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));}
+	| _MINUS _CONSTANT_SINGLE { validarFlotante((Token) $2.obj);
+								polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));}
+	/*NO SE ACEPTA CONSTANTE STRING PORQUE ESTA SOLO SERA USADA EN PRINT
 	| _CONSTANT_STRING
-	| _IDENTIFIER
+	*/
+	| _IDENTIFIER { polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));}
+	| error { yyerror("ERROR: Se esperaba un factor en lugar del token: " + ((Token) $1.obj).getLexema()); }
 	;
 
 /**
@@ -302,6 +310,8 @@ TipoToken tipoActual;
 int lineaActual;
 
 List<Token> tokensIDENTIFIER = new ArrayList<>();
+
+PolacaInversa polaca = new PolacaInversa();
 
 public void notify(String msg)
 {
@@ -382,6 +392,10 @@ public void Run() throws IOException
     System.out.println("Tabla de Simbolos:");
     this.tablaDeSimbolos.imprimirTablaDeSimbolos();
     System.out.println("************************************************");
+
+	System.out.println();
+    System.out.println("************************************************");
+	polaca.imprimir();
 }
 
 public void addIdentifier(Token token){
