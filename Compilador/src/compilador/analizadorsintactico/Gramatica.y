@@ -169,8 +169,10 @@ bloque_ejecutable :
  * if ( <condicion> ) <bloque_de_sentencias> else <bloque_de_sentencias>
  */
 seleccion :
-	_IF _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF {	notify("Sentencia IF en línea " + this.lineaActual + ".");	}
-	| _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE bloque_de_sentencias _ENDIF {	notify("Sentencia IF en línea " + this.lineaActual + ".");	}
+	_IF _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF { notify("Sentencia IF sin ELSE en línea " + this.lineaActual + ".");
+																polaca.completarPasoIncompleto(0); }
+	| _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE { polaca.generarElse(); } bloque_de_sentencias _ENDIF {	notify("Sentencia IF con ELSE en línea " + this.lineaActual + "."); polaca.completarPasoIncompleto(0); }
+
 	| _IF _LPAREN error _RPAREN bloque_de_sentencias _ENDIF {	yyerror("ERROR: Faltó condición en IF", this.lineaActual);	}
 	| _IF _LPAREN condicion _RPAREN error _ENDIF {	yyerror("ERROR: Faltó bloque de sentencias en IF", this.lineaActual);	}
 	;
@@ -190,7 +192,7 @@ bloque_de_sentencias :
  * Comparación entre expresiones aritméticas, variables o constantes
  */
 condicion :
-	expresion comparador expresion
+	expresion comparador expresion { polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$1.obj)); polaca.generarBifurcacion("BF"); }
   ;
 
 /**

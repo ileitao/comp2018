@@ -45,4 +45,12 @@ public class ElementoPI {
 	public void setToken(Token token) {
 		this.token = token;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ElementoPI [" + elemento + "]\n";
+	}
 }
