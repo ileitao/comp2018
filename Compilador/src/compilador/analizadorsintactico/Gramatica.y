@@ -12,6 +12,7 @@ import compilador.log.EventoLog;
 import static java.lang.Math.toIntExact;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import compilador.accionsemantica.ASValidarFlotante;
 import compilador.codigointermedio.PolacaInversa;
 import compilador.codigointermedio.ElementoPI;
@@ -227,21 +228,51 @@ impresion :
   ;
 
 /**
+* Fue necesario agregar esta regla para evitar conflictos al generar codigo intermedio para apilar el paso inicial 
+* del FOR.
+*/
+inicio_iteracion :
+	_FOR { polaca.generarInicioCondicionFOR(); }
+	;
+
+/**
  * Iteración
  *  for ( <condiciones_de_iteracion> ) <bloque_de_sentencias> ,
  */
 iteracion :
-	_FOR _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA {	notify("Sentencia FOR en línea " + this.lineaActual + ".");	}
-	| _FOR _LPAREN error _RPAREN bloque_de_sentencias _COMMA {	yyerror("ERROR: No se especificó  ninguna condición en sentencia FOR", this.lineaActual);	}
-	| _FOR _LPAREN condiciones_de_iteracion _RPAREN error _COMMA {	yyerror("ERROR: No se especificó  ningún bloque de sentencias en sentencia FOR", this.lineaActual);	}
+	inicio_iteracion _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA
+				{	notify("Sentencia FOR en línea " + this.lineaActual + ".");
+					polaca.generarBloqueFOR(pilaAcumulador.pop(), pilaAcumulador.pop()); }
+	| inicio_iteracion _LPAREN error _RPAREN bloque_de_sentencias _COMMA {	yyerror("ERROR: No se especificó  ninguna condición en sentencia FOR", this.lineaActual);	}
+	| inicio_iteracion _LPAREN condiciones_de_iteracion _RPAREN error _COMMA {	yyerror("ERROR: No se especificó  ningún bloque de sentencias en sentencia FOR", this.lineaActual);	}
 	;
 
 /**
  * Condiciones_de_iteracion
  * (i := n ; <condicion> ; j )
+ *
+ * Es necesario guardar el token del iterador y el acumulador para poder realizar la asignacion de incremento del iterador al final del
+ * while (antes del salto atras BI).
+ * Para esto se utiliza una pila de token exclusiva para poder mantener juntos el iterador y el acumulador para cuando se aniden
+ * sentencias de control.
  */
 condiciones_de_iteracion :
-  _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON _CONSTANT_UNSIGNED_INTEGER
+  _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER
+		{ 	pilaAcumulador.push( (Token)$1.obj );
+			polaca.addElemento( new ElementoPI( ((Token)$3.obj).getLexema(), (Token)$3.obj));
+			polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));
+			polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));
+		}
+
+	_SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON
+		{	
+			polaca.addElemento( new ElementoPI( ((Token)$6.obj).getLexema(), (Token)$6.obj));
+			polaca.addElemento( new ElementoPI( ((Token)$8.obj).getLexema(), (Token)$8.obj));
+			polaca.addElemento( new ElementoPI( ((Token)$7.obj).getLexema(), (Token)$7.obj));
+		}
+
+	_CONSTANT_UNSIGNED_INTEGER { 	pilaAcumulador.push( (Token)$11.obj );
+									polaca.generarBifurcacion("BF"); }
   ;
 
 /**
@@ -315,6 +346,11 @@ List<Token> tokensIDENTIFIER = new ArrayList<>();
 
 PolacaInversa polaca = new PolacaInversa();
 
+//Se usa para ir apilando el valor del acumulador del FOR.
+//Es necesario usar una pila, ya que en caso de anidarse varios FOR
+//Debo tener en el tope el del ultimo FOR
+Stack<Token> pilaAcumulador = new Stack<>();
+
 public void notify(String msg)
 {
 	System.out.println(msg);
@@ -344,7 +380,13 @@ public int yylex() throws IOException
 	
 	//Se almacena el token actual
 	yylval = new ParserVal(tokenActual);
-	
+
+	/*System.out.println();
+	System.out.println("Token actual: " + this.tokenActual);
+	for(int i = 0 ; (i < 15) && (valstk[i] != null) ; i++) {
+		System.out.println(i+" | "+valstk[i].obj);
+	}	*/
+
 	//tokenfy(this.tokenActual.toString(), this.tokenActual.getLine());
 	//yylval = this.tablaDeSimbolos.createRegTabla(this.tokenActual.toString(), this.tipoToken, lineaToken, posicionToken);
 	if (this.tokenActual != null)

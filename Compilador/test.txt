@@ -1,15 +1,10 @@
-if ( _var1 - 5_ui > _var2 + _var3 ) {
-	_z := _a * _b * 2.5 + _c * 5_ui + _d ,
-	_v1 := 1_ui,
-}
-else{
-	_var1 := _var2 ,
-	if(_var1 != 5_ui)
-		_v2 := 1_ui,
-	else
-		_var1 := 5_ui,
-	endif
-}
-endif
+_v2 := _v1,
 
-_v3 := 1_ui,
+for ( _i := 1_ui ; _i < 3_ui ; 2_ui ) { 
+  _v1 := 1_ui ,
+  
+  for ( _k := 2_ui ; _k < 5_ui ; 4_ui )
+  	_aux := _aux2 , ,
+},
+  
+_v1 := _v2 ,

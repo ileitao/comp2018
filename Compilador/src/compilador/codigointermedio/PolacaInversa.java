@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import compilador.Token;
+import compilador.analizadorsintactico.Parser;
+
 public class PolacaInversa {
 
 	//La posicion del elemento en la lista indica la direccion
@@ -80,20 +83,54 @@ public class PolacaInversa {
 
 	}
 	
-	public void despuesBloqueWhile() {
+	/**
+	 * La sentencia FOR sera generada con el equivalente de:
+	 * 		1) asignacion de inicializacion del iterador (3 pasos)
+	 * 		2) codigo intermedio de while
+	 * 		3) asignacion para incrementar iterador
+	 * 
+	 * Apila posicion de comienzo de la condicion.
+	 */
+	public void generarInicioCondicionFOR() {
+		//El salto atras BI debe apuntar al primer paso de la condicion
+		//Por eso se agrega un offset de 3 pasos correspondiente a la inicializacion del iterador
+		this.pasosIncompletos.push(this.codigoGenerado.size() + 3);
+	}
+	
+	public void generarBloqueFOR(Token acumulador, Token iterador) {
+		
+		//genero codigo intermedio para incremento de iterador
+		generarIncrementoFOR(acumulador, iterador);
 		
 		//Se completa paso incompleto a donde deberia saltar en caso de que la
 		//condicion fuera falsa.
 		completarPasoIncompleto(2);
 		
-//		indice_destino = pila.pop();
-//		a_marcar.push(indice_destino);
-//		e = new Elemento(Integer.toString(indice_destino), -1);
-//		codigo.add(e);
-//		
-//		e = new Elemento("BI", -1);
-//		codigo.add(e);
-
+		//Recupero paso de inicio de condicion del FOR para generar el salto atras BI
+		int indice_destino = this.pasosIncompletos.pop();
+		
+		//Genera el salto atras BI hacia el paso recuperado previamente
+		generarBifurcacion("BI");
+		
+		//Recupero el paso geneardo en la linea anterior y lo completo
+		int completar = this.pasosIncompletos.pop();
+		this.codigoGenerado.get(completar).setElemento(String.valueOf(indice_destino));
+	}
+	
+	/**
+	 * Genera codigo intermedio para la asignacion de incremento del iterador del FOR
+	 * @param iterador Token variable utilizado como iterador en la sentencia FOR
+	 * @param acumulador Token con el valor de incremento para acumular
+	 */
+	private void generarIncrementoFOR(Token acumulador, Token iterador) {
+		
+		//Genero asignacion: iterador := iterador + acumulador
+		//Codigo intermedio: ( iterador, acumulador, +, iterador, := )
+		this.codigoGenerado.add( new ElementoPI(iterador.getLexema(), iterador));
+		this.codigoGenerado.add( new ElementoPI(acumulador.getLexema(), acumulador));
+		this.codigoGenerado.add( new ElementoPI("+", new Token("+", Parser._PLUS)));
+		this.codigoGenerado.add( new ElementoPI(iterador.getLexema(), iterador));
+		this.codigoGenerado.add( new ElementoPI(":=", new Token(":=", Parser._ASSIGN)));
 	}
 	
 	/**
