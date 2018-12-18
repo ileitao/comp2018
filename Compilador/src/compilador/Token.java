@@ -66,7 +66,7 @@ public class Token {
 	 */
 	@Override
 	public String toString() {
-		return "Token [lexema=" + lexema + "\t| id=" + codigo + "]";
+		return "Token [id=" + codigo + " | " + "lexema=" + lexema + "]";
 	}
 
 }

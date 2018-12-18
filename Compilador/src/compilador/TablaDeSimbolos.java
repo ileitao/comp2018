@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import compilador.analizadorsintactico.Parser;
 
@@ -92,10 +93,68 @@ public class TablaDeSimbolos {
     private RegTablaSimbolos registrarNuevoToken(short idToken, String lexemaToken, int linea, int posicion) {
     	
     	Token token = new Token(lexemaToken, idToken);
-    	return new RegTablaSimbolos(getNextTokenId(), token, linea, posicion);
+    	RegTablaSimbolos reg = new RegTablaSimbolos(getNextTokenId(), token, linea, posicion);
+    	token.setRegTabSimbolos(reg);
+    	return reg;
     }
     
     public short getNextTokenId() {
     	return ++nextTokenId;
     }
+    
+    public Optional<RegTablaSimbolos> obtenerDeclaracion(Token tokenIdentificador) {
+    	
+    	Optional<RegTablaSimbolos> regEncontrado = this.tablaSimbolos.stream()
+    			//Descarto el token recibido por parametro.filter( reg -> reg.getToken().getLexema().equals(tokenID.getLexema()))
+    			.filter( reg -> !reg.equals(tokenIdentificador.getRegTabSimbolos()))
+    			// Busco los identificadores con el mismo lexema
+    			.filter( reg -> reg.getToken().getLexema().equals(tokenIdentificador.getLexema()))
+    			// Me quedo con los que son alcanzables desde el ambito actual
+    			.filter( reg -> esVisible(reg.getToken()))
+    			// De los declarados tomo el mas nuevo (mayor regId)
+    			.max( (reg1, reg2) -> Integer.compare(reg1.getRegId(), reg2.getRegId()) )
+				;
+  
+    	return regEncontrado;
+    }
+    
+    /**
+	 * Verifica si un identificador es visible para el ambito actual
+	 * El alcance para un identificador segun su declaracion se define como sigue (mayor a menor):
+	 *	1) main
+	 *	2) Algun miembro dentro del anidamiento de ambitos (padre, abuelo, etc)
+	 *	3) Ambito actual
+	 * Para el caso de que no tenga ambito, significa que es un token de una sentencia ejecutable anterior
+	 * la cual no fue declarada (entonces no tiene ambito).
+	 * Por lo tanto se considera como que no esta al alcance.
+	 * @param token
+	 * @return
+	 */
+	private boolean esVisible(Token token){
+		
+		Ambito ambitoToken = token.getRegTabSimbolos().getAmbito(); 
+		
+		if (ambitoToken == null)
+			return false;
+		
+		if (ambitoToken.isMain())
+			return true;
+		
+		if (ambitoToken.equals(Ambito.getAmbitoActual()))
+			return true;
+		
+		return Ambito.esAncestro(ambitoToken); 
+	}
+	
+	/**
+	 * Enlaza un token a su correspondiente declaracion.
+	 * Estos tokens corresponden al uso de un identificador en las sentencias ejecutables
+	 * @param reg Registro que contiene la declaracion correspondiente del identificador
+	 * @param token Token a enlazar
+	 */
+	public void enlazarDeclaracion(RegTablaSimbolos reg, Token token) {
+		//Elimino registro de la tabla de simbolos antes de reenlazar el token al nuevo registro
+		this.tablaSimbolos.remove(token.getRegTabSimbolos());
+		token.setRegTabSimbolos(reg);
+	}
 }

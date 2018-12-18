@@ -224,6 +224,7 @@ public class AnalizadorLexico {
 			int lineaToken = lector.getNroLinea();
 
 			Token token;
+			RegTablaSimbolos reg = this.tablaSimbolos.getRegistro(this.lexemaParcial.toString());
 			
 			//Solo se almacenan los tokens detallados en el switch
 			switch(this.codigoTokenReconocido) {
@@ -232,7 +233,7 @@ public class AnalizadorLexico {
 				case Parser._CONSTANT_UNSIGNED_INTEGER:
 				case Parser._CONSTANT_SINGLE:
 					//Se genera el registro para insertar en la tabla de simbolos
-					RegTablaSimbolos reg = this.tablaSimbolos.createRegTabla(this.lexemaParcial.toString(), this.codigoTokenReconocido, lineaToken, posicionToken);
+					reg = this.tablaSimbolos.createRegTabla(this.lexemaParcial.toString(), this.codigoTokenReconocido, lineaToken, posicionToken);
 					
 					switch (this.codigoTokenReconocido) {
 					
@@ -256,12 +257,15 @@ public class AnalizadorLexico {
 					this.tablaSimbolos.agregarSimbolo(reg);
 					
 					token = reg.getToken();
-					token.setRegTabSimbolos(reg);
+//					token.setRegTabSimbolos(reg);
 					
 					break;
 				default:
 					//No almacenar token
-					token = new Token(this.lexemaParcial.toString(), this.codigoTokenReconocido);
+					if (reg == null)
+						token = new Token(this.lexemaParcial.toString(), this.codigoTokenReconocido);
+					else
+						token = reg.getToken();
 					break;
 			}
 			

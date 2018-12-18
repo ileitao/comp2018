@@ -1,10 +1,11 @@
-_v2 := _v1,
+usinteger _var1,
+usinteger _var2 ,
 
-for ( _i := 1_ui ; _i < 3_ui ; 2_ui ) { 
-  _v1 := 1_ui ,
-  
-  for ( _k := 2_ui ; _k < 5_ui ; 4_ui )
-  	_aux := _aux2 , ,
+for ( _var1 := 1_ui ; _uivar1 > 5_ui + _var2 ; _var20 ) {
+  _var2 := 4_ui ,
+  _var2 := 4_ui , 
 },
-  
-_v1 := _v2 ,
+
+_var2 := -2.1 ,
+
+print('Hola') ,

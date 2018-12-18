@@ -12,7 +12,12 @@ package compilador;
  */
 public class RegTablaSimbolos {
 
+	//Id que identifica unicidad de un registro de tabla de simbolos.
 	private short regId = -1;
+	
+	//Ambito en el que fue declarado el token
+	private Ambito ambito;
+	
 	private Token token;
 	private TipoToken tipoToken;
 	private UsoToken usoToken;
@@ -87,11 +92,24 @@ public class RegTablaSimbolos {
 	public void setUsoToken(UsoToken usoToken) {
 		this.usoToken = usoToken;
 	}
+	
+	/**
+	 * @return the ambito
+	 */
+	public Ambito getAmbito() {
+		return ambito;
+	}
+
+	/**
+	 * @param ambito the ambito to set
+	 */
+	public void setAmbito(Ambito ambito) {
+		this.ambito = ambito;
+	}
 
 	@Override
 	public String toString() {
-		return "RegTS [regId=" + regId + ", " + token + ", tipoToken=" + tipoToken + ", usoToken="
+		return "RegTS [regId=" + regId + ", " + token + ",\t" + "ambito=" + ambito + ", tipoToken=" + tipoToken + ", usoToken="
 				+ usoToken + ", linea=" + linea + ", posicion=" + posicion + "]";
 	}
-
 }

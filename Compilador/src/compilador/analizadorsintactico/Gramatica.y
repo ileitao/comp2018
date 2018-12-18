@@ -3,6 +3,7 @@
 import java.io.IOException;
 import compilador.AnalizadorLexico;
 import compilador.RegTablaSimbolos;
+import compilador.Ambito;
 import compilador.TablaDeSimbolos;
 import compilador.TipoToken;
 import compilador.UsoToken;
@@ -12,6 +13,7 @@ import compilador.log.EventoLog;
 import static java.lang.Math.toIntExact;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Stack;
 import compilador.accionsemantica.ASValidarFlotante;
 import compilador.codigointermedio.PolacaInversa;
@@ -76,10 +78,16 @@ bloque_declarativo :
  */
 sentencias_de_declaracion_de_variables :
 	tipo lista_de_variables _COMMA { notify("Sentencia de declaración de variables en línea " + this.lineaActual + ".");
-									 configurarIdentificadores((Token)$2.obj, UsoToken.VARIABLE);
+									 declararIdentificadores((Token)$2.obj, UsoToken.VARIABLE);
 									 }
 	| tipo error _COMMA { yyerror("ERROR: No se definió ninguna variable en sentencia de declaración de variables", this.lineaActual); }
 	| declaracion_de_funcion
+	/* Se agrega declaracion de variables de tipo FUN */
+	| _FUN lista_de_variables _COMMA
+		{
+		this.tipoActual = TipoToken.FUN;
+		declararIdentificadores((Token)$2.obj, UsoToken.VARIABLE);
+		}
 	;
 
 /**
@@ -88,7 +96,7 @@ sentencias_de_declaracion_de_variables :
  */
 tipo :
 	_USINTEGER { this.tipoActual = TipoToken.USINTEGER; }
-	|	_SINGLE { this.tipoActual = TipoToken.SINGLE;	}
+	| _SINGLE { this.tipoActual = TipoToken.SINGLE;	}
 	;
 
 /**
@@ -97,8 +105,51 @@ tipo :
  */
 lista_de_variables:
   _IDENTIFIER
-	|	_IDENTIFIER _SEMICOLON lista_de_variables { addIdentifier( (Token) $3.obj); }
+	|	_IDENTIFIER _SEMICOLON lista_de_variables { addIdentifier( (Token) $3.obj ); }
 	| _IDENTIFIER error lista_de_variables { yyerror("ERROR: Falta ; para separar variables en la sentencia de declaración de variables", this.lineaActual); }
+	;
+
+inicio_funcion :
+	_FUN _IDENTIFIER {
+		this.tipoActual = TipoToken.FUN;
+		
+		/*Configura tipo y uso de identificador*/
+		declararIdentificadores((Token) $2.obj, UsoToken.FUNCION);
+
+		//Apilo y obtengo nuevo ambito con el nombre de la funcion actual
+		Ambito.nuevoAmbito( (Token) $1.obj, (Token) $2.obj );
+
+		//apilo contador de closures para poder controlar cantidad en caso de que anide funciones
+		//(lo cual seria un error, pero aun asi necesito llevar el control)
+		pilaClosures.push(this.numClosuresEnFuncion);
+		this.numClosuresEnFuncion = 0;
+	}
+	| _FUN error { yyerror("ERROR: No se definió nombre para la función", this.lineaActual); }
+	;
+
+inicio_closure :
+	_VOID _IDENTIFIER {
+		this.tipoActual = TipoToken.VOID;
+		//Incremento para control de closures declarados en funcion
+		this.numClosuresEnFuncion++;
+
+		if (this.numClosuresEnFuncion > 1)
+			yyerror("ERROR: Solo se permite la declaracion de 1 unica funcion sin retorno dentro de una funcion FUN (" + Ambito.getAmbitoActual() +")", this.lineaActual);
+
+		//Pido el token que genero el ambito actual para ver si es tipo FUN
+		Token tokenAmbito = Ambito.getAmbitoActual().getTokenIdentificador();
+		
+		//Con esto se controla que la funcion sin retorno solo sea declarada dentro del ambito de una funcion con retorno
+		if (Ambito.getAmbitoActual().isMain() || !TipoToken.FUN.equals(tokenAmbito.getRegTabSimbolos().getTipoToken()) )
+			yyerror("ERROR: Declaración de función sin retorno ("+((Token) $2.obj).getLexema()+") en un ambito que no es una funcion FUN (" + Ambito.getAmbitoActual() +")", this.lineaActual);
+
+		/*Configura tipo y uso de identificadores*/
+		declararIdentificadores((Token) $2.obj, UsoToken.FUNCION);
+	
+		//Apilo y obtengo nuevo ambito con el nombre del closure actual
+		Ambito.nuevoAmbito( (Token) $1.obj, (Token) $2.obj );
+	}
+	|_VOID error { yyerror("ERROR: No se definió nombre para la función", this.lineaActual); }
 	;
 
 /**
@@ -113,18 +164,21 @@ lista_de_variables:
  * }
  */
 declaracion_de_funcion :
-	_FUN _IDENTIFIER _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE { notify("Sentencia de declaración de función con retorno " + this.lineaActual + ".");
-																							  /*Configura tipo y uso de identificadores*/
-																							  this.tipoActual = TipoToken.FUN;
-																							  configurarIdentificadores((Token) $2.obj, UsoToken.FUNCION);
-																							  }
-	| _VOID _IDENTIFIER _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE { notify("Sentencia de declaración de función sin retorno " + this.lineaActual + ".");
-																				this.tipoActual = TipoToken.VOID;
-																				configurarIdentificadores((Token)$2.obj, UsoToken.FUNCION);
-																			}
-	| _FUN error _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE { yyerror("ERROR: No se definió nombre para la función", this.lineaActual); }
-	| _VOID error _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE { yyerror("ERROR: No se definió nombre para la función", this.lineaActual); }
-	| _FUN _IDENTIFIER _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion error _RCBRACE { yyerror("ERROR: Falta retorno de la función", this.lineaActual); }
+	inicio_funcion _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion retorno_de_funcion _RCBRACE
+		{	
+			notify("Sentencia de declaración de función con retorno " + this.lineaActual + ".");
+
+			// Restauro ambito anterior
+			Ambito.finalizarAmbito();
+			this.numClosuresEnFuncion = pilaClosures.pop();
+		}
+	| inicio_closure _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion _RCBRACE
+		{	notify("Sentencia de declaración de función sin retorno " + this.lineaActual + ".");
+
+			// Restauro ambito anterior
+			Ambito.finalizarAmbito();
+		}
+	| inicio_funcion _LPAREN _RPAREN _LCBRACE cuerpo_de_funcion error _RCBRACE { yyerror("ERROR: Falta retorno de la función", this.lineaActual); }
 	;
 
 /**
@@ -150,6 +204,13 @@ retorno_de_funcion :
  */
 retorno :
   _IDENTIFIER _LPAREN _RPAREN
+		{
+		Token tokenIdentificador = (Token)$1.obj;
+		validarDeclaracionIdentificador(tokenIdentificador);
+		// Valido el tipo de retorno
+		if (!TipoToken.VOID.equals( tokenIdentificador.getRegTabSimbolos().getTipoToken() ))
+			yyerror("ERROR: La funcion retornada ("+ tokenIdentificador.getLexema() +") debe ser de tipo VOID", this.lineaActual);
+		}
   | cuerpo_de_funcion
   ;
 
@@ -170,9 +231,14 @@ bloque_ejecutable :
  * if ( <condicion> ) <bloque_de_sentencias> else <bloque_de_sentencias>
  */
 seleccion :
-	_IF _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF { notify("Sentencia IF sin ELSE en línea " + this.lineaActual + ".");
-																polaca.completarPasoIncompleto(0); }
-	| _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE { polaca.generarElse(); } bloque_de_sentencias _ENDIF {	notify("Sentencia IF con ELSE en línea " + this.lineaActual + "."); polaca.completarPasoIncompleto(0); }
+	_IF _LPAREN condicion _RPAREN bloque_de_sentencias _ENDIF
+		{	notify("Sentencia IF sin ELSE en línea " + this.lineaActual + ".");
+			polaca.completarPasoIncompleto(0);
+		}
+	| _IF _LPAREN condicion _RPAREN bloque_de_sentencias _ELSE { polaca.generarElse(); } bloque_de_sentencias _ENDIF
+	{	notify("Sentencia IF con ELSE en línea " + this.lineaActual + ".");
+		polaca.completarPasoIncompleto(0);
+	}
 
 	| _IF _LPAREN error _RPAREN bloque_de_sentencias _ENDIF {	yyerror("ERROR: Faltó condición en IF", this.lineaActual);	}
 	| _IF _LPAREN condicion _RPAREN error _ENDIF {	yyerror("ERROR: Faltó bloque de sentencias en IF", this.lineaActual);	}
@@ -201,10 +267,32 @@ condicion :
  * <_IDENTIFIER> := <expresion>
  */
 asignacion :
-  _IDENTIFIER _ASSIGN expresion _COMMA { notify("Sentencia de asignación en línea " + this.lineaActual + ".");
-					 polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));
-					 polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));}
-  | _IDENTIFIER _ASSIGN invocacion_de_funcion {	notify("Sentencia de asignación en línea " + this.lineaActual + ".");	}
+	_IDENTIFIER _ASSIGN expresion _COMMA
+		{
+		notify("Sentencia de asignación en línea " + this.lineaActual + ".");
+
+		validarDeclaracionIdentificador((Token)$1.obj);
+
+		//Valido semantica para el caso de asignacion de variables de tipo FUN
+		if ( TipoToken.FUN.equals( ((Token)$1.obj).getRegTabSimbolos().getTipoToken()) ){
+			if (cantFactores > 1)
+				yyerror("ERROR: No se permiten asignacion de expresiones para identificadores de tipo FUN", this.lineaActual);
+			
+			//$3 tiene el ultimo token reconocido de la expresion
+			else if (!TipoToken.FUN.equals( ((Token)$3.obj).getRegTabSimbolos().getTipoToken()) )
+				yyerror("ERROR: Se esperaba un identificador de tipo FUN despues del simbolo de asignacion :=", this.lineaActual);
+		}
+		cantFactores = 0;
+
+		//Genero codigo intermedio para asignacion
+		polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));
+		polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));
+		}
+	| _IDENTIFIER _ASSIGN invocacion_de_funcion
+		{
+		notify("Sentencia de asignación en línea " + this.lineaActual + ".");
+		validarDeclaracionIdentificador( (Token)$1.obj );
+		}
  ;
 
 /**
@@ -223,7 +311,11 @@ asignacion_compuesta :
  * print <(cadena)> ,
  */
 impresion :
-  _PRINT _LPAREN _CONSTANT_STRING _RPAREN _COMMA {	notify("Sentencia PRINT en línea " + this.lineaActual + ".");	}
+  _PRINT _LPAREN _CONSTANT_STRING _RPAREN _COMMA
+		{	notify("Sentencia PRINT en línea " + this.lineaActual + ".");
+			polaca.addElemento( new ElementoPI( ((Token)$3.obj).getLexema(), (Token)$3.obj));
+			polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));
+		}
   | _PRINT _LPAREN error _RPAREN	_COMMA { yyerror("ERROR: No se especificó ninguna cadena en sentencia PRINT", this.lineaActual); }
   ;
 
@@ -241,9 +333,10 @@ inicio_iteracion :
  */
 iteracion :
 	inicio_iteracion _LPAREN condiciones_de_iteracion _RPAREN bloque_de_sentencias _COMMA
-				{	notify("Sentencia FOR en línea " + this.lineaActual + ".");
-					polaca.generarBloqueFOR(pilaAcumulador.pop(), pilaAcumulador.pop()); }
-	| inicio_iteracion _LPAREN error _RPAREN bloque_de_sentencias _COMMA {	yyerror("ERROR: No se especificó  ninguna condición en sentencia FOR", this.lineaActual);	}
+		{	notify("Sentencia FOR en línea " + this.lineaActual + ".");
+			polaca.generarBloqueFOR(pilaAcumulador.pop(), pilaAcumulador.pop());
+		}
+
 	| inicio_iteracion _LPAREN condiciones_de_iteracion _RPAREN error _COMMA {	yyerror("ERROR: No se especificó  ningún bloque de sentencias en sentencia FOR", this.lineaActual);	}
 	;
 
@@ -257,23 +350,72 @@ iteracion :
  * sentencias de control.
  */
 condiciones_de_iteracion :
-  _IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER
-		{ 	pilaAcumulador.push( (Token)$1.obj );
-			polaca.addElemento( new ElementoPI( ((Token)$3.obj).getLexema(), (Token)$3.obj));
-			polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));
-			polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));
-		}
+	inicializacion_iteracion condicion_iteracion incremento_iteracion
+	;
 
-	_SEMICOLON _IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON
+inicializacion_iteracion :
+	_IDENTIFIER _ASSIGN _CONSTANT_UNSIGNED_INTEGER _SEMICOLON
+		{
+		Token tokenIdentificador = ((Token)$1.obj);
+
+		//Valido semantica de uso para la variable del iterador
+		RegTablaSimbolos regDeclaracion = validarDeclaracionIdentificador(tokenIdentificador);	
+		if ( (regDeclaracion != null) && (!TipoToken.USINTEGER.equals(regDeclaracion.getTipoToken()) ))
+			yyerror("ERROR: La variable usada en el iterador de la sentencia de iteracion FOR, debe ser de tipo entero");	
+
+		//Realiza acciones necesarias para generar inicio de iteracion para polaca inversa
+		inicializarIteracion((Token)$1.obj, (Token)$2.obj, (Token)$3.obj);
+		}
+	
+	| _IDENTIFIER _ASSIGN error _SEMICOLON
+		{
+		//Realiza acciones necesarias para generar inicio de iteracion para polaca inversa
+		inicializarIteracion((Token)$1.obj, (Token)$2.obj, (Token)$3.obj);
+		yyerror("ERROR: Solo se permite el uso de constantes enteras para inicializar la variable de iteracion", this.lineaActual);
+		}
+	;
+
+condicion_iteracion :
+	/*_IDENTIFIER comparador _CONSTANT_UNSIGNED_INTEGER _SEMICOLON*/
+	condicion_iteracion_inicio comparador expresion _SEMICOLON
 		{	
-			polaca.addElemento( new ElementoPI( ((Token)$6.obj).getLexema(), (Token)$6.obj));
-			polaca.addElemento( new ElementoPI( ((Token)$8.obj).getLexema(), (Token)$8.obj));
-			polaca.addElemento( new ElementoPI( ((Token)$7.obj).getLexema(), (Token)$7.obj));
+		polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));
 		}
+	
+	| error comparador expresion _SEMICOLON
+		{	
+		yyerror("ERROR: Falta variable en lado izquierdo del comparador en la condicion de iteracion FOR.");
+		}
+	
+	| condicion_iteracion_inicio error expresion _SEMICOLON
+		{	
+		yyerror("ERROR: Falta comparador en la condicion de iteracion FOR.");
+		}
+	;
 
-	_CONSTANT_UNSIGNED_INTEGER { 	pilaAcumulador.push( (Token)$11.obj );
-									polaca.generarBifurcacion("BF"); }
-  ;
+incremento_iteracion :
+	_CONSTANT_UNSIGNED_INTEGER
+			{
+			pilaAcumulador.push( (Token)$1.obj );
+			polaca.generarBifurcacion("BF");
+			}
+
+	| error
+		{
+		//Semantica para la constante de incremento del iterador
+		yyerror("ERROR: Solo se permite el uso de constantes enteras para incrementar la variable de iteracion FOR");
+		pilaAcumulador.push( (Token)$1.obj );
+		polaca.generarBifurcacion("BF");		
+		}
+	;
+
+/**
+* Fue necesario incluir este no terminal para poder generar el codigo intermedio del identificador antes que la expresion
+* para la condicion de la sentencia de iteracion (sino se generaba primero la expresion)
+*/
+condicion_iteracion_inicio :
+	_IDENTIFIER {polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));}
+	;
 
 /**
  * Invocación de función
@@ -281,6 +423,14 @@ condiciones_de_iteracion :
  */
 invocacion_de_funcion :
 	_IDENTIFIER _LPAREN _RPAREN _COMMA
+		{
+		Token tokenIdentificador = (Token)$1.obj;
+		
+		//Valido semantica de uso de funciones
+		validarDeclaracionIdentificador(tokenIdentificador);
+		if (!TipoToken.FUN.equals(tokenIdentificador.getRegTabSimbolos().getTipoToken()))
+			yyerror("ERROR: El identificador " + ((Token) $1.obj).getLexema() + " no es de tipo fun.");
+		}
 	;
 
 /**
@@ -298,9 +448,17 @@ expresion :
  * Aritmética, variable o constante
  */
 termino :
-	termino _MULT factor { polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));}
-	|	termino _DIV factor { polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));}
-	|	factor
+	termino _MULT factor
+		{
+		polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));
+		cantFactores++;
+		}
+	|	termino _DIV factor
+		{
+		polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));
+		cantFactores++;
+		}
+	|	factor {cantFactores++;}
 	;
 
 /**
@@ -311,11 +469,15 @@ factor :
 	_CONSTANT_UNSIGNED_INTEGER { polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));}
 	| _CONSTANT_SINGLE { polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));}
 	| _MINUS _CONSTANT_SINGLE { validarFlotante((Token) $2.obj);
-								polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));}
+								polaca.addElemento( new ElementoPI( ((Token)$2.obj).getLexema(), (Token)$2.obj));}
 	/*NO SE ACEPTA CONSTANTE STRING PORQUE ESTA SOLO SERA USADA EN PRINT
 	| _CONSTANT_STRING
 	*/
-	| _IDENTIFIER { polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));}
+	| _IDENTIFIER
+		{
+		polaca.addElemento( new ElementoPI( ((Token)$1.obj).getLexema(), (Token)$1.obj));
+		validarDeclaracionIdentificador((Token)$1.obj);
+		}
 	| error { yyerror("ERROR: Se esperaba un factor en lugar del token: " + ((Token) $1.obj).getLexema()); }
 	;
 
@@ -348,18 +510,20 @@ PolacaInversa polaca = new PolacaInversa();
 
 //Se usa para ir apilando el valor del acumulador del FOR.
 //Es necesario usar una pila, ya que en caso de anidarse varios FOR
-//Debo tener en el tope el del ultimo FOR
+//debo tener en el tope el del ultimo FOR
 Stack<Token> pilaAcumulador = new Stack<>();
+
+String ambitoFuncionPadre = "";
+
+// Contador y pila para controlar semantica de closures
+int numClosuresEnFuncion = 0;
+Stack<Integer> pilaClosures = new Stack<>();
+
+int cantFactores = 0;
 
 public void notify(String msg)
 {
 	System.out.println(msg);
-	//this.syntaxLog.addLog(msg, lexAnalyzer.getLineNumber());
-}
-
-public void actualizarTipoID(String msg, int line)
-{
-	//this.syntaxLog.addLog(msg, line);
 }
 
 public void yyerror(String error)
@@ -376,19 +540,10 @@ public int yylex() throws IOException
 {
 	this.tokenActual = analizadorLexico.getToken();
 	this.lineaActual = analizadorLexico.getLineaActual();
-	//RegTablaSimbolos reg = this.tablaDeSimbolos.getRegistro(this.tokenActual.toString());
 	
 	//Se almacena el token actual
 	yylval = new ParserVal(tokenActual);
 
-	/*System.out.println();
-	System.out.println("Token actual: " + this.tokenActual);
-	for(int i = 0 ; (i < 15) && (valstk[i] != null) ; i++) {
-		System.out.println(i+" | "+valstk[i].obj);
-	}	*/
-
-	//tokenfy(this.tokenActual.toString(), this.tokenActual.getLine());
-	//yylval = this.tablaDeSimbolos.createRegTabla(this.tokenActual.toString(), this.tipoToken, lineaToken, posicionToken);
 	if (this.tokenActual != null)
 	{
 		if (this.tokenActual.getCodigo() == -1)
@@ -442,30 +597,46 @@ public void Run() throws IOException
 	polaca.imprimir();
 }
 
+/**
+* Agrega un token identificador a la lista
+*/
 public void addIdentifier(Token token){
 	tokensIDENTIFIER.add(token);
-}
-
-public void setTipoIdentificador(){
-	tokensIDENTIFIER.forEach( token -> token.getRegTabSimbolos().setTipoToken(this.tipoActual));
-	this.tipoActual = null;
-}
-
-public void setUsoIdentificador(UsoToken usoToken) {
-	tokensIDENTIFIER.forEach( token -> token.getRegTabSimbolos().setUsoToken(usoToken) );
 }
 
 /**
 * Configura tipo y uso de identificadores.
 * Para funciones se utiliza la misma lista para reuso de la funcionalidad.
 */
-public void configurarIdentificadores(Token tokenIdentificador, UsoToken usoToken) {
-	addIdentifier(tokenIdentificador);
-	setTipoIdentificador();
-	setUsoIdentificador(usoToken);
+public void declararIdentificadores(Token tokenID, UsoToken usoToken) {
+	
+	//Agrego ultimo identificador reconocido a la lista	
+	addIdentifier(tokenID);
+
+	//Setea el tipo reconocido, tipo de uso y ambito a los identificadores declarados.	
+	tokensIDENTIFIER.forEach( token -> {
+		token.getRegTabSimbolos().setTipoToken(this.tipoActual);
+		token.getRegTabSimbolos().setUsoToken(usoToken);
+		token.getRegTabSimbolos().setAmbito(Ambito.getAmbitoActual());
+		
+		Optional<RegTablaSimbolos> reg = tablaDeSimbolos.obtenerDeclaracion(token);
+		if (reg.isPresent())
+			errorIdentificadorRedeclarado(reg.get().getToken());
+		
+		else if (TipoToken.FUN.equals(this.tipoActual))
+			//Chequeo que se declara en ambito main
+			if(!Ambito.getAmbitoActual().isMain())
+				yyerror("ERROR: Declaración de función con retorno ("+token.getLexema()+") en un ambito que no es main (" + Ambito.getAmbitoActual() +")", this.lineaActual);
+	});
+	
+	//Restablezco variables
+	this.tipoActual = null;
 	tokensIDENTIFIER.clear();
 }
 
+/**
+* Valida flotante para el caso en que haya tenido signo
+*/
 public void validarFlotante(Token tokenFlotante) {
 	
 	String lexema = "-" + tokenFlotante.getLexema();
@@ -477,3 +648,45 @@ public void validarFlotante(Token tokenFlotante) {
 	}
 	tokenFlotante.setLexema(lexema);
 }
+
+/**
+* loguea error de identificador no declarado
+*/
+public void errorIdentificadorNoDeclarado(Token token){
+	yyerror("ERROR: Identificador " + token.getLexema() + " no declarado dentro del alcance del ambito ("+Ambito.getAmbitoActual().getNombre()+")", this.lineaActual);
+}
+
+/**
+* loguea error de identificador REdeclarado
+*/
+public void errorIdentificadorRedeclarado(Token token){
+	yyerror("ERROR: Redeclaracion del identificador " + token.getLexema() + " (" + token.getRegTabSimbolos().getAmbito().getNombre() + ") en el ambito " + Ambito.getAmbitoActual().getNombre(), this.lineaActual);
+}
+
+/**
+* Valida si una variable fue declarada antes de su uso.
+* En caso de haber sido declarada enlaza el token al registro correspondiente
+* en la tabla de simbolos y lo retorna.
+* En caso contrario se informa error de identificador no declarado y retorna null.
+*/
+public RegTablaSimbolos validarDeclaracionIdentificador(Token token){
+	Optional<RegTablaSimbolos> regDeclaracion = tablaDeSimbolos.obtenerDeclaracion(token);
+	if (regDeclaracion.isPresent()){
+		tablaDeSimbolos.enlazarDeclaracion(regDeclaracion.get(), token);
+	}	
+	else
+		errorIdentificadorNoDeclarado(token);
+	return regDeclaracion.isPresent() ? regDeclaracion.get() : null;
+}
+
+/**
+* Realiza acciones necesarias para generar inicio de iteracion para polaca inversa
+*/
+private void inicializarIteracion(Token identifier, Token assign, Token value){
+
+	pilaAcumulador.push( identifier );
+	polaca.addElemento( new ElementoPI( value.getLexema(), value));
+	polaca.addElemento( new ElementoPI( identifier.getLexema(), identifier));
+	polaca.addElemento( new ElementoPI( assign.getLexema(), assign));
+}
+
